@@ -15,3 +15,10 @@ curl https://sh.rustup.rs -sSf | sh
 rustc --version
 ```
 
+# building hello.rs
+
+```
+rustc hello.rs
+```
+
+で Go よりもちょっと大きなバイナリ hello* ができる。
