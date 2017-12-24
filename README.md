@@ -22,3 +22,14 @@ rustc hello.rs
 ```
 
 で Go よりもちょっと大きなバイナリ hello* ができる。
+
+# Get started with Cargo.
+
+```
+mkdir testapp1
+cd testapp1
+cargo init
+```
+
+`touch src/main.rs` を書いたら `cargo build` して `cargo run`
+
