@@ -41,3 +41,15 @@ cargo init --bin
 cargo build
 cargo run
 ```
+
+# build
+
+```
+cargo build
+```
+
+or 
+
+```
+cargo build --release
+```
