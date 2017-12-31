@@ -26,18 +26,18 @@ rustc hello.rs
 # Get started with Cargo.
 
 ```
-mkdir testapp1
-cd testapp1
-cargo init
+cargo new testapp2 --bin
+cd testapp2
+cargo build
+cargo run
 ```
-
-`touch src/main.rs` を書いたら `cargo build` して `cargo run`
 
 ##### または
 
 ```
-cargo new testapp2 --bin
-cd testapp2
+mkdir testapp1
+cd testapp1
+cargo init --bin
 cargo build
 cargo run
 ```
