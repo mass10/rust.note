@@ -33,3 +33,11 @@ cargo init
 
 `touch src/main.rs` を書いたら `cargo build` して `cargo run`
 
+##### または
+
+```
+cargo new testapp2 --bin
+cd testapp2
+cargo build
+cargo run
+```
