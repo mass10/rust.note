@@ -10,7 +10,7 @@ fn on_entry(e: &DirEntry) {
 }
 
 # [allow(unused)]
-fn search(dir: &Path, cb: &Fn(&DirEntry)) {
+fn search(dir: &Path, handler: &Fn(&DirEntry)) {
 
 	if dir.is_dir() {
 		let it = fs::read_dir(dir).unwrap();
@@ -18,9 +18,9 @@ fn search(dir: &Path, cb: &Fn(&DirEntry)) {
 			let entry = e.unwrap();
 			let path = entry.path();
 			if path.is_dir() {
-				search(&path, cb);
+				search(&path, handler);
 			} else {
-				cb(&entry);
+				handler(&entry);
 			}
 		}
 	}
