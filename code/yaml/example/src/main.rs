@@ -12,6 +12,10 @@ fn main() {
 	file.read_to_string(&mut content).unwrap();
 	let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
 	let doc = &docs[0];
-	println!("{:?}", doc["key2"].as_str().unwrap());
-	println!("{:?}", doc["unknown-key"].as_str());
+
+	// println!("{:?}", doc["key1"].as_str().unwrap());
+	// println!("{:?}", doc["key2"].as_str().unwrap());
+	println!("{:?}", doc["key2"]);
+	println!("{:?}", doc["key3"]);
+	println!("{:?}", doc["key4"]);
 }
