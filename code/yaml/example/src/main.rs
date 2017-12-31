@@ -15,7 +15,7 @@ fn main() {
 
 	// println!("{:?}", doc["key1"].as_str().unwrap());
 	// println!("{:?}", doc["key2"].as_str().unwrap());
-	println!("{:?}", doc["key2"]);
-	println!("{:?}", doc["key3"]);
-	println!("{:?}", doc["key4"]);
+	println!("{:?}", doc["key2"].as_str());
+	println!("{:?}", doc["key3"].as_f64());
+	println!("{:?}", doc["key4"].is_badvalue());
 }
