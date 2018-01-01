@@ -1,16 +1,16 @@
+extern crate yaml_rust;
+
 use std::fs::File;
 use std::io::Read;
-
-extern crate yaml_rust;
-use yaml_rust::yaml;
+use yaml_rust::yaml::YamlLoader;
 
 // #[allow(unused)]
 fn main() {
 
-	let mut file = File::open("conf/settings.yml").unwrap();
+	let mut file = File::open("conf/settings.yml2").unwrap();
 	let mut content = String::new();
 	file.read_to_string(&mut content).unwrap();
-	let docs = yaml::YamlLoader::load_from_str(content.as_str()).unwrap();
+	let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
 	let doc = &docs[0];
 
 	// println!("{:?}", doc["key1"].as_str().unwrap());
