@@ -13,5 +13,5 @@ fn main() {
 	println!("{:#b}", 95);
 
 	println!("family name: [{family_name}], first name: [{first_name}]", first_name="John", family_name="Jones");
-	println!("都道府県: [{都道府県}], field02: [{field02}]", field02="", 都道府県="");
+	println!("都道府県: [{都道府県}], 市区町村: [{市区町村}]", 市区町村="小樽市南台2-1", 都道府県="北海道");
 }
