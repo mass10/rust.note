@@ -1,7 +1,10 @@
 fn main() {
 
 	println!("Hello, world!");
+
 	println!("{}", "あいうえお");
+	println!("{}, {}, {}", 1, "2", '3');
+
 	println!("{}", 95);
 	println!("{:X}", 95);
 	println!("{:#X}", 95);
