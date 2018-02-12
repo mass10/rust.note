@@ -34,6 +34,4 @@ fn main() {
 	test(" 981 ");
 	test("アイウエオ");
 	test("狩野永徳");
-
-	println!("Ok.");
 }
