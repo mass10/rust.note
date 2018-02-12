@@ -1,7 +1,7 @@
 
 fn unsafe_operation() {
 
-    panic!("ERROR!");
+    panic!("予期しないエラーです。");
 }
 
 fn main() {
