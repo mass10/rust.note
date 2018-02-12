@@ -12,6 +12,6 @@ fn main() {
 
 	let s = String::from("こんにちは");
 
-    test1(&s);
-    test2(&s);
+	test1(&s);
+	test2(&s);
 }
