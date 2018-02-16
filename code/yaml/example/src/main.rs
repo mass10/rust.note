@@ -7,7 +7,7 @@ use yaml_rust::yaml::YamlLoader;
 // #[allow(unused)]
 fn main() {
 
-	let mut file = File::open("conf/settings.yml2").unwrap();
+	let mut file = File::open("conf/settings.yml").unwrap();
 	let mut content = String::new();
 	file.read_to_string(&mut content).unwrap();
 	let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
