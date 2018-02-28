@@ -22,8 +22,9 @@ fn main() {
 		let path = "src/main.rs";
 		let file = std::fs::File::open(path).unwrap();
 		let r = std::io::BufReader::new(file);
-		for line in r.lines() {
-			println!("{}", line.unwrap());
+		for e in r.lines() {
+			let mut line = e.unwrap();
+			println!("{}", line);
 		}
 	}
 }
