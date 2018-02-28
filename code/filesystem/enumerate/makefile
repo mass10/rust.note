@@ -1,0 +1,3 @@
+default:
+	rustc main.rs
+
