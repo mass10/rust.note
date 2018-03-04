@@ -9,7 +9,8 @@ fn create_string() -> String {
 
 fn main() {
 
-	test1("abc");
-	println!("{:?}", create_string());
+	test1("Hello, Real Rust World!");
+	println!("{}", create_string());
+	println!("{}", create_string().as_str());
+	test1(create_string().as_str());
 }
-
