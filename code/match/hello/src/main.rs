@@ -1,6 +1,5 @@
-use std::num::ParseIntError;
 
-fn parse_int_unsafe(s: &str) -> std::result::Result<i32, ParseIntError> {
+fn parse_int_unsafe(s: &str) -> std::result::Result<i32, std::num::ParseIntError> {
 	return s.trim().parse::<i32>();
 }
 
