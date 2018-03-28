@@ -1,15 +1,19 @@
 use std::num::ParseIntError;
 
 fn parse_int_unsafe(s: &str) -> std::result::Result<i32, ParseIntError> {
+	return s.trim().parse::<i32>();
+}
 
+#[allow(unused)]
+fn parse_int(s: &str) -> i32 {
 	match s.trim().parse::<i32>() {
-		Ok(n) => Ok(n),
-		Err(err) => Err(err),
+		Ok(n) => n,
+		Err(err) => 0,
 	}
 }
 
-fn test(s: &str) {
-
+#[allow(unused)]
+fn test1(s: &str) {
 	let result = parse_int_unsafe(&s);
 	match result {
 		Ok(value) => println!("\"{}\" >> ({})", s, value),
@@ -17,8 +21,15 @@ fn test(s: &str) {
 	};
 }
 
-fn main() {
+#[allow(unused)]
+fn test2(s: &str) {
+	let value = parse_int(&s);
+	println!("\"{}\" >> ({})", s, value);
+}
 
+fn main() {
+	let test = test1;
+	// let test = test2;
 	test("");
 	test("123");
 	test("0.0");
