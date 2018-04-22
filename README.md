@@ -55,4 +55,32 @@ cargo build --release
 ```
 
 
+# updating Rust
 
+```
+rustup update
+```
+
+```
+neu@ubuntu:~/workspace/rust.note/code/database$ rustup update
+info: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'
+info: latest update on 2018-03-29, rust version 1.25.0 (84203cac6 2018-03-25)
+info: downloading component 'rustc'
+ 55.2 MiB /  55.2 MiB (100 %)  11.0 MiB/s ETA:   0 s
+info: downloading component 'rust-std'
+ 47.3 MiB /  47.3 MiB (100 %)  10.8 MiB/s ETA:   0 s
+info: downloading component 'cargo'
+info: downloading component 'rust-docs'
+info: removing component 'rustc'
+info: removing component 'rust-std'
+info: removing component 'cargo'
+info: removing component 'rust-docs'
+info: installing component 'rustc'
+info: installing component 'rust-std'
+info: installing component 'cargo'
+info: installing component 'rust-docs'
+info: checking for self-updates
+info: downloading self-update
+
+  stable-x86_64-unknown-linux-gnu updated - rustc 1.25.0 (84203cac6 2018-03-25)
+```
