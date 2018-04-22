@@ -1,38 +1,41 @@
-// use std::io;
-use std::fs::{self, DirEntry};
 use std::path::Path;
-use std::env;
 
-fn on_entry(e: &DirEntry) {
+fn on_entry(e: &Path) -> std::io::Result<()> {
 
-	let path_str = String::from(e.path().as_os_str().to_str().unwrap().to_string());
+	// let path_str = String::from(e.as_os_str().to_str().unwrap().to_string());
+	let path_str = e.as_os_str().to_str().unwrap();
 	println!("{}", path_str);
+	Ok(())
 }
 
 # [allow(unused)]
-fn search(dir: &Path, handler: &Fn(&DirEntry)) {
+fn search(e: &Path, handler: &Fn(&Path) -> std::io::Result<()>) -> std::io::Result<()> {
 
-	if dir.is_dir() {
-		let it = fs::read_dir(dir).unwrap();
+	if !e.exists() {
+		println!("[TRACE] invalid path {}", e.to_str().unwrap());
+		return Ok(());
+	}
+	if e.is_dir() {
+		let it = std::fs::read_dir(e)?;
 		for e in it {
 			let entry = e.unwrap();
 			let path = entry.path();
-			if path.is_dir() {
-				search(&path, handler);
-			} else {
-				handler(&entry);
-			}
+			search(&path, handler);
 		}
 	}
+	else {
+		return handler(e);
+	}
+	Ok(())
 }
 
 fn main() {
 
-	let args: Vec<String> = env::args().collect();
+	let args: Vec<String> = std::env::args().collect();
 	if args.len() < 2 {
 		println!("path?");
 		return;
 	}
 	let path = Path::new(&args[1]);
-	search(path, &on_entry);
+	let _result = search(path, &on_entry);
 }
