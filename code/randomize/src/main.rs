@@ -14,19 +14,23 @@ fn _generate_new_name() -> String {
 
 fn on_file_found(e: &Path) -> std::io::Result<()> {
 
-	let _path_str = e.as_os_str().to_str().unwrap();
 	let parent = match e.parent() {
 		Some(result) => result,
 		None => Path::new("")
 	};
+
 	let name = _generate_new_name();
+
 	let ext = match e.extension() {
 		Some(result1) => result1,
 		None => OsStr::new("")
 	};
+
 	let new_path = parent.join(&name).with_extension(ext);
 	println!("{}", new_path.as_os_str().to_str().unwrap());
+
 	std::fs::rename(e, new_path)?;
+
 	Ok(())
 }
 
@@ -37,6 +41,7 @@ fn enumerate(e: &Path, handler: &Fn(&Path) -> std::io::Result<()>) -> std::io::R
 		println!("[TRACE] invalid path {}", e.to_str().unwrap());
 		return Ok(());
 	}
+
 	if e.is_dir() {
 		let it = std::fs::read_dir(e)?;
 		for e in it {
@@ -48,6 +53,7 @@ fn enumerate(e: &Path, handler: &Fn(&Path) -> std::io::Result<()>) -> std::io::R
 	else {
 		return handler(e);
 	}
+
 	Ok(())
 }
 
@@ -58,6 +64,7 @@ fn main() {
 		println!("path?");
 		return;
 	}
+
 	for e in &args[1..] {
 		let path = Path::new(e);
 		let _ = enumerate(path, &on_file_found);
