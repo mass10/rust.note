@@ -7,5 +7,8 @@ fn main() {
 		println!("what?");
 		return;
 	}
-	println!("{}", &args[1]);
+
+	for e in &args[1..] {
+	    println!("{:?}", e);
+	}
 }
