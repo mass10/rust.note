@@ -7,10 +7,10 @@ use yaml_rust::yaml::YamlLoader;
 	
 
 // fn open() -> File {
-// 	match File::open("conf/settings.yml") {
-// 	    Some(file) => file,
-// 	    None => None,
-// 	}
+//  match File::open("conf/settings.yml") {
+//      Some(file) => file,
+//      None => None,
+//  }
 // }
 
 fn configure() -> String {
@@ -29,13 +29,13 @@ fn configure() -> String {
 
 // fn configure2() -> Option<&yaml_rust::Yaml> {
 
-// 	let content = configure();
-// 	if content == "" {
-// 		println!("[WARN] exit.");
-// 		return None;
-// 	}
-// 	let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
-// 	return Some(&docs[0]);
+//  let content = configure();
+//  if content == "" {
+//      println!("[WARN] exit.");
+//      return None;
+//  }
+//  let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
+//  return Some(&docs[0]);
 // }
 
 struct Application {
@@ -46,20 +46,22 @@ struct Application {
 impl Application {
 
 	// fn new<'a>() -> Application<'a> {
-	// 	let mut app = Application { _connection: None };
-	// 	return &app;
+	//  let mut app = Application { _connection: None };
+	//  return &app;
 	// }
 
-	fn run(&mut self) {
+	fn create_new_connection() -> Option<mysql::Pool> {
 
-		//========== configuration ==========
 		let content = configure();
 		if content == "" {
-			println!("[WARN] exit.");
-			return;
+			panic!("[ERROR] no configuration settings.");
 		}
 		let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
 		let doc = &docs[0];
+		let host = doc["database"]["host"].as_str().unwrap();
+		let port = doc["database"]["port"].as_str().unwrap();
+		let user = doc["database"]["user"].as_str().unwrap();
+		let password = doc["database"]["password"].as_str().unwrap();
 
 		//========== debug ==========
 		if false {
@@ -71,44 +73,102 @@ impl Application {
 			println!("{:?}", doc["database"]["port"].as_str());
 			println!("{:?}", doc["key3"].as_f64());
 			println!("{:?}", doc["key4"].is_badvalue());
-			return;
 		}
 
-		let host = doc["database"]["host"].as_str().unwrap();
-		let port = doc["database"]["port"].as_str().unwrap();
-		let user = doc["database"]["user"].as_str().unwrap();
-		let password = doc["database"]["password"].as_str().unwrap();
 		let connection_string = format!("mysql://{}:{}@{}:{}/accounts", user, password, host, port);
 
-		//========== test MySQL Connection ==========
+		// もしかしてコネクションが複製されるのでは...
 		let pool = mysql::Pool::new(connection_string).unwrap();
-		let sql = "SELECT MAIL FROM ACCOUNT";
-		let mut stmt = pool.prepare(sql).unwrap();
-	    for row in stmt.execute(()).unwrap() {
-	        let name : String = mysql::from_row(row.unwrap());
-	        // let name = String::from_utf8(name).unwrap();
-	        println!("name: {}", name);
-	    }
+		return Some(pool);
+	}
+
+	fn run(&mut self) {
+
+		//========== test MySQL Connection ==========
+		let pool = self.open_connection();
+
+		// ※※※ connection_id() が全部異なる！ ※※※
+
+		//========== create a table ==========
+		{
+			println!("[TRACE] creating a temporary table...");
+			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
+				let connection_id : i64 = mysql::from_row(row.unwrap());
+				println!("[TRACE] connection_id: {}", connection_id);
+			}
+			let sql = r"
+			CREATE TEMPORARY TABLE ACCOUNT(
+				MAIL NVARCHAR(999) NOT NULL,
+				PRIMARY KEY(MAIL))
+			";
+			let _ = pool.prep_exec(sql, ()).unwrap();
+			// ↓投げてない？？？
+			// let mut stmt = pool.prepare(sql).unwrap();
+			// stmt.execute(()).unwrap();
+			println!("[TRACE] Ok.");
+			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
+				let connection_id : i64 = mysql::from_row(row.unwrap());
+				println!("[TRACE] connection_id: {}", connection_id);
+			}
+		}
+
+		{
+			println!("[TRACE] creating records...");
+			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
+				let connection_id : i64 = mysql::from_row(row.unwrap());
+				println!("[TRACE] connection_id: {}", connection_id);
+			}
+			let sql = r"
+			INSERT INTO ACCOUNT VALUES(?)
+			";
+			let mut stmt = pool.prepare(sql).unwrap();
+			stmt.execute((String::from("jimi.hendrix@gmail.com"),)).unwrap();
+			println!("[TRACE] Ok.");
+		}
+
+		//========== test MySQL Connection ==========
+		{
+			println!("[TRACE] enumerating records...");
+			let sql = "SELECT MAIL FROM ACCOUNT";
+			let mut stmt = pool.prepare(sql).unwrap();
+			for row in stmt.execute(()).unwrap() {
+				let name : String = mysql::from_row(row.unwrap());
+				// let name = String::from_utf8(name).unwrap();
+				println!("name: {}", name);
+			}
+			println!("[TRACE] Ok.");
+		}
+
+		println!("--- end ---");
+	}
+
+	fn open_connection(&mut self) -> &mut mysql::Pool {
+		if self._connection.is_some() {
+			return self._connection.as_mut().unwrap();
+		}
+		self._connection = Application::create_new_connection();
+		let conn = self._connection.as_mut().unwrap();
+		return conn;
 	}
 }
 
 // fn open_connection() -> Option<&'static mysql::Pool> {
 
-// 	let content = configure();
-// 	if content == "" {
-// 		println!("[WARN] exit.");
-// 		return None;
-// 	}
-// 	let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
-// 	let doc = &docs[0];
-// 	let host = doc["database"]["host"].as_str().unwrap();
-// 	let port = doc["database"]["port"].as_str().unwrap();
-// 	let user = doc["database"]["user"].as_str().unwrap();
-// 	let password = doc["database"]["password"].as_str().unwrap();
-// 	let connection_string = format!("mysql://{}:{}@{}:{}/accounts", user, password, host, port);
-// 	println!("{:?}", connection_string);
-// 	let pool = mysql::Pool::new(connection_string).unwrap();
-// 	return Some(&pool);
+//  let content = configure();
+//  if content == "" {
+//      println!("[WARN] exit.");
+//      return None;
+//  }
+//  let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
+//  let doc = &docs[0];
+//  let host = doc["database"]["host"].as_str().unwrap();
+//  let port = doc["database"]["port"].as_str().unwrap();
+//  let user = doc["database"]["user"].as_str().unwrap();
+//  let password = doc["database"]["password"].as_str().unwrap();
+//  let connection_string = format!("mysql://{}:{}@{}:{}/accounts", user, password, host, port);
+//  println!("{:?}", connection_string);
+//  let pool = mysql::Pool::new(connection_string).unwrap();
+//  return Some(&pool);
 // }
 
 fn main() {
