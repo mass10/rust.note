@@ -6,13 +6,6 @@ use std::io::Read;
 use yaml_rust::yaml::YamlLoader;
 	
 
-// fn open() -> File {
-//  match File::open("conf/settings.yml") {
-//      Some(file) => file,
-//      None => None,
-//  }
-// }
-
 fn configure() -> String {
 	match File::open("conf/settings.yaml") {
 		Err(error) => {
@@ -27,15 +20,16 @@ fn configure() -> String {
 	};
 }
 
-// fn configure2() -> Option<&yaml_rust::Yaml> {
+// fn configure2() -> Option<yaml_rust::Yaml> {
 
-//  let content = configure();
-//  if content == "" {
-//      println!("[WARN] exit.");
-//      return None;
-//  }
-//  let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
-//  return Some(&docs[0]);
+// 	let content = configure();
+// 	if content == "" {
+// 		println!("[WARN] exit.");
+// 		return None;
+// 	}
+// 	let docs = YamlLoader::load_from_str(content.as_str()).unwrap();
+// 	let doc = &docs[0];
+// 	return Some(doc);
 // }
 
 struct Application {
@@ -150,7 +144,7 @@ impl Application {
 				println!("[TRACE] connection_id: {}", connection_id);
 			}
 		}
-		
+
 		println!("[INFO] --- end ---");
 	}
 
