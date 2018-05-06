@@ -84,8 +84,6 @@ impl Application {
 		//========== test MySQL Connection ==========
 		let pool = self.open_connection();
 
-		// ※※※ connection_id() が全部異なる！ ※※※
-
 		//========== create a table ==========
 		{
 			println!("[INFO] creating a temporary table...");
