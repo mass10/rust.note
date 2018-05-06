@@ -85,6 +85,8 @@ impl Application {
 
 	fn run(&mut self) {
 
+		println!("[INFO] ### START ###");
+
 		//========== test MySQL Connection ==========
 		let pool = self.open_connection();
 
@@ -92,7 +94,7 @@ impl Application {
 
 		//========== create a table ==========
 		{
-			println!("[TRACE] creating a temporary table...");
+			println!("[INFO] creating a temporary table...");
 			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
 				let connection_id : i64 = mysql::from_row(row.unwrap());
 				println!("[TRACE] connection_id: {}", connection_id);
@@ -106,7 +108,7 @@ impl Application {
 			// ↓投げてない？？？
 			// let mut stmt = pool.prepare(sql).unwrap();
 			// stmt.execute(()).unwrap();
-			println!("[TRACE] Ok.");
+			println!("[INFO] Ok.");
 			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
 				let connection_id : i64 = mysql::from_row(row.unwrap());
 				println!("[TRACE] connection_id: {}", connection_id);
@@ -114,7 +116,7 @@ impl Application {
 		}
 
 		{
-			println!("[TRACE] creating records...");
+			println!("[INFO] creating records...");
 			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
 				let connection_id : i64 = mysql::from_row(row.unwrap());
 				println!("[TRACE] connection_id: {}", connection_id);
@@ -123,24 +125,33 @@ impl Application {
 			INSERT INTO ACCOUNT VALUES(?)
 			";
 			let mut stmt = pool.prepare(sql).unwrap();
-			stmt.execute((String::from("jimi.hendrix@gmail.com"),)).unwrap();
-			println!("[TRACE] Ok.");
+			stmt.execute((String::from("jimi.hendrix@i.softbank.jp"),)).unwrap();
+			stmt.execute((String::from("janis.joplin@gmail.com"),)).unwrap();
+			stmt.execute((String::from("paul.kossof@gmail.com"),)).unwrap();
+			println!("[INFO] Ok.");
 		}
 
 		//========== test MySQL Connection ==========
 		{
-			println!("[TRACE] enumerating records...");
+			println!("[INFO] enumerating records...");
 			let sql = "SELECT MAIL FROM ACCOUNT";
 			let mut stmt = pool.prepare(sql).unwrap();
 			for row in stmt.execute(()).unwrap() {
 				let name : String = mysql::from_row(row.unwrap());
 				// let name = String::from_utf8(name).unwrap();
-				println!("name: {}", name);
+				println!("[TRACE] name: {}", name);
 			}
-			println!("[TRACE] Ok.");
+			println!("[INFO] Ok.");
 		}
 
-		println!("--- end ---");
+		{
+			for row in pool.prep_exec("select connection_id()", ()).unwrap() {
+				let connection_id : i64 = mysql::from_row(row.unwrap());
+				println!("[TRACE] connection_id: {}", connection_id);
+			}
+		}
+		
+		println!("[INFO] --- end ---");
 	}
 
 	fn open_connection(&mut self) -> &mut mysql::Conn {
