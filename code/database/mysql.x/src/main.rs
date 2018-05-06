@@ -40,7 +40,7 @@ fn configure() -> String {
 
 struct Application {
 
-	_connection: Option<mysql::Conn>,
+	_connection: Option<mysql::Pool>,
 }
 
 impl Application {
@@ -50,7 +50,7 @@ impl Application {
 	//  return &app;
 	// }
 
-	fn create_new_connection() -> Option<mysql::Conn> {
+	fn create_new_connection() -> Option<mysql::Pool> {
 
 		let content = configure();
 		if content == "" {
@@ -79,8 +79,7 @@ impl Application {
 
 		// もしかしてコネクションが複製されるのでは...
 		let pool = mysql::Pool::new(connection_string).unwrap();
-		let conn = pool.get_conn().unwrap().unwrap();
-		return Some(conn);
+		return Some(pool);
 	}
 
 	fn run(&mut self) {
@@ -143,7 +142,7 @@ impl Application {
 		println!("--- end ---");
 	}
 
-	fn open_connection(&mut self) -> &mut mysql::Conn {
+	fn open_connection(&mut self) -> &mut mysql::Pool {
 		if self._connection.is_some() {
 			return self._connection.as_mut().unwrap();
 		}
