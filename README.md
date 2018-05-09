@@ -1,11 +1,17 @@
 # rust.note
 
-# Installing racer
+# Installing racer (2018-05-09)
 
 シンタックスハイライトとかに使うもの？？ (Rust language support は Racer ではないぽい)
 
 ```
 cargo install racer
+```
+
+# Rust 本体のソースファイルをセットアップする (2018-05-07)
+
+```
+rustup component add rust-src
 ```
 
 # Installation on Ubuntu 16
