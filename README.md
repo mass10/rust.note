@@ -1,5 +1,13 @@
 # rust.note
 
+# Installing racer
+
+シンタックスハイライトとかに使うもの？？ (Rust language support は Racer ではないぽい)
+
+```
+cargo install racer
+```
+
 # Installation on Ubuntu 16
 
 ```
