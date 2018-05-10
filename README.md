@@ -1,6 +1,5 @@
 # rust.note
 
-<<<<<<< HEAD
 # Setting up rust code itself in Windows 10. (2018-05-07)
 
 ```
@@ -24,7 +23,6 @@ cargo install racer
 ```
 rustup component add rust-src
 ```
->>>>>>> 3156d14aee07ffec6b85cc6d218e467e2ba177b5
 
 # Installation on Ubuntu 16
 
