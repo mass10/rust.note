@@ -1,5 +1,6 @@
 # rust.note
 
+<<<<<<< HEAD
 # Setting up rust code itself in Windows 10. (2018-05-07)
 
 ```
@@ -9,6 +10,21 @@ rustup component add rust-src
 # Rust for Windows (2018-05-07)
 
 rustup installer を実行。
+=======
+# Installing racer (2018-05-09)
+
+シンタックスハイライトとかに使うもの？？ (Rust language support は Racer ではないぽい)
+
+```
+cargo install racer
+```
+
+# Rust 本体のソースファイルをセットアップする (2018-05-07)
+
+```
+rustup component add rust-src
+```
+>>>>>>> 3156d14aee07ffec6b85cc6d218e467e2ba177b5
 
 # Installation on Ubuntu 16
 
