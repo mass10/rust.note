@@ -1,5 +1,17 @@
 # rust.note
 
+# components
+
+```
+rustup component list
+```
+
+# toolchains
+
+```
+rustup toolchain list
+```
+
 # Setting up rust code itself in Windows 10. (2018-05-07)
 
 ```
