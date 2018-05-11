@@ -1,12 +1,12 @@
 # rust.note
 
-# Visual Studio Code
+# RLS could not be started with Visual Studio Code. (2018-05-12)
 
 - 「nightly toolchain not installed. Install?」と言われたので入れた。その後 nightly を削除したら「RLS could not be started.」と言われた。
 
 ![](.images/RLS%20could%20not%20be%20started.png)
 
-ユーザー設定に `"rust-client.channel": "stable"` を入れたら解消した。
+ユーザー設定に `"rust-client.channel": "stable"` を入れて Visual Studio Code を再起動たら解消した。
 
 # components
 
