@@ -6,6 +6,8 @@
 
 ![](.images/RLS%20could%20not%20be%20started.png)
 
+`"rust-client.channel": "stable"` を入れたら解消した。
+
 # components
 
 ```
