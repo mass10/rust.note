@@ -1,5 +1,9 @@
 # rust.note
 
+# Visual Studio Code
+
+- "nightly toolchain not installed. Install?" と言われたので入れた。その後 nightly を削除したら
+
 # components
 
 ```
@@ -10,6 +14,12 @@ rustup component list
 
 ```
 rustup toolchain list
+```
+
+# removing toolchain
+
+```
+rustup toolchain remove nightly
 ```
 
 # Setting up rust code itself in Windows 10. (2018-05-07)
