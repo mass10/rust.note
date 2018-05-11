@@ -4,7 +4,7 @@
 
 - 「nightly toolchain not installed. Install?」と言われたので入れた。その後 nightly を削除したら「RLS could not be started.」と言われた。
 
-![画像](".images/RLS could not be started.png" "RLS could not be started")
+![画像](.images/RLS+could+not+be+started.png "RLS could not be started")
 
 # components
 
