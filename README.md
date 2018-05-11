@@ -2,7 +2,9 @@
 
 # Visual Studio Code
 
-- "nightly toolchain not installed. Install?" と言われたので入れた。その後 nightly を削除したら
+- 「nightly toolchain not installed. Install?」と言われたので入れた。その後 nightly を削除したら「RLS could not be started.」と言われた。
+
+
 
 # components
 
