@@ -1,4 +1,9 @@
+fn get_current_position() -> (i64, i64) {
+	let items = (1, 1272);
+	return items;
+}
+
 fn main() {
-	let tuple = (1, 1272, 9999, 12000);
-	println!("{:?}", tuple);
+	let position = get_current_position();
+	println!("{:?}", position);
 }
