@@ -1,5 +1,9 @@
 # rust.note
 
+# cargo bench 時の最適化に注意 (2018-05-17)
+
+`test::black_box` → cargo bench 実行時の最適化を回避
+
 # RLS could not be started with Visual Studio Code. (2018-05-12)
 
 - 「nightly toolchain not installed. Install?」と言われたので入れた。その後 nightly を削除したら「RLS could not be started.」と言われた。

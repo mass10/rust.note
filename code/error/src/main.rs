@@ -8,6 +8,6 @@ fn main() {
 	let result = std::fs::rename(left, right);
 	match result {
 		Ok(n) => println!("success: {:?}", n),
-		Err(err) => println!("error: {:?}", err)
+		Err(err) => println!("error: {:?}", err),
 	}
 }
