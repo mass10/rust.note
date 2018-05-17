@@ -2,13 +2,14 @@ extern crate csv;
 
 fn read_main<R: std::io::Read>(stream: R) {
 
-	let mut csv_reader = csv::Reader::from_reader(stream);
-	for row in csv_reader.records() {
+	let mut reader = csv::Reader::from_reader(stream);
+	for row in reader.records() {
 		if row.is_err() {
 			continue;
 		}
-		let row = row.unwrap();
-		println!("{:?}", row);
+		let record = row.unwrap();
+		println!("date: {:?}, mail: {:?}, name: {:?}",
+			record[0].to_string(), record[1].to_string(), record[2].to_string());
 	}
 }
 
