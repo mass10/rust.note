@@ -7,7 +7,8 @@ use std::sync::Arc;
 fn inner_main() {
 
 	println!("{} [TRACE] attack.", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"));
-	let response = reqwest::get("http://192.168.56.102:3000");
+	let client = reqwest::Client::new();
+	let response = client.get("http://192.168.187.128:3000").header(reqwest::header::Connection::close()).send();
 	if response.is_err() {
 		let error = response.err().unwrap();
 		println!("{} [ERROR] {:?}", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"), error);
