@@ -6,6 +6,7 @@ fn main() {
 
 	{
 		let now = SystemTime::now();
+		// 整数
 		println!("{:?}", now);
 	}
 
@@ -13,7 +14,7 @@ fn main() {
 		let date = chrono::Local::now();
 		// timestamp with timezone
 		println!("{}", date.format("%+"));
-		// timestamp
+		// timestamp ★★★
 		println!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
 	}
 }
