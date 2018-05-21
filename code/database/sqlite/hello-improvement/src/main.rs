@@ -9,33 +9,33 @@ struct Service {
 
 impl Service {
 
-	fn init(&mut self) {
+	fn init(&mut self) -> Result<(), sqlite::Error> {
 
 		let connection = self.open();
 
-		// 表を作成しています。
-		connection.execute("CREATE TABLE USERS(ID VARCHAR(999) NOT NULL, NAME VARCHAR(255) NOT NULL)").unwrap();
-		// let connection = self.open();
+		connection.execute("CREATE TABLE USERS(ID VARCHAR(999) NOT NULL, NAME VARCHAR(255) NOT NULL)")?;
 
-		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)").unwrap();
-		statement.bind(1, "1").unwrap();
-		statement.bind(2, "John Lennon").unwrap();
-		statement.next().unwrap();
+		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)")?;
+		statement.bind(1, "1")?;
+		statement.bind(2, "John Lennon")?;
+		statement.next()?;
 
-		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)").unwrap();
-		statement.bind(1, "2").unwrap();
-		statement.bind(2, "Paul McCartney").unwrap();
-		statement.next().unwrap();
+		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)")?;
+		statement.bind(1, "2")?;
+		statement.bind(2, "Paul McCartney")?;
+		statement.next()?;
 
-		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)").unwrap();
-		statement.bind(1, "3").unwrap();
-		statement.bind(2, "Ringo Starr").unwrap();
-		statement.next().unwrap();
+		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)")?;
+		statement.bind(1, "3")?;
+		statement.bind(2, "Ringo Starr")?;
+		statement.next()?;
 
-		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)").unwrap();
-		statement.bind(1, "4").unwrap();
-		statement.bind(2, "George Harrison").unwrap();
-		statement.next().unwrap();
+		let mut statement = connection.prepare("INSERT INTO USERS(ID, NAME) VALUES(?, ?)")?;
+		statement.bind(1, "4")?;
+		statement.bind(2, "George Harrison")?;
+		statement.next()?;
+
+		return Ok(());
 	}
 
 	fn open(&mut self) -> &mut sqlite::Connection {	
@@ -69,7 +69,7 @@ fn main() {
 		_connection: None
 	};
 
-	s.init();
+	let _ = s.init();
 
 	s.dump();
 }
