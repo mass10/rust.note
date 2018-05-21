@@ -8,7 +8,7 @@ fn inner_main() {
 
 	println!("{} [TRACE] attack.", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"));
 	let client = reqwest::Client::new();
-	let response = client.get("http://192.168.187.128:3000").header(reqwest::header::Connection::close()).send();
+	let response = client.get("http://127.0.0.1:3000").header(reqwest::header::Connection::close()).send();
 	if response.is_err() {
 		let error = response.err().unwrap();
 		println!("{} [ERROR] {:?}", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"), error);
