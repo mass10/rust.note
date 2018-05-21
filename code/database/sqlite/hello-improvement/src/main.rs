@@ -51,15 +51,14 @@ impl Service {
 		return connection;
 	}
 
-	fn dump(&mut self) {
+	fn dump(&mut self) -> Result<(), sqlite::Error> {
 
 		let connection = self.open();
-
-		// 表のレコードを抽出しています。
-		let mut statement = connection.prepare("SELECT * FROM USERS").unwrap();
-		while let sqlite::State::Row = statement.next().unwrap() {
-			println!("id={}, name={}", statement.read::<String>(0).unwrap(), statement.read::<String>(1).unwrap());
+		let mut statement = connection.prepare("SELECT * FROM USERS")?;
+		while let sqlite::State::Row = statement.next()? {
+			println!("id={}, name={}", statement.read::<String>(0)?, statement.read::<String>(1)?);
 		}
+		return Ok(());
 	}
 }
 
@@ -70,6 +69,5 @@ fn main() {
 	};
 
 	let _ = s.init();
-
-	s.dump();
+	let _ = s.dump();
 }
