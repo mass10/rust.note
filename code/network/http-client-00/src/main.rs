@@ -3,7 +3,7 @@ use std::io;
 
 fn main() {
 
-	let http = reqwest::get("http://127.0.0.1:3000");
+	let http = reqwest::get("https://google.co.jp?q=led%20zeppekin");
 	if http.is_err() {
 		let error = http.unwrap();
 		println!("{:?}", error);
