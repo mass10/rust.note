@@ -60,14 +60,18 @@ impl Service {
 		}
 		return Ok(());
 	}
+
+	fn new() -> Service {
+		let s = Service{
+			_connection: None
+		};
+		return s;
+	}
 }
 
 fn main() {
 
-	let mut s = Service{
-		_connection: None
-	};
-
+	let mut s = Service::new();
 	let _ = s.init();
 	let _ = s.dump();
 }
