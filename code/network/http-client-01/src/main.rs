@@ -6,6 +6,11 @@ use std::sync::Arc;
 
 fn inner_main() {
 
+	// let mut _headers = reqwest::header::Headers::new();
+	// _headers.set(
+	// 	reqwest::header::AcceptLanguage(vec![])
+	// );
+
 	println!("{} [TRACE] attack.", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"));
 	let client = reqwest::Client::new();
 	let response = client.get("http://127.0.0.1:3000").header(reqwest::header::Connection::close()).send();
