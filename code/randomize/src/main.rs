@@ -1,28 +1,27 @@
-// use std::fs;
+extern crate uuid;
+
 use std::path::Path;
 use std::ffi::OsStr;
-// use std::env;
-
-extern crate uuid;
 use uuid::Uuid;
+use std::io::Result;
 
-fn _generate_new_name() -> String {
+fn generate_new_name() -> String {
 
 	let uuid = Uuid::new_v4();
 	return uuid.hyphenated().to_string();
 }
 
-fn on_file_found(e: &Path) -> std::io::Result<()> {
+fn on_file_found(e: &Path) -> Result<()> {
 
 	let parent = match e.parent() {
-		Some(result) => result,
+		Some(d) => d,
 		None => Path::new("")
 	};
 
-	let name = _generate_new_name();
+	let name = generate_new_name();
 
 	let ext = match e.extension() {
-		Some(result1) => result1,
+		Some(s) => s,
 		None => OsStr::new("")
 	};
 
@@ -31,30 +30,28 @@ fn on_file_found(e: &Path) -> std::io::Result<()> {
 
 	std::fs::rename(e, new_path)?;
 
-	Ok(())
+	return Ok(());
 }
 
 #[allow(unused)]
-fn enumerate(e: &Path, handler: &Fn(&Path) -> std::io::Result<()>) -> std::io::Result<()> {
+fn enumerate(e: &Path, handler: &Fn(&Path) -> Result<()>) -> Result<()> {
 
 	if !e.exists() {
 		println!("[TRACE] invalid path {}", e.to_str().unwrap());
 		return Ok(());
 	}
-
-	if e.is_dir() {
+	else if e.is_dir() {
 		let it = std::fs::read_dir(e)?;
 		for e in it {
 			let entry = e.unwrap();
 			let path = entry.path();
 			enumerate(&path, handler);
 		}
+		return Ok(());
 	}
 	else {
 		return handler(e);
 	}
-
-	Ok(())
 }
 
 fn main() {
