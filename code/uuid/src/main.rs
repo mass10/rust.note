@@ -1,4 +1,5 @@
 extern crate uuid;
+
 use uuid::Uuid;
 
 fn generate_uuid4() -> String {
