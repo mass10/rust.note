@@ -30,6 +30,8 @@ fn main() {
 	test(0);
 	test(1);
 	test(12);
+	test(19);
+	test(20);
 	test(21);
 	test(59);
 	test(90);
