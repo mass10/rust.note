@@ -2,20 +2,20 @@ extern crate chrono;
 
 use std::time::SystemTime;
 
-fn main() {
-
-	{
-		let now = SystemTime::now();
-		// 整数
-		println!("{:?}", now);
-	}
-
-	{
-		let date = chrono::Local::now();
-		// timestamp with timezone
-		println!("{}", date.format("%+"));
-		// timestamp ★★★
-		println!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
-	}
+fn timestamp() -> String {
+	let date = chrono::Local::now();
+	return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
 }
 
+fn timestamp_with_timezone() -> String {
+	let date = chrono::Local::now();
+	return format!("{}", date.format("%+"));
+}
+
+fn main() {
+	println!("{:?}", SystemTime::now());
+	// timestamp with timezone
+	println!("{}", timestamp_with_timezone());
+	// timestamp ★★★
+	println!("{}", timestamp());
+}
