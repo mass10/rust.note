@@ -39,7 +39,7 @@ rustup component add rust-src
 # Rust for Windows (2018-05-07)
 
 rustup installer を実行。
-=======
+
 # Installing racer (2018-05-09)
 
 シンタックスハイライトとかに使うもの？？ (Rust language support は Racer ではないぽい)
