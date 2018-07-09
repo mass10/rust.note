@@ -16,6 +16,7 @@ fn main() {
 	}
 
 	{
+		println!("--- 3 ---");
 		let left = std::ops::Range{start: 0, end: 10};
 		let right = 0..10;
 		assert!(left == right);
