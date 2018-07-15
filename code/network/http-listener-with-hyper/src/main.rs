@@ -7,10 +7,21 @@ use futures::future::Future;
 use hyper::header::ContentLength;
 use hyper::server::{Http, Request, Response, Service};
 
+struct Logger;
+
+impl Logger {
+
+	fn put(text: String) {
+		println!("{} [TRACE] {}", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"), text);
+	}
+
+	fn put_str(text: &str) {
+		Logger::put(text.to_string());
+	}
+}
 
 struct HelloWorld;
 
-const PHRASE: &'static str = "{\"status\": \"Hello, World!\"}\n";
 
 impl Service for HelloWorld {
 
@@ -20,7 +31,10 @@ impl Service for HelloWorld {
 	type Future = Box<Future<Item=Self::Response, Error=Self::Error>>;
 
 	fn call(&self, _req: Request) -> Self::Future {
-		println!("{} [TRACE] accept.", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"));
+
+		const PHRASE: &'static str = "{\"status\": \"Hello, World!\"}\n";
+
+		Logger::put_str("accept.");
 		Box::new(futures::future::ok(
 			Response::new()
 				.with_header(ContentLength(PHRASE.len() as u64))
@@ -31,7 +45,7 @@ impl Service for HelloWorld {
 
 fn main() {
 
-	// println!("{} [TRACE] accept.", chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f"));
+	Logger::put_str("### start ###");
 	let addr = "127.0.0.1:3000".parse().unwrap();
 	let server = Http::new().bind(&addr, || Ok(HelloWorld)).unwrap();
 	server.run().unwrap();
