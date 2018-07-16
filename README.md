@@ -159,3 +159,8 @@ info: downloading self-update
 
 
 
+# error: no default toolchain configured
+
+```
+rustup default stable
+```
