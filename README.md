@@ -30,6 +30,12 @@ rustup toolchain list
 rustup toolchain remove nightly
 ```
 
+# install stable
+
+```
+rustup toolchain install stable
+```
+
 # Setting up rust code itself in Windows 10. (2018-05-07)
 
 ```
