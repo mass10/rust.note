@@ -11,6 +11,12 @@ fn generate_uuid4() -> String {
 	return l2;
 }
 
+fn generate_nil_uuid() -> String {
+
+	let uuid = Uuid::nil();
+	return uuid.hyphenated().to_string();
+}
+
 fn main() {
 
 	let uuid = generate_uuid4();
@@ -22,7 +28,6 @@ fn main() {
 	let uuid = generate_uuid4();
 	println!("{}", uuid);
 
-	// all zero
-	let uuid = Uuid::nil();
-	println!("{}", uuid.hyphenated().to_string());
+	let uuid = generate_nil_uuid();
+	println!("{}", uuid);
 }
