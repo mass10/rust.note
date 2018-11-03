@@ -1,3 +1,0 @@
-default:
-	cargo run --release
-
