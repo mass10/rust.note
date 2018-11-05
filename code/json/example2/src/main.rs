@@ -14,23 +14,10 @@ fn invalid_json() -> Result<(), json::Error> {
 		return Ok(());
 	}
 	let json_text = result.unwrap();
-	// ここで error!!
-	let parsed_object = json::parse(json_text.as_str())?;
 
-	let instantiated = object!{
-		"code" => 200,
-		"success" => true,
-		"payload" => object!{
-			"features" => array![
-				"awesome",
-				"easyAPI",
-				"lowLearningCurve"
-			]
-		}
-	};
-
-	assert_eq!(parsed_object, instantiated);
-
+	// ここで Err() が返るので、次の行へは進みません。
+	json::parse(json_text.as_str())?;
+	// unreachable
 	return Ok(());
 }
 
