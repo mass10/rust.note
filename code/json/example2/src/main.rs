@@ -25,9 +25,12 @@ fn invalid_json() -> Result<(), json::Error> {
 
 fn read_text_file(path: &str) -> Result<String, std::io::Error> {
 
+	// 何かあればただちに std::io::Error が返ります。
 	let mut file = std::fs::File::open(path)?;
 	let mut s = String::new();
+	// 何かあればただちに std::io::Error が返ります。
 	file.read_to_string(&mut s)?;
+	// Success(content: "JSON 文字列") のようなものが返ります。
 	return Ok(s);
 }
 
