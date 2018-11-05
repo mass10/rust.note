@@ -14,8 +14,8 @@ fn invalid_json() -> Result<(), json::Error> {
 		return Ok(());
 	}
 	let json_text = result.unwrap();
+	// ここで error!!
 	let parsed_object = json::parse(json_text.as_str())?;
-
 	let instantiated = object!{
 		"code" => 200,
 		"success" => true,
