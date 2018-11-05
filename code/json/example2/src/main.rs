@@ -8,6 +8,7 @@ fn invalid_json() -> Result<(), json::Error> {
 
 	println!("[INFO] $$$ 不正な JSON のパース $$$");
 
+	// ファイルを読み込み
 	let result = read_text_file("settings-invalid.json");
 	if result.is_err() {
 		println!("{:?}", result.err().unwrap());
@@ -15,8 +16,9 @@ fn invalid_json() -> Result<(), json::Error> {
 	}
 	let json_text = result.unwrap();
 
-	// ここで Err() が返るので、次の行へは進みません。
+	// パース。ここで Err() が返るので、次の行へは進みません。
 	json::parse(json_text.as_str())?;
+
 	// unreachable
 	return Ok(());
 }
@@ -33,6 +35,7 @@ fn valid_json() -> Result<(), json::Error> {
 
 	println!("[INFO] $$$ 正しい JSON のパース $$$");
 
+	// ファイルを読み込み
 	let result = read_text_file("settings-valid.json");
 	if result.is_err() {
 		println!("{:?}", result.err().unwrap());
@@ -40,8 +43,10 @@ fn valid_json() -> Result<(), json::Error> {
 	}
 	let json_text = result.unwrap();
 
+	// パース。
 	let parsed_object = json::parse(json_text.as_str())?;
 
+	// 検証
 	let instantiated = object!{
 		"code" => 200,
 		"success" => true,
@@ -53,7 +58,6 @@ fn valid_json() -> Result<(), json::Error> {
 			]
 		}
 	};
-
 	assert_eq!(parsed_object, instantiated);
 
 	/* 特に何も返す必要がないので中身は空でよい。success(reason: null) みたいなイメージ。 */
