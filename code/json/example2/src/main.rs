@@ -3,7 +3,6 @@
 extern crate json;
 
 use std::io::Read;
-// use std::io::BufRead;
 
 fn invalid_json() -> Result<(), json::Error> {
 
