@@ -69,6 +69,7 @@ fn valid_json() -> Result<(), json::Error> {
 
 fn main() {
 
+	// ========== 不正な JSONファイルをパースするケース ==========
 	{
 		let result = invalid_json();
 		if result.is_err() {
@@ -79,6 +80,7 @@ fn main() {
 		}
 	}
 
+	// ========== 正しい JSONファイルをパースするケース ==========
 	{
 		let result = valid_json();
 		if result.is_err() {
