@@ -20,14 +20,14 @@ fn generate_nil_uuid() -> String {
 fn main() {
 
 	let uuid = generate_uuid4();
-	println!("{}", uuid);
+	println!("uuid 4:\n    [{}]", uuid);
 
 	let uuid = generate_uuid4();
-	println!("{}", uuid);
+	println!("uuid 4:\n    [{}]", uuid);
 
 	let uuid = generate_uuid4();
-	println!("{}", uuid);
+	println!("uuid 4:\n    [{}]", uuid);
 
 	let uuid = generate_nil_uuid();
-	println!("{}", uuid);
+	println!("空の UUID:\n    [{}]", uuid);
 }
