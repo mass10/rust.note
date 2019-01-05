@@ -71,10 +71,6 @@ fn test_string_value(n: &TestableString<String>) {
 	println!("{:?}", n.is_alpha());
 }
 
-fn test_string_value(n: &TestableString<str>) {
-	println!("{:?}", n.is_alpha());
-}
-
 fn main() {
 
 	{
@@ -87,7 +83,6 @@ fn main() {
 	{
 		println!("### 文字列をテストします ###");
 		test_string_value(&String::from("くぃうえお"));
-		// test_string_value("Ansi");
 	}
 
 	println!("{:?}", String::new());
