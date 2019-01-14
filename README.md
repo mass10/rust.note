@@ -183,3 +183,7 @@ rustup toolchain install stable
 # then
 rustup component add rustfmt
 ```
+
+# rustfmt のコンフィギュレーション
+
+* https://github.com/rust-lang/rustfmt/blob/master/Configurations.md#hard_tabs
