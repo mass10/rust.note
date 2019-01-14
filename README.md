@@ -172,3 +172,14 @@ rustup default stable
 rustup component add rustfmt
 ```
 
+
+# error: toolchain 'stable-x86_64-unknown-linux-gnu' does not contain component 'rustfmt' for target 'x86_64-unknown-linux-gnu'
+
+```bash
+# try
+rustup toolchain remove stable
+rustup toolchain install stable
+
+# then
+rustup component add rustfmt
+```
