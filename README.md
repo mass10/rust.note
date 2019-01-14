@@ -161,6 +161,14 @@ info: downloading self-update
 
 # error: no default toolchain configured
 
-```
+```bash
 rustup default stable
 ```
+
+
+# installing rustfmt
+
+```bash
+rustup component add rustfmt
+```
+
