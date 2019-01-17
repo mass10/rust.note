@@ -187,3 +187,11 @@ rustup component add rustfmt
 # rustfmt のコンフィギュレーション
 
 * https://github.com/rust-lang/rustfmt/blob/master/Configurations.md#hard_tabs
+
+
+# To format Rust source
+
+```
+cargo fmt
+```
+
