@@ -2,6 +2,7 @@ struct Class {
 }
 
 impl Class {
+
 	fn enum_students(&self) -> Vec<String> {
 		let mut v: Vec<String> = vec![];
 		v.push(String::from("jimi.hendrix@gmail.com"));
@@ -14,6 +15,7 @@ impl Class {
 }
 
 fn test(v: &Vec<i64>) {
+
 	print!("[TRACE] ");
 	for (i, e) in v.iter().enumerate() {
 		if 0 < i {

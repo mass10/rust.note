@@ -1,10 +1,7 @@
 [package]
-name = "tsv"
+name = "enum-test"
 version = "0.1.0"
 authors = ["mass10 <mass10.github@gmail.com>"]
 edition = "2018"
-publish = false
 
 [dependencies]
-csv = "1.0.6"
-
