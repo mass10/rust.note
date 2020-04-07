@@ -100,15 +100,6 @@ fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &P
 		if file_name == ".project" {
 			return Ok(())
 		}
-		if file_name == "makefile" {
-			return Ok(())
-		}
-		if file_name == "yarn-error.log" {
-			return Ok(())
-		}
-		if file_name == "techtouch-frontend-20200330-142517.tar" {
-			return Ok(())
-		}
 		if file_name.to_os_string().to_str().unwrap().starts_with(".env.") {
 			return Ok(())
 		}
