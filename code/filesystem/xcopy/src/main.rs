@@ -1,3 +1,9 @@
+/// 
+/// 
+/// 日本語パス名への対応が未確認です。
+/// 
+///
+
 use std::path::Path;
 use file_diff::{diff};
 
