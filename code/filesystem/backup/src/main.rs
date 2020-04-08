@@ -60,6 +60,9 @@ fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &P
 	}
 	if source_path.is_file() {
 		let file_name = source_path.file_name().unwrap();
+		if file_name == "techtouch-frontend-20200330-142517.tar" {
+			return Ok(())
+		}
 		if file_name.to_os_string().to_str().unwrap().starts_with(".env.") {
 			return Ok(())
 		}
@@ -77,8 +80,11 @@ fn main() {
 		return;
 	}
 	let path_source = Path::new(&args[1]);
+	if !path_source.exists() {
+		println!("[{}] はみつかりません。", path_source.to_str().unwrap());
+		return;
+	}
 	let path_destination = format!("{}-{}", &args[1], timestamp());
-	println!("[TRACE] source: {}", path_source.to_str().unwrap());
 	println!("[TRACE] destination: {}", path_destination.as_str());
 	let _ = xcopy(path_source, Path::new(path_destination.as_str()), &on_entry);
 }
