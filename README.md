@@ -14,55 +14,55 @@
 
 # components
 
-```
+```bash
 rustup component list
 ```
 
 # toolchains
 
-```
+```bash
 rustup toolchain list
 ```
 
 # removing toolchain
 
-```
+```bash
 rustup toolchain remove nightly
 ```
 
 # install stable
 
-```
+```bash
 rustup toolchain install stable
 ```
 
 # Setting up rust code itself in Windows 10. (2018-05-07)
 
-```
+```bash
 rustup component add rust-src
 ```
 
 # Rust for Windows (2018-05-07)
 
-rustup installer を実行。
+rustup installer をみつけてきて実行します。
 
 # Installing racer (2018-05-09)
 
 シンタックスハイライトとかに使うもの？？ (Rust language support は Racer ではないぽい)
 
-```
+```bash
 cargo install racer
 ```
 
 # Rust 本体のソースファイルをセットアップする (2018-05-07)
 
-```
+```bash
 rustup component add rust-src
 ```
 
 # Installation on Ubuntu 16
 
-```
+```bash
 curl https://sh.rustup.rs -sSf | sh
 ```
 
@@ -74,20 +74,18 @@ curl https://sh.rustup.rs -sSf | sh
 3) Cancel installation
 ```
 
-
-
 > Rust is installed now. Great!
 
 といわれたら `~/.cargo/bin` を PATH に追加するように言われるので追加。
 追加したらログアウト & ログイン
 
-```
+```bash
 rustc --version
 ```
 
 # building hello.rs
 
-```
+```bash
 rustc hello.rs
 ```
 
@@ -95,16 +93,16 @@ rustc hello.rs
 
 # Get started with Cargo.
 
-```
+```bash
 cargo new testapp2 --bin
 cd testapp2
 cargo build
 cargo run
 ```
 
-##### または
+または
 
-```
+```bash
 mkdir testapp1
 cd testapp1
 cargo init --bin
@@ -114,25 +112,24 @@ cargo run
 
 # build
 
-```
+```bash
 cargo build
 ```
 
 or 
 
-```
+```bash
 cargo build --release
 ```
 
 
 # updating Rust
 
-```
+```bash
 rustup update
 ```
 
-```
-neu@ubuntu:~/workspace/rust.note/code/database$ rustup update
+```plain
 info: syncing channel updates for 'stable-x86_64-unknown-linux-gnu'
 info: latest update on 2018-03-29, rust version 1.25.0 (84203cac6 2018-03-25)
 info: downloading component 'rustc'
@@ -155,16 +152,11 @@ info: downloading self-update
   stable-x86_64-unknown-linux-gnu updated - rustc 1.25.0 (84203cac6 2018-03-25)
 ```
 
-
-
-
-
 # error: no default toolchain configured
 
 ```bash
 rustup default stable
 ```
-
 
 # installing rustfmt
 
@@ -191,7 +183,6 @@ rustup component add rustfmt
 
 # To format Rust source
 
-```
+```bash
 cargo fmt
 ```
-
