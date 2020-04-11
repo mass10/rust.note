@@ -140,12 +140,6 @@ fn xcopy(
 		if file_name == ".project" {
 			return Ok(());
 		}
-		if file_name == "makefile" {
-			return Ok(());
-		}
-		if file_name == "yarn-error.log" {
-			return Ok(());
-		}
 		if file_name.starts_with(".env.") {
 			return Ok(());
 		}
