@@ -134,15 +134,6 @@ fn xcopy(
 	}
 	if source_path.is_file() {
 		let file_name = source_path.file_name().unwrap().to_str().unwrap();
-		if file_name == ".gitignore" {
-			return Ok(());
-		}
-		if file_name == ".project" {
-			return Ok(());
-		}
-		if file_name.starts_with(".env.") {
-			return Ok(());
-		}
 		return handler(
 			source_path.to_str().unwrap(),
 			destination_path.to_str().unwrap(),
