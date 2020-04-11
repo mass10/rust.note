@@ -90,25 +90,7 @@ fn xcopy(
 		if dir_name == ".git" {
 			return Ok(());
 		}
-		if dir_name == ".project" {
-			return Ok(());
-		}
 		if dir_name == "dist" {
-			return Ok(());
-		}
-		if dir_name == ".nuxt" {
-			return Ok(());
-		}
-		if dir_name == ".vscode" {
-			return Ok(());
-		}
-		if dir_name == ".circleci" {
-			return Ok(());
-		}
-		if dir_name == ".github" {
-			return Ok(());
-		}
-		if dir_name == "env" {
 			return Ok(());
 		}
 		// コピー先にディレクトリを作成します。
@@ -133,7 +115,7 @@ fn xcopy(
 		return Ok(());
 	}
 	if source_path.is_file() {
-		let file_name = source_path.file_name().unwrap().to_str().unwrap();
+		let _file_name = source_path.file_name().unwrap().to_str().unwrap();
 		return handler(
 			source_path.to_str().unwrap(),
 			destination_path.to_str().unwrap(),
