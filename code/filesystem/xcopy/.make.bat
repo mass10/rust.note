@@ -1,1 +1,2 @@
-@cargo build --release
+@CALL cargo fmt
+@CALL cargo build --release
