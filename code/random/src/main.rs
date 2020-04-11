@@ -3,7 +3,7 @@
 // use rand_core::{RngCore, Error, impls};
 
 extern crate rand;
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 
 fn test0() {
 
@@ -13,11 +13,10 @@ fn test0() {
 fn test1() {
 	// let mut rng = rand::thread_rng();
 	let n: i64 = thread_rng().gen();
-    println!("{}", n);
+	println!("{}", n);
 }
 
 fn main() {
-
 	test0();
 	test1();
 }
