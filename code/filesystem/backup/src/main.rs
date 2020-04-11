@@ -1,28 +1,28 @@
-/// 
-/// 
-/// 日本語パス名への対応が未確認です。
-/// 
 ///
-
+///
+/// 日本語パス名への対応が未確認です。
+///
+///
 use std::path::Path;
 extern crate chrono;
 
 fn timestamp() -> String {
 	let date = chrono::Local::now();
-	// return format!("{}", date.format("%Y%m%d-%H%M%S%.3f"));
 	return format!("{}", date.format("%Y%m%d-%H%M%S"));
 }
 
 /// ファイルごとに呼びだされるハンドラーです。
 fn on_entry(source_path: &Path, destination_path: &Path) -> std::io::Result<()> {
-
 	let _result = std::fs::copy(source_path, destination_path);
 	return Ok(());
 }
 
 /// ディレクトリをコピーします。
-fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &Path) -> std::io::Result<()>) -> std::io::Result<()> {
-
+fn xcopy(
+	source_path: &Path,
+	destination_path: &Path,
+	handler: &dyn Fn(&Path, &Path) -> std::io::Result<()>,
+) -> std::io::Result<()> {
 	if !source_path.exists() {
 		println!("[TRACE] invalid path {}", source_path.to_str().unwrap());
 		return Ok(());
@@ -61,19 +61,23 @@ fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &P
 	if source_path.is_file() {
 		let file_name = source_path.file_name().unwrap();
 		if file_name == "techtouch-frontend-20200330-142517.tar" {
-			return Ok(())
+			return Ok(());
 		}
-		if file_name.to_os_string().to_str().unwrap().starts_with(".env.") {
-			return Ok(())
+		if file_name
+			.to_os_string()
+			.to_str()
+			.unwrap()
+			.starts_with(".env.")
+		{
+			return Ok(());
 		}
 		return handler(source_path, destination_path);
 	}
-	return Ok(())
+	return Ok(());
 }
 
 /// エントリーポイントです。
 fn main() {
-
 	let args: Vec<String> = std::env::args().collect();
 	if args.len() < 2 {
 		println!("path?");
