@@ -12,17 +12,13 @@ fn timestamp() -> String {
 }
 
 /// ファイルごとに呼びだされるハンドラーです。
-fn on_entry(source_path: &Path, destination_path: &Path) -> std::io::Result<()> {
-	let _result = std::fs::copy(source_path, destination_path);
+fn on_entry(source_path: &Path, destination_path: &Path) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	std::fs::copy(source_path, destination_path)?;
 	return Ok(());
 }
 
 /// ディレクトリをコピーします。
-fn xcopy(
-	source_path: &Path,
-	destination_path: &Path,
-	handler: &dyn Fn(&Path, &Path) -> std::io::Result<()>,
-) -> std::io::Result<()> {
+fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &Path) -> std::result::Result<(), Box<dyn std::error::Error>>) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	if !source_path.exists() {
 		println!("[TRACE] invalid path {}", source_path.to_str().unwrap());
 		return Ok(());
@@ -42,16 +38,11 @@ fn xcopy(
 			return Ok(());
 		}
 		// コピー先にディレクトリを作成します。
-		let result = std::fs::create_dir_all(destination_path);
-		if result.is_err() {
-			let error = result.err().unwrap();
-			println!("[ERROR] reason: {}", error);
-			return Ok(());
-		}
+		std::fs::create_dir_all(destination_path)?;
 		// ディレクトリ内エントリーを走査
 		let it = std::fs::read_dir(source_path)?;
 		for e in it {
-			let entry = e.unwrap();
+			let entry = e?;
 			let name = entry.file_name();
 			let path = entry.path();
 			let _ = xcopy(&path, destination_path.join(name).as_path(), handler);
@@ -59,18 +50,6 @@ fn xcopy(
 		return Ok(());
 	}
 	if source_path.is_file() {
-		let file_name = source_path.file_name().unwrap();
-		if file_name == "techtouch-frontend-20200330-142517.tar" {
-			return Ok(());
-		}
-		if file_name
-			.to_os_string()
-			.to_str()
-			.unwrap()
-			.starts_with(".env.")
-		{
-			return Ok(());
-		}
 		return handler(source_path, destination_path);
 	}
 	return Ok(());
@@ -90,5 +69,9 @@ fn main() {
 	}
 	let path_destination = format!("{}-{}", &args[1], timestamp());
 	println!("[TRACE] destination: {}", path_destination.as_str());
-	let _ = xcopy(path_source, Path::new(path_destination.as_str()), &on_entry);
+	let result = xcopy(path_source, Path::new(path_destination.as_str()), &on_entry);
+	if result.is_err() {
+		println!("[ERROR] {}", result.err().unwrap());
+		return;
+	}
 }
