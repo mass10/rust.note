@@ -14,6 +14,7 @@ fn timestamp() -> String {
 /// ファイルごとに呼びだされるハンドラーです。
 fn on_entry(source_path: &Path, destination_path: &Path) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	std::fs::copy(source_path, destination_path)?;
+	std::thread::sleep(std::time::Duration::from_millis(1));
 	return Ok(());
 }
 
