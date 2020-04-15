@@ -31,10 +31,7 @@ fn confirm() -> bool {
 }
 
 /// 二つのファイルが同一かどうかを調べます。
-fn seems_to_be_same(
-	source_path: &std::path::Path,
-	destination_path: &std::path::Path,
-) -> std::result::Result<bool, Box<dyn std::error::Error>> {
+fn seems_to_be_same(source_path: &std::path::Path, destination_path: &std::path::Path) -> std::result::Result<bool, Box<dyn std::error::Error>> {
 	// 元
 	let left = std::fs::metadata(source_path)?;
 	// 先
@@ -51,22 +48,13 @@ fn seems_to_be_same(
 		}
 	}
 	// 中身を比較
-	let result = diff(
-		source_path.to_str().unwrap(),
-		destination_path.to_str().unwrap(),
-	);
+	let result = diff(source_path.to_str().unwrap(), destination_path.to_str().unwrap());
 	return Ok(result);
 }
 
 /// ファイルごとに呼びだされるハンドラーです。
-fn copy_file(
-	source_path: &str,
-	destination_path: &str,
-) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	if seems_to_be_same(
-		std::path::Path::new(source_path),
-		std::path::Path::new(destination_path),
-	)? {
+fn copy_file(source_path: &str, destination_path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	if seems_to_be_same(std::path::Path::new(source_path), std::path::Path::new(destination_path))? {
 		return Ok(());
 	}
 	println!("ファイル {} を上書きしますか？(y/N)", destination_path);
@@ -74,15 +62,12 @@ fn copy_file(
 		return Ok(());
 	}
 	std::fs::copy(source_path, destination_path)?;
+	std::thread::sleep(std::time::Duration::from_millis(1));
 	return Ok(());
 }
 
 /// ディレクトリをコピーします。
-fn xcopy(
-	source_path: &str,
-	destination_path: &str,
-	handler: &dyn Fn(&str, &str) -> std::result::Result<(), Box<dyn std::error::Error>>,
-) -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn xcopy(source_path: &str, destination_path: &str, handler: &dyn Fn(&str, &str) -> std::result::Result<(), Box<dyn std::error::Error>>) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let source_path = std::path::Path::new(source_path);
 	let destination_path = std::path::Path::new(destination_path);
 	if !source_path.exists() {
@@ -108,24 +93,14 @@ fn xcopy(
 			let entry = e?;
 			let name = entry.file_name();
 			let path = entry.path();
-			let _ = xcopy(
-				&path.to_str().unwrap(),
-				destination_path.join(name).as_path().to_str().unwrap(),
-				handler,
-			);
+			xcopy(&path.to_str().unwrap(), destination_path.join(name).as_path().to_str().unwrap(), handler)?;
 		}
 		return Ok(());
 	}
 	if source_path.is_file() {
-		return handler(
-			source_path.to_str().unwrap(),
-			destination_path.to_str().unwrap(),
-		);
+		return handler(source_path.to_str().unwrap(), destination_path.to_str().unwrap());
 	}
-	println!(
-		"[WARN] 不明なファイルです。[{}]",
-		source_path.to_str().unwrap()
-	);
+	println!("[WARN] 不明なファイルです。[{}]", source_path.to_str().unwrap());
 	return Ok(());
 }
 
