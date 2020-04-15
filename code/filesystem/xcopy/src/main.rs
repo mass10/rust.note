@@ -53,7 +53,7 @@ fn seems_to_be_same(source_path: &std::path::Path, destination_path: &std::path:
 }
 
 /// ファイルごとに呼びだされるハンドラーです。
-fn copy_file(source_path: &str, destination_path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn file_handler(source_path: &str, destination_path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	if seems_to_be_same(std::path::Path::new(source_path), std::path::Path::new(destination_path))? {
 		return Ok(());
 	}
@@ -67,7 +67,7 @@ fn copy_file(source_path: &str, destination_path: &str) -> std::result::Result<(
 }
 
 /// ディレクトリをコピーします。
-fn xcopy(source_path: &str, destination_path: &str, handler: &dyn Fn(&str, &str) -> std::result::Result<(), Box<dyn std::error::Error>>) -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn find_file(source_path: &str, destination_path: &str, handler: &dyn Fn(&str, &str) -> std::result::Result<(), Box<dyn std::error::Error>>) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let source_path = std::path::Path::new(source_path);
 	let destination_path = std::path::Path::new(destination_path);
 	if !source_path.exists() {
@@ -85,6 +85,12 @@ fn xcopy(source_path: &str, destination_path: &str, handler: &dyn Fn(&str, &str)
 		if dir_name == "dist" {
 			return Ok(());
 		}
+		if dir_name == "target" {
+			return Ok(());
+		}
+		if dir_name == ".svn" {
+			return Ok(());
+		}
 		// コピー先にディレクトリを作成します。
 		std::fs::create_dir_all(destination_path)?;
 		// ディレクトリ内エントリーを走査
@@ -93,7 +99,7 @@ fn xcopy(source_path: &str, destination_path: &str, handler: &dyn Fn(&str, &str)
 			let entry = e?;
 			let name = entry.file_name();
 			let path = entry.path();
-			xcopy(&path.to_str().unwrap(), destination_path.join(name).as_path().to_str().unwrap(), handler)?;
+			find_file(&path.to_str().unwrap(), destination_path.join(name).as_path().to_str().unwrap(), handler)?;
 		}
 		return Ok(());
 	}
@@ -104,6 +110,11 @@ fn xcopy(source_path: &str, destination_path: &str, handler: &dyn Fn(&str, &str)
 	return Ok(());
 }
 
+fn xcopy(source_path: &str, destination_path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	find_file(source_path, destination_path, &file_handler)?;
+	return Ok(());
+}
+
 /// エントリーポイントです。
 fn main() {
 	let args: Vec<String> = std::env::args().collect();
@@ -111,7 +122,7 @@ fn main() {
 		println!("path?");
 		return;
 	}
-	let result = xcopy(&args[1], &args[2], &copy_file);
+	let result = xcopy(&args[1], &args[2]);
 	if result.is_err() {
 		println!("[ERROR] <main()> {}", result.err().unwrap());
 	}
