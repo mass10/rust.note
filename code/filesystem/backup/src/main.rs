@@ -14,12 +14,17 @@ fn timestamp() -> String {
 /// ファイルごとに呼びだされるハンドラーです。
 fn on_entry(source_path: &Path, destination_path: &Path) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	std::fs::copy(source_path, destination_path)?;
+	println!("{}", destination_path.to_str().unwrap());
 	std::thread::sleep(std::time::Duration::from_millis(1));
 	return Ok(());
 }
 
 /// ディレクトリをコピーします。
-fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &Path) -> std::result::Result<(), Box<dyn std::error::Error>>) -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn find_files(
+	source_path: &Path,
+	destination_path: &Path,
+	handler: &dyn Fn(&Path, &Path) -> std::result::Result<(), Box<dyn std::error::Error>>,
+) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	if !source_path.exists() {
 		println!("[TRACE] invalid path {}", source_path.to_str().unwrap());
 		return Ok(());
@@ -38,6 +43,12 @@ fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &P
 		if dir_name == ".nuxt" {
 			return Ok(());
 		}
+		if dir_name == "Debug" {
+			return Ok(());
+		}
+		if dir_name == "Release" {
+			return Ok(());
+		}
 		// コピー先にディレクトリを作成します。
 		std::fs::create_dir_all(destination_path)?;
 		// ディレクトリ内エントリーを走査
@@ -46,7 +57,7 @@ fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &P
 			let entry = e?;
 			let name = entry.file_name();
 			let path = entry.path();
-			let _ = xcopy(&path, destination_path.join(name).as_path(), handler);
+			let _ = find_files(&path, destination_path.join(name).as_path(), handler);
 		}
 		return Ok(());
 	}
@@ -54,6 +65,10 @@ fn xcopy(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &P
 		return handler(source_path, destination_path);
 	}
 	return Ok(());
+}
+
+fn xcopy(source_path: &Path, destination_path: &Path) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	return find_files(source_path, destination_path, &on_entry);
 }
 
 /// エントリーポイントです。
@@ -70,7 +85,7 @@ fn main() {
 	}
 	let path_destination = format!("{}-{}", &args[1], timestamp());
 	println!("[TRACE] destination: {}", path_destination.as_str());
-	let result = xcopy(path_source, Path::new(path_destination.as_str()), &on_entry);
+	let result = xcopy(path_source, Path::new(path_destination.as_str()));
 	if result.is_err() {
 		println!("[ERROR] {}", result.err().unwrap());
 		return;
