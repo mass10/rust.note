@@ -1,4 +1,6 @@
 use file_diff::diff;
+use std::io::{Write};
+
 ///
 ///
 /// 日本語パス名への対応が未確認です。
@@ -20,6 +22,8 @@ fn input() -> String {
 
 /// プロンプトを表示し、YES/NO の応答を読み取ります。
 fn confirm() -> bool {
+	print!("> ");
+	std::io::stdout().flush().unwrap();
 	let line = input();
 	if line.to_uppercase() == "Y" {
 		return true;
