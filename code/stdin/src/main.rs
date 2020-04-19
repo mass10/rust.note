@@ -1,21 +1,25 @@
-fn read(stdin: std::io::Stdin) {
+use std::io::{Write};
 
-	let reader = stdin;
-
+fn read(reader: std::io::Stdin) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	loop {
+		print!("? ");
+		std::io::stdout().flush().unwrap();
+		// line には 0d,0a も入ってきます。
 		let mut line = String::new();
-		let ret = reader.read_line(&mut line);
-		if ret.is_err() {
+		let read = reader.read_line(&mut line)?;
+		if read == 0 {
+			// シグナル発生
 			break;
 		}
-		if ret.unwrap() == 0 {
-			break;
-		}
-		print!("{}", line);
+		let line = line.trim_end();
+		println!("> [{}] {}", line, read);
 	}
+	return Ok(());
 }
 
 fn main() {
-
-	read(std::io::stdin());
+	let result = read(std::io::stdin());
+	if result.is_err() {
+		println!("{}", result.err().unwrap());
+	}
 }
