@@ -42,7 +42,7 @@ fn usage() {
 fn main() {
 	let args: Vec<String> = std::env::args().collect();
 	let mut count = 0;
-	for arg in args {
+	for arg in &args[1..] {
 		let result = erase_node_modules_r(arg.as_str());
 		if result.is_err() {
 			println!("[ERROR] {}", result.err().unwrap());
