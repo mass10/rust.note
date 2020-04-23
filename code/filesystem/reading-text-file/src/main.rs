@@ -23,7 +23,7 @@ fn main() {
 		let file = std::fs::File::open(path).unwrap();
 		let r = std::io::BufReader::new(file);
 		for e in r.lines() {
-			let mut line = e.unwrap();
+			let line = e.unwrap();
 			println!("{}", line);
 		}
 	}
