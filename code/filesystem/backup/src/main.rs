@@ -1,3 +1,5 @@
+mod stopwatch;
+
 ///
 ///
 /// 日本語パス名への対応が未確認です。
@@ -6,9 +8,19 @@
 use std::path::Path;
 extern crate chrono;
 
-fn timestamp() -> String {
-	let date = chrono::Local::now();
-	return format!("{}", date.format("%Y%m%d-%H%M%S"));
+struct Util {}
+
+impl Util {
+	/// タイムスタンプを返します。
+	fn timestamp0() -> String {
+		let date = chrono::Local::now();
+		return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
+	}
+	/// タイムスタンプを返します。
+	fn timestamp1() -> String {
+		let date = chrono::Local::now();
+		return format!("{}", date.format("%Y%m%d-%H%M%S"));
+	}
 }
 
 /// ファイルごとに呼びだされるハンドラーです。
@@ -83,11 +95,15 @@ fn main() {
 		println!("[{}] はみつかりません。", path_source.to_str().unwrap());
 		return;
 	}
-	let path_destination = format!("{}-{}", &args[1], timestamp());
+	let path_destination = format!("{}-{}", &args[1], Util::timestamp1());
 	println!("[TRACE] destination: {}", path_destination.as_str());
+	let sw = stopwatch::Stopwatch::new();
+	println!("{} [TRACE] start", Util::timestamp0());
 	let result = xcopy(path_source, Path::new(path_destination.as_str()));
 	if result.is_err() {
 		println!("[ERROR] {}", result.err().unwrap());
 		return;
 	}
+	let duration = sw.elapsed();
+	println!("{} [TRACE] end. ({})", Util::timestamp0(), duration);
 }
