@@ -17,8 +17,17 @@ fn test0() {
 	println!("[TARCE] {}", json_text);
 }
 
+#[allow(dead_code)]
+fn parse_json_to_value(json_text: &str) -> std::option::Option<Value> {
+	let result = serde_json::from_str::<Value>(json_text);
+	if result.is_err() {
+		return None;
+	}
+	return Some(result.ok().unwrap());
+}
+
 fn test1() {
-	let data = r#"{
+	let json_text = r#"{
 		"name": "John Doe",
 		"age": 43,
 		"phones": [
@@ -26,7 +35,12 @@ fn test1() {
 		"+44 2345678"
 		]
 	}"#;
-	let v: Value = serde_json::from_str(data).unwrap();
+	let result = serde_json::from_str::<Value>(json_text);
+	if result.is_err() {
+		println!("[ERROR] {}", result.err().unwrap());
+		return;
+	}
+	let v = result.ok().unwrap();
 	println!("[TRACE] {:?}", v);
 	println!("[TRACE] Please call {} at the number {}", v["name"], v["phones"][0]);
 }
