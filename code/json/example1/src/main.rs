@@ -1,21 +1,10 @@
 #[macro_use]
 extern crate serde_json;
 
-// use serde_json::{Value, Error};
-
-#[derive(Debug)]
-enum Value {
-	Null,
-	Bool(bool),
-	Number(serde_json::Number),
-	String(String),
-	Array(Vec<serde_json::Value>),
-	// Object(serde_json::Map<String, Value>),
-}
+use serde_json::Value;
 
 fn test0() {
-
-	let _value = json!({
+	let json_text = json!({
 		"code": 200,
 		"success": true,
 		"payload": {
@@ -25,9 +14,10 @@ fn test0() {
 			]
 		}
 	});
+	println!("[TARCE] {}", json_text);
 }
 
-fn test1() -> Result<(), serde_json::Error> {
+fn test1() {
 	let data = r#"{
 		"name": "John Doe",
 		"age": 43,
@@ -37,17 +27,13 @@ fn test1() -> Result<(), serde_json::Error> {
 		]
 	}"#;
 	let v: Value = serde_json::from_str(data).unwrap();
-	// println!("{:?}", v);
-	// println!("Please call {} at the number {}", v["name"], v["phones"][0]);
-	Ok(())
+	println!("[TRACE] {:?}", v);
+	println!("[TRACE] Please call {} at the number {}", v["name"], v["phones"][0]);
 }
 
 fn main() {
-	
-	match test1() {
-		Ok(result) => println!("[INFO] {:?}", result),
-		Err(result) => println!("[ERROR] {:?}", result),
-	}
-    
-    println!("Ok.");
+	test0();
+	test1();
+
+	println!("Ok.");
 }
