@@ -1,4 +1,5 @@
 mod stopwatch;
+mod util;
 
 ///
 ///
@@ -7,21 +8,6 @@ mod stopwatch;
 ///
 use std::path::Path;
 extern crate chrono;
-
-struct Util {}
-
-impl Util {
-	/// タイムスタンプを返します。
-	fn timestamp0() -> String {
-		let date = chrono::Local::now();
-		return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
-	}
-	/// タイムスタンプを返します。
-	fn timestamp1() -> String {
-		let date = chrono::Local::now();
-		return format!("{}", date.format("%Y%m%d-%H%M%S"));
-	}
-}
 
 /// ファイルごとに呼びだされるハンドラーです。
 fn on_entry(source_path: &Path, destination_path: &Path) -> std::result::Result<(), Box<dyn std::error::Error>> {
@@ -95,15 +81,15 @@ fn main() {
 		println!("[{}] はみつかりません。", path_source.to_str().unwrap());
 		return;
 	}
-	let path_destination = format!("{}-{}", &args[1], Util::timestamp1());
+	let path_destination = format!("{}-{}", &args[1], util::Util::timestamp1());
 	println!("[TRACE] destination: {}", path_destination.as_str());
 	let sw = stopwatch::Stopwatch::new();
-	println!("{} [TRACE] start", Util::timestamp0());
+	println!("{} [TRACE] start", util::Util::timestamp0());
 	let result = xcopy(path_source, Path::new(path_destination.as_str()));
 	if result.is_err() {
 		println!("[ERROR] {}", result.err().unwrap());
 		return;
 	}
 	let duration = sw.elapsed();
-	println!("{} [TRACE] end. ({})", Util::timestamp0(), duration);
+	println!("{} [TRACE] end. ({})", util::Util::timestamp0(), duration);
 }
