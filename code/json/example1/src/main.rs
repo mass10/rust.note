@@ -14,6 +14,8 @@ fn test0() {
 			]
 		}
 	});
+	let json_text = format!("{}", json_text);
+	// let json_text = serde_json::from_value::<String>(json_text).unwrap();
 	println!("[TARCE] {}", json_text);
 }
 
