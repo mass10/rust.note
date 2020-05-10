@@ -1,9 +1,9 @@
+extern crate colored;
+
 /// トレイトの宣言
 trait TestableNumber<T> {
 	/// この T が 'A' もしくは 'a' と同等である場合に true を返します。
 	fn is_a(&self) -> bool;
-	/// この T を返します。
-	fn value(&self) -> T;
 }
 
 impl TestableNumber<i32> for i32 {
@@ -14,13 +14,26 @@ impl TestableNumber<i32> for i32 {
 			_ => false,
 		}
 	}
-	fn value(&self) -> i32 {
-		return *self;
-	}
 }
 
+// fn red<T: std::fmt::Display>(s: T) -> String {
+// 	return format!("\x1b[31m{}\x1b[39m", s);
+// }
+
+// fn green<T: std::fmt::Display>(s: T) -> String {
+// 	return format!("\x1b[32m{}\x1b[39m", s);
+// }
+
+// fn result(b: bool) -> String {
+// 	match b {
+// 		true => green(b),
+// 		false => red(b)
+// 	}
+// }
+
 fn test_integral_value(n: i32) {
-	println!("{}.is_alphabet() -> {:?}", n.value(), n.is_a());
+	let result = ::myutil::result(n.is_a());
+	println!("{:?}.is_a() -> {}", n, result);
 }
 
 pub fn main() {

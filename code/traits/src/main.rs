@@ -1,10 +1,13 @@
-pub mod integral;
-pub mod string;
-pub mod vector;
+mod integral;
+mod string;
+mod string2;
+mod vector;
+mod myutil;
 
 fn main() {
 	integral::main();
 	string::main();
+	string2::main();
 	vector::main();
 	println!("Ok.");
 }

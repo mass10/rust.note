@@ -14,13 +14,13 @@ impl StringVectorTrait<StringVectorType> for StringVectorType {
 }
 
 pub fn main() {
+	println!("### vec をテストします ###");
 	let v = vec![
 		String::from(""),
 		String::from("bbbbbb"),
 		String::from("ジミヘン"),
 	];
 
-	println!("### vec をテストします ###");
 	println!("{}", v.at(0));
 	println!("{}", v.at(2));
 	println!("{}", v.at(99));
