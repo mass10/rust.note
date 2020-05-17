@@ -19,12 +19,13 @@ rustup component list
 ```
 
 # toolchains
-
+* システムにセットアップされている Rust システムのリスト
 ```bash
 rustup toolchain list
 ```
 
 # use toolchain stable (or nightly)
+* デフォルトでどの Rust システムを使用するか
 ```bash
 rustup default stable
 rustup default nightly
