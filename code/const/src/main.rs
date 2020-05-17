@@ -6,9 +6,9 @@ const GREETING: &str = "Hello, World!";
 
 /// 定数モジュールの参照
 mod constants;
+mod locals;
 
 fn main() {
-
 	// 消費税率の参照
 	println!("Hello, Tax !{}", TAX);
 
@@ -17,4 +17,7 @@ fn main() {
 
 	// 定数モジュールから定数の参照
 	println!("{}", constants::system::KALI);
+
+	// 同ディレクトリ内のモジュールから定数を参照
+	println!("{}", locals::X);
 }
