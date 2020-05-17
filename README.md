@@ -24,6 +24,12 @@ rustup component list
 rustup toolchain list
 ```
 
+# use toolchain stable (or nightly)
+```bash
+rustup default stable
+rustup default nightly
+```
+
 # removing toolchain
 
 ```bash
