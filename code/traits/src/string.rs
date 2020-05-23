@@ -54,12 +54,12 @@ impl TestableString<&'static str> for &'static str {
 
 fn test_string(n: String) {
 	let result = ::myutil::result(n.is_alpha());
-	println!("{:?}.slphabet() -> {}", n, result);
+	println!("{:?}.slphabet() -> [{}]", n, result);
 }
 
 fn test_str(n: &'static str) {
 	let result = ::myutil::result(n.is_alpha());
-	println!("{:?}.slphabet() -> {}", n, result);
+	println!("{:?}.slphabet() -> [{}]", n, result);
 }
 
 pub fn main() {

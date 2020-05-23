@@ -30,7 +30,7 @@ impl TestableString<&str> for &str {
 
 fn test_str(n: &str) {
 	let result = ::myutil::result(n.is_alpha());
-	println!("{:?}.slphabet() -> {}", n, result);
+	println!("{:?}.slphabet() -> [{}]", n, result);
 }
 
 pub fn main() {
