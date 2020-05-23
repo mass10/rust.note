@@ -1,14 +1,13 @@
 extern crate uuid;
 
-use std::path::Path;
 use std::ffi::OsStr;
-use uuid::Uuid;
 use std::io::Result;
 use std::io::Write;
+use std::path::Path;
+use uuid::Uuid;
 
 /// 標準入力から一行の入力を得ます。
 fn input_text() -> String {
-
 	let mut line = String::new();
 	let ret = std::io::stdin().read_line(&mut line);
 	if ret.is_err() {
@@ -23,7 +22,6 @@ fn input_text() -> String {
 
 /// プロンプトを表示し、YES/NO の応答を読み取ります。
 fn confirm(message: &str) -> bool {
-
 	println!("{}", message);
 	print!("(y/N)> ");
 	std::io::stdout().flush().unwrap();
@@ -39,18 +37,16 @@ fn confirm(message: &str) -> bool {
 
 /// 新しい名前を生成します。
 fn generate_new_name() -> String {
-
 	let uuid = Uuid::new_v4();
 	return uuid.hyphenated().to_string();
 }
 
 /// ファイルハンドラー
 fn on_file_found(e: &Path) -> Result<()> {
-
 	// ディレクトリの名前
 	let parent = match e.parent() {
 		Some(d) => d,
-		None => Path::new("")
+		None => Path::new(""),
 	};
 
 	// 名前
@@ -59,7 +55,7 @@ fn on_file_found(e: &Path) -> Result<()> {
 	// 拡張子
 	let ext = match e.extension() {
 		Some(s) => s,
-		None => OsStr::new("")
+		None => OsStr::new(""),
 	};
 
 	// 新しい名前
@@ -73,12 +69,10 @@ fn on_file_found(e: &Path) -> Result<()> {
 }
 
 fn enumerate(e: &Path, file_handler: &dyn Fn(&Path) -> Result<()>) -> Result<()> {
-
 	if !e.exists() {
 		println!("[TRACE] invalid path {}", e.to_str().unwrap());
 		return Ok(());
-	}
-	else if e.is_dir() {
+	} else if e.is_dir() {
 		let it = std::fs::read_dir(e)?;
 		for e in it {
 			let entry = e.unwrap();
@@ -86,14 +80,12 @@ fn enumerate(e: &Path, file_handler: &dyn Fn(&Path) -> Result<()>) -> Result<()>
 			enumerate(&path, file_handler)?;
 		}
 		return Ok(());
-	}
-	else {
+	} else {
 		return file_handler(e);
 	}
 }
 
 fn main() {
-
 	let args: Vec<String> = std::env::args().collect();
 	if args.len() < 2 {
 		println!("path?");
@@ -101,7 +93,10 @@ fn main() {
 	}
 
 	for e in &args[1..] {
-		let message = format!("{} をランダムな名前に変更します。この操作は元に戻すことができませんがよろしいですか？", e);
+		let message = format!(
+			"{} をランダムな名前に変更します。この操作は元に戻すことができませんがよろしいですか？",
+			e
+		);
 		if !confirm(&message.to_string()) {
 			println!("キャンセルされました。");
 			continue;
