@@ -21,13 +21,17 @@ fn main() {
 
 	let uuid = generate_uuid4();
 	println!("uuid 4:\n    [{}]", uuid);
+	println!();
 
 	let uuid = generate_uuid4();
 	println!("uuid 4:\n    [{}]", uuid);
+	println!();
 
 	let uuid = generate_uuid4();
 	println!("uuid 4:\n    [{}]", uuid);
+	println!();
 
 	let uuid = generate_nil_uuid();
 	println!("空の UUID:\n    [{}]", uuid);
+	println!();
 }
