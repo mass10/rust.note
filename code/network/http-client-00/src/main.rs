@@ -46,10 +46,12 @@ fn main() {
 	let mut res = http.unwrap();
 
 	// 文字列に全部読む
-	if false {
+	if true {
 		let _ = _read_body_all(&mut res);
 	}
 
 	// 標準出力に全部出す
-	print_body_all(&mut res, &mut std::io::stdout());
+	if false {
+		print_body_all(&mut res, &mut std::io::stdout());
+	}
 }
