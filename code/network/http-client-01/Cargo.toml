@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["mass10 <mass10.github@gmail.com>"]
 
 [dependencies]
-reqwest = "*"
+reqwest = "0.9.0"
 chrono = "*"
 ctrlc = "*"
 
