@@ -131,7 +131,7 @@ fn main() {
 	let mut affected = 0;
 	for e in args {
 		if !sub(&e, &current_timestamp) {
-			continue;	
+			continue;
 		}
 		affected += 1;
 	}
