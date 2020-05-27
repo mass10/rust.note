@@ -150,7 +150,7 @@ fn zip_main(path: &str) -> bool {
 	println!("{} [TRACE] destination: {}", util::Util::timestamp0(), archive_name.as_str());
 
 	// リストファイル名
-	let listfile = "listfile.tmp";
+	let listfile = "~listfile.tmp";
 
 	// バックアップ対象ファイルを列挙します。
 	let result = collect(path, listfile);
