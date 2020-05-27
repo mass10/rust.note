@@ -149,15 +149,18 @@ fn zip_main(path: &str) -> bool {
 	let archive_name = format!("{}-{}.zip", path, current_timestamp);
 	println!("{} [TRACE] destination: {}", util::Util::timestamp0(), archive_name.as_str());
 
+	// リストファイル名
+	let listfile = "listfile.tmp";
+
 	// バックアップ対象ファイルを列挙します。
-	let result = collect(path, "listfile.tmp");
+	let result = collect(path, listfile);
 	if result.is_err() {
 		println!("[ERROR] {}", result.err().unwrap());
 		return false;
 	}
 
 	// 書庫化
-	let result2 = call_zip7("listfile.tmp", archive_name.as_str());
+	let result2 = call_zip7(listfile, archive_name.as_str());
 	if result2.is_err() {
 		println!("[ERROR] 書庫化に失敗しています。理由: {}", result2.err().unwrap());
 		return false;
