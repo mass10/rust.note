@@ -1,14 +1,13 @@
-use std::fs::File;
 use std::io::Write;
 
-fn test1() {
+fn trunc_and_write() {
 
 	// always create
-	let mut f = File::create("main.log").unwrap();
-	f.write_all(b"test.\n").unwrap();
+	let mut f = std::fs::File::create("main.log").unwrap();
+	f.write_all(b"trunc.\n").unwrap();
 }
 
-fn test2() {
+fn append() {
 
 	// create or append
 	let mut f = std::fs::OpenOptions::new().create(true).append(true).open("main.log").unwrap();
@@ -17,6 +16,10 @@ fn test2() {
 
 fn main() {
 
-	// test1();
-	test2();
+	trunc_and_write();
+	append();
+	append();
+	append();
+	append();
+	append();
 }
