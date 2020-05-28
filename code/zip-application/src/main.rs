@@ -111,16 +111,42 @@ fn _test_write(out: &mut std::fs::File) -> std::result::Result<(), Box<dyn std::
 }
 
 fn call_zip7(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	// ロケーション移動
-	std::env::set_current_dir(&left)?;
-
 	// 7zip 呼び出し
+	println!("[TRACE] 7zip 呼び出し");
 	let command_path = "C:\\Program Files\\7-Zip\\7z.exe";
 	let mut command = std::process::Command::new(command_path);
 	let archive_name = right;
 	let listfile_tmp = ".listfile.tmp";
 	let listfile = format!("@{}", listfile_tmp);
 	let args = ["a", archive_name, &listfile];
+	let mut command = command.args(&args).spawn()?;
+	let status = command.wait()?;
+
+	// 終了ステータスを確認
+	if !status.success() {
+		// バッチを終了
+		let exit_code = status.code().unwrap();
+		println!("[WARN] yarn exited with status: {}", exit_code);
+		std::process::exit(exit_code);
+	}
+
+	return Ok(());
+}
+
+/// フルパスに変換
+fn get_absolute_path(path: &str) -> String {
+	let absolute_path = std::fs::canonicalize(path).unwrap();
+	let result = absolute_path.as_path().as_os_str().to_str().unwrap();
+	return result.to_string();
+}
+
+#[allow(unused)]
+fn call_zip7_2(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	// 7zip 呼び出し
+	println!("[TRACE] 7zip 呼び出し");
+	let command_path = "C:\\Program Files\\7-Zip\\7z.exe";
+	let mut command = std::process::Command::new(command_path);
+	let args = ["a", right, left];
 	let mut command = command.args(&args).spawn()?;
 	let status = command.wait()?;
 
@@ -150,36 +176,58 @@ fn create_listfile(path: &str) -> std::result::Result<(), Box<dyn std::error::Er
 	return Ok(());
 }
 
-fn zip_main(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+/// 一時ディレクトリ
+fn get_temp_dir(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
+	// タイムスタンプ(%Y%m%d-%H%M%S)
+	let current_timestamp = util::Util::timestamp1();
+
+	// ディレクトリ名
+	let left_name = get_name_only(&path)?;
+
+	// 一時ディレクトリの下に同名のフォルダーを作る
+	let tmp_dir = format!("C:\\tmp\\.{}.tmp", current_timestamp);
+	let tmp_dir = std::path::Path::new(&tmp_dir).join(left_name);
+	let tmp_dir = tmp_dir.to_str().unwrap();
+
+	std::fs::create_dir_all(tmp_dir)?;
+
+	return Ok(tmp_dir.to_string());
+}
+
+fn get_name_only(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
+	let name = std::path::Path::new(path).file_name().unwrap().to_str().unwrap();
+	return Ok(name.to_string());
+}
+
+/// 書庫化 & ZIP 圧縮
+fn zip_main(path_arg: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	// フルパスに変換
+	let left_absolute_path = get_absolute_path(path_arg);
+
 	// タイムスタンプ(%Y%m%d-%H%M%S)
 	let current_timestamp = util::Util::timestamp1();
 
 	// 一時ディレクトリ
-	let tmp_dir = tmp_dir()?;
-
-	// 新しいパス
-	let archive_name = format!("{}-{}.zip", path, current_timestamp);
-	println!("{} [TRACE] destination: {}", util::Util::timestamp0(), archive_name.as_str());
+	let tmp_dir = get_temp_dir(&left_absolute_path)?;
 
 	// バックアップ対象ファイルを列挙します。
-	let files_copied = xcopy(path, tmp_dir.as_str())?;
+	println!("[TRACE] バックアップ対象ファイルを列挙");
+	let files_copied = xcopy(&left_absolute_path, &tmp_dir)?;
 
 	// リストファイルを作成
+	println!("[TRACE] リストファイルを作成");
 	create_listfile(&tmp_dir)?;
 
+	// 新しいパス
+	let archive_name = format!("{}-{}.zip", left_absolute_path, current_timestamp);
+	println!("[TRACE] destination: {}", archive_name.as_str());
+
 	// 書庫化
-	call_zip7(&tmp_dir, archive_name.as_str())?;
-	println!("{} [TRACE] {}個のファイルをコピーしました。", util::Util::timestamp0(), files_copied);
+	println!("[TRACE] 書庫化");
+	call_zip7_2(&tmp_dir, archive_name.as_str())?;
+	println!("[TRACE] {}個のファイルをコピーしました。", files_copied);
 
 	return Ok(());
-}
-
-fn tmp_dir() -> std::result::Result<String, Box<dyn std::error::Error>> {
-	// タイムスタンプ(%Y%m%d-%H%M%S)
-	let current_timestamp = util::Util::timestamp1();
-	let path = format!(".{}.tmp", current_timestamp);
-	std::fs::create_dir(&path)?;
-	return Ok(path);
 }
 
 /// エントリーポイントです。
@@ -208,5 +256,5 @@ fn main() {
 	let duration = sw.elapsed();
 
 	// サマリー
-	println!("{} [TRACE] end. ({})", util::Util::timestamp0(), duration);
+	println!("[TRACE] end. (処理時間: {})", duration);
 }
