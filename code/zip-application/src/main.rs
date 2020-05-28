@@ -97,6 +97,7 @@ fn xcopy(left: &str, right: &str) -> std::result::Result<u32, Box<dyn std::error
 
 	// ファイル
 	if source_path.is_file() {
+		println!("準備 >>> {:?}", destination_path);
 		std::fs::copy(source_path, destination_path)?;
 		std::thread::sleep(std::time::Duration::from_millis(1));
 		return Ok(1);
@@ -110,29 +111,6 @@ fn _test_write(out: &mut std::fs::File) -> std::result::Result<(), Box<dyn std::
 	return Ok(());
 }
 
-fn call_zip7(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	// 7zip 呼び出し
-	println!("[TRACE] 7zip 呼び出し");
-	let command_path = "C:\\Program Files\\7-Zip\\7z.exe";
-	let mut command = std::process::Command::new(command_path);
-	let archive_name = right;
-	let listfile_tmp = ".listfile.tmp";
-	let listfile = format!("@{}", listfile_tmp);
-	let args = ["a", archive_name, &listfile];
-	let mut command = command.args(&args).spawn()?;
-	let status = command.wait()?;
-
-	// 終了ステータスを確認
-	if !status.success() {
-		// バッチを終了
-		let exit_code = status.code().unwrap();
-		println!("[WARN] yarn exited with status: {}", exit_code);
-		std::process::exit(exit_code);
-	}
-
-	return Ok(());
-}
-
 /// フルパスに変換
 fn get_absolute_path(path: &str) -> String {
 	let absolute_path = std::fs::canonicalize(path).unwrap();
@@ -140,8 +118,8 @@ fn get_absolute_path(path: &str) -> String {
 	return result.to_string();
 }
 
-#[allow(unused)]
-fn call_zip7_2(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+/// 書庫化 & 圧縮(ZIP)
+fn call_zip7(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// 7zip 呼び出し
 	println!("[TRACE] 7zip 呼び出し");
 	let command_path = "C:\\Program Files\\7-Zip\\7z.exe";
@@ -150,14 +128,13 @@ fn call_zip7_2(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::
 	let mut command = command.args(&args).spawn()?;
 	let status = command.wait()?;
 
-	// 終了ステータスを確認
+	// 終了ステータスの確認
 	if !status.success() {
 		// バッチを終了
 		let exit_code = status.code().unwrap();
 		println!("[WARN] yarn exited with status: {}", exit_code);
 		std::process::exit(exit_code);
 	}
-
 	return Ok(());
 }
 
@@ -226,7 +203,7 @@ fn zip_main(path_arg: &str) -> std::result::Result<(), Box<dyn std::error::Error
 
 	// 書庫化
 	println!("[TRACE] 書庫化");
-	call_zip7_2(&tmp_dir, archive_name.as_str())?;
+	call_zip7(&tmp_dir, archive_name.as_str())?;
 	println!("[TRACE] {}個のファイルをコピーしました。", files_copied);
 
 	return Ok(());
