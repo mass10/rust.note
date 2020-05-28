@@ -55,7 +55,7 @@ impl Stopwatch {
 	}
 
 	/// 経過時間の文字列表現を返します。
-	pub fn elapsed(self: &Stopwatch) -> String {
+	pub fn elapsed_text(self: &Stopwatch) -> String {
 		let elapsed = std::time::Instant::now() - self._time;
 		return format!("{}", elapsed.to_string2());
 	}

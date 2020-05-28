@@ -4,47 +4,6 @@ mod stopwatch;
 mod util;
 use std::io::Write;
 
-/// ディレクトリを走査します。
-fn find_file(left: &str, out: &mut std::fs::File) -> std::result::Result<u32, Box<dyn std::error::Error>> {
-	// 元
-	let source_path = std::path::Path::new(left);
-	if !source_path.exists() {
-		println!("[ERROR] ディレクトリは存在しません。{}", left);
-		return Ok(0);
-	}
-
-	// ディレクトリ
-	if source_path.is_dir() {
-		// ディレクトリ内エントリーを走査
-		let mut count = 0;
-		let it = std::fs::read_dir(source_path)?;
-		for e in it {
-			let entry = e?;
-			let name = entry.file_name();
-			if name == ".listfile.tmp" {
-				continue;
-			}
-			let path = entry.path();
-			count += find_file(&path.to_str().unwrap(), out)?;
-		}
-		return Ok(count);
-	}
-
-	// ファイル
-	if source_path.is_file() {
-		println!(">> {}", left);
-		let left = match left.starts_with(".\\") {
-			true => &left[2..],
-			_ => left,
-		};
-		out.write_all(left.as_bytes())?;
-		out.write_all(b"\n")?;
-		return Ok(1);
-	}
-
-	return Ok(0);
-}
-
 /// ディレクトリをコピーします。
 fn xcopy(left: &str, right: &str) -> std::result::Result<u32, Box<dyn std::error::Error>> {
 	// 元
@@ -138,21 +97,6 @@ fn call_zip7(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::er
 	return Ok(());
 }
 
-fn create_listfile(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	// ロケーション移動
-	std::env::set_current_dir(&path)?;
-
-	// リストファイル名
-	let listfile_tmp = ".listfile.tmp";
-	let mut out = std::fs::OpenOptions::new().create(true).append(true).open(listfile_tmp)?;
-
-	// リストファイル出力
-	find_file(".", &mut out)?;
-	out.flush()?;
-
-	return Ok(());
-}
-
 /// 一時ディレクトリ
 fn get_temp_dir(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
 	// タイムスタンプ(%Y%m%d-%H%M%S)
@@ -166,11 +110,13 @@ fn get_temp_dir(path: &str) -> std::result::Result<String, Box<dyn std::error::E
 	let tmp_dir = std::path::Path::new(&tmp_dir).join(left_name);
 	let tmp_dir = tmp_dir.to_str().unwrap();
 
+	// ディレクトリを作成
 	std::fs::create_dir_all(tmp_dir)?;
 
 	return Ok(tmp_dir.to_string());
 }
 
+/// ディレクトリ／ファイルの名前だけを取り出します。
 fn get_name_only(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
 	let name = std::path::Path::new(path).file_name().unwrap().to_str().unwrap();
 	return Ok(name.to_string());
@@ -191,19 +137,13 @@ fn zip_main(path_arg: &str) -> std::result::Result<(), Box<dyn std::error::Error
 	println!("[TRACE] バックアップ対象ファイルを列挙");
 	let files_copied = xcopy(&left_absolute_path, &tmp_dir)?;
 
-	// リストファイルを作成
-	if false {
-		println!("[TRACE] リストファイルを作成");
-		create_listfile(&tmp_dir)?;
-	}
-
 	// 新しいパス
-	let archive_name = format!("{}-{}.zip", left_absolute_path, current_timestamp);
-	println!("[TRACE] destination: {}", archive_name.as_str());
+	let zip_archive_name = format!("{}-{}.zip", left_absolute_path, current_timestamp);
+	println!("[TRACE] destination: {}", zip_archive_name.as_str());
 
 	// 書庫化
 	println!("[TRACE] 書庫化");
-	call_zip7(&tmp_dir, archive_name.as_str())?;
+	call_zip7(&tmp_dir, zip_archive_name.as_str())?;
 	println!("[TRACE] {}個のファイルをコピーしました。", files_copied);
 
 	return Ok(());
@@ -213,7 +153,6 @@ fn zip_main(path_arg: &str) -> std::result::Result<(), Box<dyn std::error::Error
 fn main() {
 	// コマンドライン引数(コマンド自身を除く)
 	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
-
 	if args.len() == 0 {
 		println!("パスを指定します。");
 		return;
@@ -222,7 +161,7 @@ fn main() {
 	let target = &args[0];
 
 	// 処理時間計測用ストップウォッチ
-	let sw = stopwatch::Stopwatch::new();
+	let stopwatch = stopwatch::Stopwatch::new();
 
 	// 複製
 	let result = zip_main(&target);
@@ -232,8 +171,8 @@ fn main() {
 	}
 
 	// 処理時間
-	let duration = sw.elapsed();
+	let duration_time = stopwatch.elapsed_text();
 
 	// サマリー
-	println!("[TRACE] end. (処理時間: {})", duration);
+	println!("[TRACE] end. (処理時間: {})", duration_time);
 }
