@@ -1,41 +1,7 @@
-extern crate chrono;
-
 mod stopwatch;
 mod util;
-use std::io::Write;
 
-/// ディレクトリを走査します。
-fn find_file(left: &str, out: &mut std::fs::File) -> std::result::Result<u32, Box<dyn std::error::Error>> {
-	// 元
-	let source_path = std::path::Path::new(left);
-	if !source_path.exists() {
-		println!("[TRACE] invalid path {}", left);
-		return Ok(0);
-	}
-
-	// ディレクトリ
-	if source_path.is_dir() {
-		// ディレクトリ内エントリーを走査
-		let mut count = 0;
-		let it = std::fs::read_dir(source_path)?;
-		for e in it {
-			let entry = e?;
-			// let name = entry.file_name();
-			let path = entry.path();
-			count += find_file(&path.to_str().unwrap(), out)?;
-		}
-		return Ok(count);
-	}
-
-	// ファイル
-	if source_path.is_file() {
-		out.write_all(left.as_bytes())?;
-		out.write_all(b"\n")?;
-		return Ok(1);
-	}
-
-	return Ok(0);
-}
+extern crate chrono;
 
 /// ディレクトリをコピーします。
 fn xcopy(left: &str, right: &str) -> std::result::Result<u32, Box<dyn std::error::Error>> {
@@ -97,6 +63,8 @@ fn xcopy(left: &str, right: &str) -> std::result::Result<u32, Box<dyn std::error
 	return Ok(0);
 }
 
+use std::io::Write;
+
 fn _test_write(out: &mut std::fs::File) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	out.write_all(b"")?;
 	return Ok(());
@@ -122,21 +90,6 @@ fn call_zip7(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::er
 	return Ok(());
 }
 
-fn create_listfile(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	// ロケーション移動
-	std::env::set_current_dir(&path)?;
-
-	// リストファイル名
-	let listfile_tmp = ".listfile.tmp";
-	let mut out = std::fs::OpenOptions::new().create(true).append(true).open(listfile_tmp)?;
-
-	// リストファイル出力
-	find_file(path, &mut out)?;
-	out.flush()?;
-
-	return Ok(());
-}
-
 fn zip_main(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// タイムスタンプ(%Y%m%d-%H%M%S)
 	let current_timestamp = util::Util::timestamp1();
@@ -151,13 +104,8 @@ fn zip_main(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// バックアップ対象ファイルを列挙します。
 	let files_copied = xcopy(path, tmp_dir.as_str())?;
 
-	// リストファイルを作成
-	create_listfile(&tmp_dir)?;
-
 	// 書庫化
-	if false {
-		call_zip7(tmp_dir.as_str(), archive_name.as_str())?;
-	}
+	call_zip7(tmp_dir.as_str(), archive_name.as_str())?;
 	println!("{} [TRACE] {}個のファイルをコピーしました。", util::Util::timestamp0(), files_copied);
 
 	return Ok(());
