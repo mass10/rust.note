@@ -9,7 +9,7 @@ fn find_file(left: &str, out: &mut std::fs::File) -> std::result::Result<u32, Bo
 	// 元
 	let source_path = std::path::Path::new(left);
 	if !source_path.exists() {
-		println!("[TRACE] invalid path {}", left);
+		println!("[ERROR] ディレクトリは存在しません。{}", left);
 		return Ok(0);
 	}
 
@@ -20,7 +20,10 @@ fn find_file(left: &str, out: &mut std::fs::File) -> std::result::Result<u32, Bo
 		let it = std::fs::read_dir(source_path)?;
 		for e in it {
 			let entry = e?;
-			// let name = entry.file_name();
+			let name = entry.file_name();
+			if name == ".listfile.tmp" {
+				continue;
+			}
 			let path = entry.path();
 			count += find_file(&path.to_str().unwrap(), out)?;
 		}
@@ -29,6 +32,11 @@ fn find_file(left: &str, out: &mut std::fs::File) -> std::result::Result<u32, Bo
 
 	// ファイル
 	if source_path.is_file() {
+		println!(">> {}", left);
+		let left = match left.starts_with(".\\") {
+			true => &left[2..],
+			_ => left,
+		};
 		out.write_all(left.as_bytes())?;
 		out.write_all(b"\n")?;
 		return Ok(1);
@@ -103,11 +111,16 @@ fn _test_write(out: &mut std::fs::File) -> std::result::Result<(), Box<dyn std::
 }
 
 fn call_zip7(left: &str, right: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	// ロケーション移動
+	std::env::set_current_dir(&left)?;
+
 	// 7zip 呼び出し
 	let command_path = "C:\\Program Files\\7-Zip\\7z.exe";
 	let mut command = std::process::Command::new(command_path);
 	let archive_name = right;
-	let args = ["a", archive_name, left];
+	let listfile_tmp = ".listfile.tmp";
+	let listfile = format!("@{}", listfile_tmp);
+	let args = ["a", archive_name, &listfile];
 	let mut command = command.args(&args).spawn()?;
 	let status = command.wait()?;
 
@@ -131,7 +144,7 @@ fn create_listfile(path: &str) -> std::result::Result<(), Box<dyn std::error::Er
 	let mut out = std::fs::OpenOptions::new().create(true).append(true).open(listfile_tmp)?;
 
 	// リストファイル出力
-	find_file(path, &mut out)?;
+	find_file(".", &mut out)?;
 	out.flush()?;
 
 	return Ok(());
@@ -155,9 +168,7 @@ fn zip_main(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	create_listfile(&tmp_dir)?;
 
 	// 書庫化
-	if false {
-		call_zip7(tmp_dir.as_str(), archive_name.as_str())?;
-	}
+	call_zip7(&tmp_dir, archive_name.as_str())?;
 	println!("{} [TRACE] {}個のファイルをコピーしました。", util::Util::timestamp0(), files_copied);
 
 	return Ok(());
