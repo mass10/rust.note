@@ -215,8 +215,10 @@ fn zip_main(path_arg: &str) -> std::result::Result<(), Box<dyn std::error::Error
 	let files_copied = xcopy(&left_absolute_path, &tmp_dir)?;
 
 	// リストファイルを作成
-	println!("[TRACE] リストファイルを作成");
-	create_listfile(&tmp_dir)?;
+	if false {
+		println!("[TRACE] リストファイルを作成");
+		create_listfile(&tmp_dir)?;
+	}
 
 	// 新しいパス
 	let archive_name = format!("{}-{}.zip", left_absolute_path, current_timestamp);
