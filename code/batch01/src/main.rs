@@ -1,4 +1,4 @@
-mod csv_loader;
+mod csv_file_loader;
 mod database_connection;
 mod user_manager;
 
@@ -7,7 +7,7 @@ struct Application;
 impl Application {
 	pub fn run(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		// CSV ファイルを読み込み
-		let mut loader = csv_loader::CsvLoader::new();
+		let mut loader = csv_file_loader::CsvFileLoader::new();
 		loader.open_csv_file(".rustfmt.toml")?;
 
 		// インポート
