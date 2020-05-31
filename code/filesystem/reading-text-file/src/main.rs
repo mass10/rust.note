@@ -1,7 +1,5 @@
-use std::io::Read;
-use std::io::BufRead;
-
 fn read_text_file(path: &str) -> String {
+	use std::io::Read;
 
 	let mut file = std::fs::File::open(path).unwrap();
 	let mut s = String::new();
@@ -10,7 +8,6 @@ fn read_text_file(path: &str) -> String {
 }
 
 fn main() {
-
 	// reading whole text file.
 	{
 		let s = read_text_file("src/main.rs");
@@ -19,6 +16,7 @@ fn main() {
 
 	// reading a text file line-by-line.
 	{
+		use std::io::BufRead;
 		let path = "src/main.rs";
 		let file = std::fs::File::open(path).unwrap();
 		let r = std::io::BufReader::new(file);
