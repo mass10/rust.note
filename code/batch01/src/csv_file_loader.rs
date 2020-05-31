@@ -1,10 +1,12 @@
-pub struct CsvLoader {
+/// CSV ファイルを読み込むクラス
+pub struct CsvFileLoader {
 	_file: Option<std::fs::File>,
 }
 
-impl CsvLoader {
-	pub fn new() -> CsvLoader {
-		return CsvLoader { _file: None };
+impl CsvFileLoader {
+	/// 新しいインすタンスを返します。
+	pub fn new() -> CsvFileLoader {
+		return CsvFileLoader { _file: None };
 	}
 
 	pub fn open_csv_file(&mut self, path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
@@ -20,7 +22,8 @@ impl CsvLoader {
 	}
 }
 
-impl Drop for CsvLoader {
+/// CsvFileLoader の解放
+impl Drop for CsvFileLoader {
 	fn drop(&mut self) {
 		println!("(drop)");
 	}
