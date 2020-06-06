@@ -165,13 +165,6 @@ info: downloading self-update
 rustup default stable
 ```
 
-# installing rustfmt
-
-```bash
-rustup component add rustfmt
-```
-
-
 # error: toolchain 'stable-x86_64-unknown-linux-gnu' does not contain component 'rustfmt' for target 'x86_64-unknown-linux-gnu'
 
 ```bash
@@ -183,13 +176,11 @@ rustup toolchain install stable
 rustup component add rustfmt
 ```
 
-# rustfmt のコンフィギュレーション
-
-* https://github.com/rust-lang/rustfmt/blob/master/Configurations.md#hard_tabs
-
-
 # To format Rust source
 
 ```bash
+rustup component add rustfmt
 cargo fmt
 ```
+
+* rustfmt のコンフィギュレーション https://github.com/rust-lang/rustfmt/blob/master/Configurations.md#hard_tabs
