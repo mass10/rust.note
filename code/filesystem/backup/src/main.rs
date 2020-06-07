@@ -22,11 +22,7 @@ fn on_entry(source_path: &Path, destination_path: &Path) -> std::result::Result<
 }
 
 /// ディレクトリをコピーします。
-fn find_files(
-	source_path: &Path,
-	destination_path: &Path,
-	handler: &dyn Fn(&Path, &Path) -> std::result::Result<u32, Box<dyn std::error::Error>>,
-) -> std::result::Result<u32, Box<dyn std::error::Error>> {
+fn find_files(source_path: &Path, destination_path: &Path, handler: &dyn Fn(&Path, &Path) -> std::result::Result<u32, Box<dyn std::error::Error>>) -> std::result::Result<u32, Box<dyn std::error::Error>> {
 	// パスの検証
 	if !source_path.exists() {
 		println!("[TRACE] invalid path {}", source_path.to_str().unwrap());
@@ -115,14 +111,13 @@ fn sub(path: &str, current_timestamp: &String) -> bool {
 fn main() {
 	// コマンドライン引数(コマンド自身を除く)
 	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
-
 	if args.len() == 0 {
 		println!("パスを指定します。");
 		return;
 	}
 
 	// 処理時間計測用ストップウォッチ
-	let sw = stopwatch::Stopwatch::new();
+	let stopwatch = stopwatch::Stopwatch::new();
 
 	// タイムスタンプ
 	let current_timestamp = util::Util::timestamp1();
@@ -140,5 +135,5 @@ fn main() {
 	}
 
 	// サマリー
-	println!("{} [TRACE] end. ({})", util::Util::timestamp0(), sw);
+	println!("{} [TRACE] end. ({})", util::Util::timestamp0(), stopwatch);
 }
