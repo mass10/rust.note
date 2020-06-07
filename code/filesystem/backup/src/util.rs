@@ -1,3 +1,4 @@
+/// ユーティリティー
 pub struct Util {}
 
 impl Util {

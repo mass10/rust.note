@@ -139,9 +139,6 @@ fn main() {
 		return;
 	}
 
-	// 処理時間
-	let duration = sw.elapsed();
-
 	// サマリー
-	println!("{} [TRACE] end. ({})", util::Util::timestamp0(), duration);
+	println!("{} [TRACE] end. ({})", util::Util::timestamp0(), sw);
 }

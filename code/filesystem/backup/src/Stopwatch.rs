@@ -1,12 +1,13 @@
-trait MyFormatting1 {
+/// std::time::Duration の独自フォーマッター
+trait MyDurationFormatter {
 	/// 経過時間の文字列表現を得る
-	fn to_string(&self) -> String;
+	fn to_string1(&self) -> String;
 	/// 経過時間の文字列表現を得る
 	fn to_string2(&self) -> String;
 }
 
-impl MyFormatting1 for std::time::Duration {
-	fn to_string(&self) -> String {
+impl MyDurationFormatter for std::time::Duration {
+	fn to_string1(&self) -> String {
 		let mut sec = self.as_secs();
 		let mut min = 0;
 		let mut hour = 0;
@@ -53,16 +54,14 @@ impl Stopwatch {
 	pub fn new() -> Stopwatch {
 		return Stopwatch { _time: std::time::Instant::now() };
 	}
-
-	/// 経過時間の文字列表現を返します。
-	pub fn elapsed(self: &Stopwatch) -> String {
-		let elapsed = std::time::Instant::now() - self._time;
-		return format!("{}", elapsed.to_string2());
-	}
 }
 
-#[allow(dead_code)]
-fn format_duration(left: std::time::Instant, right: std::time::Instant) -> String {
-	let elapsed = right - left;
-	return elapsed.to_string2();
+impl std::fmt::Display for Stopwatch {
+	/// 経過時間の文字列表現を返します。
+	/// ※このようなフォーマッターの実装が果たして嬉しいかどうかは疑問あり
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		let elapsed = std::time::Instant::now() - self._time;
+		write!(f, "{}", elapsed.to_string2())?;
+		return Ok(());
+	}
 }
