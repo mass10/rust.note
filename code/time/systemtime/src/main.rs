@@ -16,7 +16,6 @@ fn timestamp_with_timezone() -> String {
 }
 
 fn main() {
-
 	println!("# std::time::SystemTime");
 	println!("{:?}", std::time::SystemTime::now());
 	println!();

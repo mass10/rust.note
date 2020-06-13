@@ -1,26 +1,18 @@
 extern crate chrono;
 
-// use chrono::prelude::*;
-// use chrono::Utc;
-// use chrono::TimeZone::Utc;
-
 /// アプリケーション本体
 mod application {
 
-	#[allow(unused)]
-	fn format_filetime(time: std::time::SystemTime) -> String {
-		let timestamp: chrono::DateTime<chrono::Utc> = chrono::DateTime::from(time);
-		let timestamp: chrono::DateTime<chrono::Local> = chrono::DateTime::from(time);
-		let timestamp = chrono::DateTime::<chrono::Local>::from(time);
-		if 
-		return format!("{}", timestamp);
+	/// std::time::SystemTime の文字列表現を返します。
+	fn format_filetime(time: &std::time::SystemTime) -> String {
+		let timestamp = chrono::DateTime::<chrono::Local>::from(*time);
+		return format!("{}", timestamp.format("%Y-%m-%d %H:%M:%S%.3f"));
 	}
 
+	/// Duration から文字列表現を返そうとした痕跡
 	#[allow(unused)]
 	fn format_filetime2(time: std::time::SystemTime) -> String {
 		let timestamp = time.elapsed().unwrap();
-
-		// return format!("{:?}", time);
 
 		let duration = time.duration_since(std::time::SystemTime::UNIX_EPOCH);
 		if duration.is_err() {
@@ -59,7 +51,7 @@ mod application {
 		println!("◆ファイル: {:?}", path);
 		println!("    サイズ: {}", left.len());
 		let system_time = left.modified()?;
-		println!("    タイムスタンプ: {:?}", format_filetime(system_time));
+		println!("    タイムスタンプ: {:?}", format_filetime(&system_time));
 		println!();
 		return Ok(());
 	}
