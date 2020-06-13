@@ -1,13 +1,11 @@
 extern crate chrono;
 
-use std::time::SystemTime;
-
-fn timestamp() -> String {
+fn timestamp0() -> String {
 	let date = chrono::Local::now();
 	return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
 }
 
-fn timestamp2() -> String {
+fn timestamp1() -> String {
 	let date = chrono::Local::now();
 	return format!("{}", date.format("%Y%m%d-%H%M%S"));
 }
@@ -19,15 +17,15 @@ fn timestamp_with_timezone() -> String {
 
 fn main() {
 
-	println!("# struct SystemTime");
-	println!("{:?}", SystemTime::now());
+	println!("# std::time::SystemTime");
+	println!("{:?}", std::time::SystemTime::now());
 	println!();
 
-	println!("# timestamp with timezone");
+	println!("# timestamp with timezone (chrono::Local)");
 	println!("{}", timestamp_with_timezone());
 	println!();
 
 	println!("# local timestamp");
-	println!("{}", timestamp());
-	println!("{}", timestamp2());
+	println!("{}", timestamp0());
+	println!("{}", timestamp1());
 }
