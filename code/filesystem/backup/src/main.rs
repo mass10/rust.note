@@ -1,3 +1,4 @@
+mod myformatter;
 mod stopwatch;
 mod util;
 
@@ -13,7 +14,16 @@ extern crate chrono;
 fn on_entry(source_path: &Path, destination_path: &Path) -> std::result::Result<u32, Box<dyn std::error::Error>> {
 	// ファイルをコピー
 	std::fs::copy(source_path, destination_path)?;
-	println!("{}", destination_path.to_str().unwrap());
+
+	// ファイルの属性
+	let left = std::fs::metadata(destination_path)?;
+	// ファイルサイズ
+	let len = left.len();
+	// ファイル更新日時
+	use myformatter::MyFormatter;
+	let timestamp = format!("{}", left.modified()?.to_string1());
+
+	println!("> {} ({}, {} bytes)", destination_path.to_str().unwrap(), timestamp, len);
 
 	// 待機
 	std::thread::sleep(std::time::Duration::from_millis(1));
@@ -101,6 +111,9 @@ fn sub(path: &str, current_timestamp: &String) -> bool {
 
 	// コピーされたファイル数
 	let files_copied = result.ok().unwrap();
+	if 0 < files_copied {
+		println!();
+	}
 
 	println!("{} [TRACE] {}個のファイルをコピーしました。", util::Util::timestamp0(), files_copied);
 
