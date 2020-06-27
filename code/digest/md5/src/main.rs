@@ -1,23 +1,21 @@
 extern crate md5;
 
-fn digest_by_md5(s: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
-	let result = md5::compute(s);
-	return Ok(format!("{:x}", result));
+fn digest_md5(s: &str) -> String {
+	return format!("{:x}", md5::compute(s));
 }
 
-fn test(s: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	let digest = digest_by_md5(s)?;
+fn test(s: &str) {
+	let digest = digest_md5(s);
 	println!("[TRACE] [{}] >> [{}] (MD5)", s, digest);
-	Ok(())
 }
 
 fn main() {
-	match test("Hello, world!") {
-		Err(reason) => {
-			println!("[ERROR] {}", reason);
-		},
-		Ok(_) => {
-			println!("Ok.");
-		}
-	}
+	test("Hello, world!");
+	test("コンニチハ！");
+	test("https://www.nittsu.co.jp");
+	test("https://www.mazda.co.jp");
+	test("https://www.mol.co.jp");
+	test("https://www.nissan.co.jp");
+	test("https://www.marubeni.com");
+	test("https://www.hd.eneos.co.jp");
 }
