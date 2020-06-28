@@ -1,17 +1,26 @@
-extern crate crypto;
-
-fn digest_sha256(s: &str) -> String {
+fn digest_sha256_0(s: &str) -> String {
+	extern crate crypto;
 	use crypto::digest::Digest;
-	use crypto::sha2::Sha256;
 
-	let mut digest = Sha256::new();
+	let mut digest = crypto::sha2::Sha256::new();
 	digest.input_str(s);
 	return format!("{}", digest.result_str());
 }
 
+fn digest_sha256_1(s: &str) -> String {
+	use sha2::Digest;
+
+	let mut digest = sha2::Sha256::new();
+	digest.update(s);
+	let result = digest.finalize();
+	return format!("{:x}", result);
+}
+
 fn test(s: &str) {
-	let digest = digest_sha256(s);
-	println!("[{}] >> [{}] (SHA256)", s, digest);
+	let digest0 = digest_sha256_0(s);
+	let digest1 = digest_sha256_1(s);
+	assert_eq!(digest0, digest1);
+	println!("[{}] >> [{}] (SHA256)", s, digest0);
 }
 
 fn main() {
