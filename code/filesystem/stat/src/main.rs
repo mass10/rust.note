@@ -45,21 +45,15 @@ mod application {
 	}
 
 	fn dump_file_attributes(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-		// 元
-		let path = std::path::Path::new(path);
-		let left = std::fs::metadata(path)?;
-		println!("◆ファイル: {:?}", path);
-		println!("    サイズ: {}", left.len());
+		let left = std::fs::metadata(std::path::Path::new(path))?;
 		let system_time = left.modified()?;
-		println!("    タイムスタンプ: {:?}", format_filetime(&system_time));
-		println!();
+		println!("{} ({}, {} bytes)", &path, format_filetime(&system_time), left.len());
 		return Ok(());
 	}
 
 	/// ファイルごとに呼びだされるハンドラーです。
 	fn file_handler(source_path: &str) -> std::result::Result<i32, Box<dyn std::error::Error>> {
 		dump_file_attributes(source_path)?;
-		std::thread::sleep(std::time::Duration::from_millis(1));
 		return Ok(1);
 	}
 
@@ -72,9 +66,8 @@ mod application {
 		}
 		if source_path.is_dir() {
 			// ディレクトリ内エントリーを走査
-			let it = std::fs::read_dir(source_path)?;
 			let mut affected = 0;
-			for e in it {
+			for e in std::fs::read_dir(source_path)? {
 				let entry = e?;
 				let path = entry.path();
 				affected = affected + find_file(&path.to_str().unwrap(), handler)?;
