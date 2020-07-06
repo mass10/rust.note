@@ -1,5 +1,4 @@
 @SETLOCAL
 
 @CALL cargo fmt
-@CALL cargo run --quiet
-
+@CALL cargo run --quiet %*
