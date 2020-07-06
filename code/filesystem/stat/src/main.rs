@@ -9,41 +9,6 @@ mod application {
 		return format!("{}", timestamp.format("%Y-%m-%d %H:%M:%S%.3f"));
 	}
 
-	/// Duration から文字列表現を返そうとした痕跡
-	#[allow(unused)]
-	fn format_filetime2(time: std::time::SystemTime) -> String {
-		let timestamp = time.elapsed().unwrap();
-
-		let duration = time.duration_since(std::time::SystemTime::UNIX_EPOCH);
-		if duration.is_err() {
-			return String::new();
-		}
-		let duration = duration.unwrap();
-		let mut secs = duration.as_secs();
-		let mut min = 0;
-		while (60 <= secs) {
-			min += 1;
-			secs -= 60;
-		}
-		let mut hh = 0;
-		while (60 <= min) {
-			hh += 1;
-			min -= 60;
-		}
-		let mut dd = 0;
-		while (24 <= hh) {
-			hh -= 24;
-			dd += 1;
-		}
-		let mut mm = 0;
-		let mut yyyy = 0;
-		while (365 <= dd) {
-			dd -= 365;
-			yyyy += 1;
-		}
-		return format!("{:04}-{:02}-{:02} {:02}:{:02}:{:02}", yyyy, mm, dd, hh, min, secs);
-	}
-
 	fn dump_file_attributes(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		let left = std::fs::metadata(std::path::Path::new(path))?;
 		let system_time = left.modified()?;
@@ -54,6 +19,7 @@ mod application {
 	/// ファイルごとに呼びだされるハンドラーです。
 	fn file_handler(source_path: &str) -> std::result::Result<i32, Box<dyn std::error::Error>> {
 		dump_file_attributes(source_path)?;
+		// std::thread::sleep(std::time::Duration::from_millis(1));
 		return Ok(1);
 	}
 
