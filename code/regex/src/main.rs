@@ -47,6 +47,7 @@ fn validate_postcode_bad(unknown: &str) {
 	println!("[TRACE] [{:?}] is postcode? -> [{}]", unknown, text_status(result));
 }
 
+// 文字列から文字列を抜き出す
 fn retrieve_from(mail_body: &str) -> (String, String) {
 	let reg = regex::Regex::new("From: (.+) <(.+)>");
 	if reg.is_err() {
@@ -60,12 +61,14 @@ fn retrieve_from(mail_body: &str) -> (String, String) {
 	return ("".to_string(), "".to_string());
 }
 
+// フォームの検証
 fn validate_from() {
 	let mail_body = "From: Billy Preston <billy.preston@gmail.com>";
 	let (left, right) = retrieve_from(mail_body);
 	println!("[TRACE] From: [{}] [{}]", left, right);
 }
 
+// エントリーポイント
 fn main() {
 	//
 	// 郵便番号の検査
