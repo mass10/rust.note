@@ -20,10 +20,12 @@ fn matches(regex: &str, text: &str) -> bool {
 	return true;
 }
 
+/// 郵便番号の検査(妥当な用法)
 fn is_postcode(unknown: &str) -> bool {
 	return matches("^[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$", unknown);
 }
 
+/// 郵便番号の検査(ダメな用法)
 fn is_postcode_bad(unknown: &str) -> bool {
 	return matches("[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]", unknown);
 }
