@@ -30,7 +30,7 @@ impl ObjectSomethingDescribable for i32 {
 
 /// ジェネリック関数
 ///
-/// * くつかの不確定な要素を同様に扱いたい場合
+/// * いくつかの不確定な要素を同様に扱いたい場合
 /// * 抽象的な基本型に対して同じ操作をしたい
 /// * 同じ操作でそれぞれの実装を呼びだしたい
 ///
@@ -39,6 +39,7 @@ fn test_describe<T: ObjectSomethingDescribable>(unknown: T) {
 	println!("フォーマットされた形式: {}", unknown.describe());
 }
 
+/// エントリーポイント
 fn main() {
 	// 型パラメーターを明示的に宣言できる。
 	test_describe::<&str>("あいうえお");
