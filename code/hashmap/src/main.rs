@@ -1,6 +1,6 @@
-use std::collections::HashMap;
-
+/// エントリーポイント
 fn main() {
+	use std::collections::HashMap;
 
 	let mut map = HashMap::new();
 
