@@ -13,8 +13,8 @@ fn find_file(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> 
 		return Ok(());
 	}
 	if source_path.is_dir() {
-		let name = source_path.file_name();
-		if name.is_some() && name.unwrap() == "node_modules" {
+		let name = source_path.file_name().unwrap().to_str().unwrap();
+		if name == "node_modules" {
 			println!("delete ... {}", source_path.to_str().unwrap());
 			remove_dir_all(source_path.as_os_str().to_str().unwrap())?;
 			return Ok(());
@@ -36,6 +36,7 @@ fn erase_node_modules_r(path: &str) -> std::result::Result<(), Box<dyn std::erro
 }
 
 fn usage() {
+	println!("node_modules ディレクトリーを削除します。");
 	println!("パスを指定します");
 }
 
