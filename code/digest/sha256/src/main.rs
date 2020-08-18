@@ -24,6 +24,13 @@ fn test(s: &str) {
 }
 
 fn main() {
+
+	let argv: std::vec::Vec<String> = std::env::args().skip(1).collect();
+	if argv.len() != 0 {
+		test(&*argv[0]);
+		return;
+	}
+
 	test("Hello, world!");
 	test("コンニチハ！");
 	test("https://www.nittsu.co.jp");
