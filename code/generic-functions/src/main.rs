@@ -1,4 +1,3 @@
-
 /// 複数の型に対して同じインターフェイスを付けたい場合
 trait ObjectSomethingDescribable {
 	fn describe(&self) -> String;
@@ -7,6 +6,12 @@ trait ObjectSomethingDescribable {
 impl ObjectSomethingDescribable for &str {
 	fn describe(&self) -> String {
 		return format!("(&str) {}", &self);
+	}
+}
+
+impl ObjectSomethingDescribable for String {
+	fn describe(&self) -> String {
+		return format!("(String) {}", &self);
 	}
 }
 
@@ -42,7 +47,9 @@ fn test_describe<T: ObjectSomethingDescribable>(unknown: T) {
 /// エントリーポイント
 fn main() {
 	// 型パラメーターを明示的に宣言できる。
-	test_describe::<&str>("あいうえお");
+	test_describe::<&str>("エドラダワー(&str)");
+	test_describe("エドラダワー(&str)");
+	test_describe(String::from("エドラダワー(String)"));
 
 	test_describe::<i8>(0x7F);
 
