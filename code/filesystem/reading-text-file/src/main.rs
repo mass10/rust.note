@@ -22,6 +22,7 @@ fn test2(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let r = std::io::BufReader::new(file);
 	for e in r.lines() {
 		let line = e.unwrap();
+		let line = line.trim();
 		println!("{}", line);
 	}
 	return Ok(());
@@ -30,6 +31,7 @@ fn test2(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
 	if args.len() == 0 {
+		println!("path to file?");
 		return Ok(());
 	}
 
