@@ -1,0 +1,18 @@
+{
+    "name": "example-01",
+    "path": "example-01",
+    "sha": "0000000000000000000000000000000000000000",
+    "size": 15,
+    "url": "https://api.github.com/repos/mass10/DEPLOY-REPOSITORY/contents/example-01?ref=master",
+    "html_url": "https://github.com/mass10/DEPLOY-REPOSITORY/blob/master/example-01",
+    "git_url": "https://api.github.com/repos/mass10/DEPLOY-REPOSITORY/git/blobs/0000000000000000000000000000000000000000",
+    "download_url": "https://raw.githubusercontent.com/mass10/DEPLOY-REPOSITORY/master/example-01",
+    "type": "file",
+    "content": "VEhJUyBJUyBDT05URU5U\n",
+    "encoding": "base64",
+    "_links": {
+        "self": "https://api.github.com/repos/mass10/DEPLOY-REPOSITORY/contents/example-01?ref=master",
+        "git": "https://api.github.com/repos/mass10/DEPLOY-REPOSITORY/git/blobs/0000000000000000000000000000000000000000",
+        "html": "https://github.com/mass10/DEPLOY-REPOSITORY/blob/master/example-01"
+    }
+}
