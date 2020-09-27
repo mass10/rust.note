@@ -114,7 +114,7 @@ mod application {
 			let mut response = client
 				.post(url)
 				.header("Content-Type", "multipart/form-data")
-				.header("Authorizations", access_token_header)
+				.header("Authorization", access_token_header)
 				.multipart(form)
 				.send()?;
 
