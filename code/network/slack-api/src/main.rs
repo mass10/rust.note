@@ -114,18 +114,20 @@ mod application {
 			let mut response = client
 				.post(url)
 				.header("Content-Type", "multipart/form-data")
-				.header("Authorization", access_token_header)
+				.header("Authorizations", access_token_header)
 				.multipart(form)
 				.send()?;
-			let content = response.text()?;
-			let body = content;
-			println!("{}", body);
 
-			if false {
-				let value = serde_json::from_str::<serde_json::Value>(body.as_str())?;
+			let content = response.text()?;
+			println!("{}", content);
+
+			// JSON を分解してフィールドを読み取る場合
+			if true {
+				let value = serde_json::from_str::<serde_json::Value>(content.as_str())?;
 				println!("[TRACE] {}", value);
-				println!("[TRACE] NAME: {}", value["name"]);
-				println!("[TRACE] SHA: {}", value["sha"]);
+				println!("[TRACE] {}", value["error"].as_str().unwrap_or_default());
+				println!("[TRACE] {:?}", value["ok"]);
+				println!("[TRACE] {:?}", value["response_metadata"]);
 			}
 
 			return Ok(());
