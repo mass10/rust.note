@@ -1,0 +1,1 @@
+@CALL cargo run --release %*
