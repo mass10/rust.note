@@ -1,15 +1,21 @@
-extern crate serde;
 extern crate serde_derive;
-extern crate toml;
+
+#[derive(serde_derive::Deserialize, Debug)]
+struct Attribute {
+	#[allow(unused)]
+	attribute01: Option<String>,
+	#[allow(unused)]
+	attribute02: Option<String>,
+}
 
 #[derive(serde_derive::Deserialize)]
-struct User {
+struct Configuration {
 	#[allow(unused)]
 	email: String,
 	#[allow(unused)]
-	name: Option<String>,
+	threshold: Option<u32>,
 	#[allow(unused)]
-	age: Option<u16>,
+	attributes: Option<Attribute>,
 }
 
 fn read_text_file_all(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
@@ -21,29 +27,36 @@ fn read_text_file_all(path: &str) -> std::result::Result<String, Box<dyn std::er
 	return Ok(s);
 }
 
-fn read_toml_file(path: &str) -> std::result::Result<User, Box<dyn std::error::Error>> {
+fn read_toml_file(path: &str) -> std::result::Result<Configuration, Box<dyn std::error::Error>> {
+	extern crate toml;
+
+	// ファイル全体を文字列として読み込みます。
 	let content = read_text_file_all(path)?;
-	let user: User = toml::from_str(&content)?;
-	return Ok(user);
+
+	// toml 文字列を解析します。
+	let conf: Configuration = toml::from_str(&content)?;
+
+	return Ok(conf);
 }
 
-fn test01() -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn configure() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// TOML ファイル読み込み
-	let user = read_toml_file("settings.toml")?;
+	let conf = read_toml_file("settings.toml")?;
 
 	// ダンプ
 	println!("[TRACE] DUMP");
-	println!("[TRACE] {:?}", user.email);
-	println!("[TRACE] {:?}", user.name);
-	println!("[TRACE] {:?}", user.age);
+	println!("[TRACE] email: {:?}", conf.email);
+	println!("[TRACE] threshold: {:?}", conf.threshold);
+	println!("[TRACE] attributes: {:?}", conf.attributes);
 	println!("[TRACE] Ok.");
 
 	return Ok(());
 }
 
 fn main() {
-	let result = test01();
+	let result = configure();
 	if result.is_err() {
-		println!("[ERROR] reason: {:?}", result.unwrap());
+		let error = result.err().unwrap();
+		println!("[ERROR] reason: {:?}", error);
 	}
 }
