@@ -1,3 +1,4 @@
+[settings]
 email = "administrator@example.com"
 threshold = 2147483647
 attributes.attribute01 = "属性01"
