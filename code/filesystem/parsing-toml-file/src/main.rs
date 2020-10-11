@@ -2,20 +2,20 @@ extern crate serde_derive;
 
 #[derive(serde_derive::Deserialize, Debug)]
 struct Attribute {
-	#[allow(unused)]
 	attribute01: Option<String>,
-	#[allow(unused)]
 	attribute02: Option<String>,
 }
 
 #[derive(serde_derive::Deserialize)]
-struct Configuration {
-	#[allow(unused)]
-	email: String,
-	#[allow(unused)]
+struct Settings {
+	email: Option<String>,
 	threshold: Option<u32>,
-	#[allow(unused)]
 	attributes: Option<Attribute>,
+}
+
+#[derive(serde_derive::Deserialize)]
+struct Configuration {
+	settings: Settings,
 }
 
 fn read_text_file_all(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
@@ -44,11 +44,12 @@ fn configure() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let conf = read_toml_file("settings.toml")?;
 
 	// ダンプ
-	println!("[TRACE] DUMP");
-	println!("[TRACE] email: {:?}", conf.email);
-	println!("[TRACE] threshold: {:?}", conf.threshold);
-	println!("[TRACE] attributes: {:?}", conf.attributes);
-	println!("[TRACE] Ok.");
+	let email = conf.settings.email.unwrap_or(String::new());
+	let threashold = conf.settings.threshold.unwrap_or(0);
+	let attributes = conf.settings.attributes;
+	println!("[TRACE] email: [{}]", email);
+	println!("[TRACE] threshold: [{}]", threashold);
+	println!("[TRACE] attributes: [{:?}]", attributes);
 
 	return Ok(());
 }
