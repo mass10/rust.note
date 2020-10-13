@@ -25,13 +25,28 @@ fn main() {
 
 	{
 		println!("[TRACE] ========== std::vec::Vec<String> のテスト ==========");
-		let mut list: std::vec::Vec<String> = vec!();
+		let mut list: std::vec::Vec<String> = vec![];
 		list.push(String::from("まどか"));
 		list.push(String::from("杏子"));
 		list.push(String::from("マミさん"));
 		list.push(String::from("さやか"));
 		list.push(String::from("ほむ"));
 		println!("[TRACE] {:?}", list);
+		println!();
+	}
+
+	{
+		println!("[TRACE] ========== std::vec::Vec<String> のテスト ==========");
+		let mut map: std::collections::HashMap<String, i8> = std::collections::HashMap::new();
+		map.insert(String::from("まどか"), 13);
+		map.insert(String::from("杏子"), 13);
+		map.insert(String::from("マミさん"), 15);
+		map.insert(String::from("さやか"), 13);
+		map.insert(String::from("ほむ"), 13);
+		for (k, v) in &map {
+			println!("KEY: [{}], VALUE: [{}]", k, v);
+		}
+		println!("[TRACE] {:?}", map);
 		println!();
 	}
 }
