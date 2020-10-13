@@ -36,7 +36,7 @@ fn main() {
 	}
 
 	{
-		println!("[TRACE] ========== std::vec::Vec<String> のテスト ==========");
+		println!("[TRACE] ========== std::collections::HashMap<String, i8> のテスト ==========");
 		let mut map: std::collections::HashMap<String, i8> = std::collections::HashMap::new();
 		map.insert(String::from("まどか"), 13);
 		map.insert(String::from("杏子"), 13);
