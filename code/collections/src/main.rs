@@ -43,8 +43,47 @@ fn main() {
 		map.insert(String::from("マミさん"), 15);
 		map.insert(String::from("さやか"), 13);
 		map.insert(String::from("ほむ"), 13);
+
+		println!("[TRACE] {}", map.contains_key("さやか"));
+
 		for (k, v) in &map {
-			println!("KEY: [{}], VALUE: [{}]", k, v);
+			println!("[TRACE] KEY: [{}], VALUE: [{}]", k, v);
+		}
+		println!("[TRACE] {:?}", map);
+		println!();
+	}
+
+	{
+		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+		let mut map: std::collections::HashMap<&str, i8> = std::collections::HashMap::new();
+		map.insert("まどか", 13);
+		map.insert("杏子", 13);
+		map.insert("マミさん", 15);
+		map.insert("さやか", 13);
+		map.insert("ほむ", 13);
+
+		println!("[TRACE] {}", map.contains_key("さやか"));
+
+		for (k, v) in &map {
+			println!("[TRACE] KEY: [{}], VALUE: [{}]", k, v);
+		}
+		println!("[TRACE] {:?}", map);
+		println!();
+	}
+
+	{
+		println!("[TRACE] ========== std::collections::BTreeMap<String, i8> のテスト ==========");
+		let mut map: std::collections::BTreeMap<String, i8> = std::collections::BTreeMap::new();
+		map.insert(String::from("まどか"), 13);
+		map.insert(String::from("杏子"), 13);
+		map.insert(String::from("マミさん"), 15);
+		map.insert(String::from("さやか"), 13);
+		map.insert(String::from("ほむ"), 13);
+
+		println!("[TRACE] {}", map.contains_key("さやか"));
+
+		for (k, v) in &map {
+			println!("[TRACE] KEY: [{}], VALUE: [{}]", k, v);
 		}
 		println!("[TRACE] {:?}", map);
 		println!();
