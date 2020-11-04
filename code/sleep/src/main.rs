@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 /// 数値変換
 fn parse_uint(s: &str) -> u64 {
 	match s.trim().parse::<u64>() {
