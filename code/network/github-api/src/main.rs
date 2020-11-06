@@ -18,6 +18,7 @@ fn get_current_timestamp() -> String {
 }
 
 fn call_get_content(url: &str, access_token: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	// 大きなファイルのコンテンツは直接取得できません。初めにディレクトリ "/" を参照してファイルを列挙してから、SHA を指定してファイルのコンテンツをダウンロードする必要があります。
 	println!("{} [TRACE] attack.", get_current_timestamp());
 	let client = reqwest::Client::new();
 	let access_token_header = format!("token {}", access_token);
