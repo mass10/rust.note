@@ -1,3 +1,24 @@
+pub mod error {
+	#[derive(Debug, Clone)]
+	pub struct MyStringError {
+		pub message: String,
+		// pub line: usize,
+		// pub column: usize,
+	}
+
+	impl std::fmt::Display for MyStringError {
+		fn fmt(&self, f: &mut std::fmt::Formatter) -> std::result::Result<(), std::fmt::Error> {
+			write!(f, "{}", self.message)
+		}
+	}
+
+	impl std::error::Error for MyStringError {
+		fn description(&self) -> &str {
+			&self.message
+		}
+	}
+}
+
 ///
 /// 例: Result のハンドリング
 ///
@@ -20,35 +41,19 @@ mod example00 {
 /// 例
 ///
 mod example01 {
-	#[derive(Debug, Clone)]
-	pub struct MyStringError {
-		pub message: String,
-		// pub line: usize,
-		// pub column: usize,
-	}
-
-	impl std::fmt::Display for MyStringError {
-		fn fmt(&self, f: &mut std::fmt::Formatter) -> std::result::Result<(), std::fmt::Error> {
-			write!(f, "{}", self.message)
-		}
-	}
-
-	impl std::error::Error for MyStringError {
-		fn description(&self) -> &str {
-			&self.message
-		}
-	}
-
-	fn assertion_failure() -> std::result::Result<(), MyStringError> {
-		return Err(MyStringError {
+	/// 不正な処理を行う操作
+	fn operation_fails() -> std::result::Result<(), super::error::MyStringError> {
+		return Err(super::error::MyStringError {
 			message: "アプリケーションのエラーです。要求はキャンセルされました。".to_string(),
 		});
 	}
 
 	pub fn run() {
-		let result = assertion_failure();
+		// 不正な処理を行う操作
+		let result = operation_fails();
 		if result.is_err() {
-			println!("[ERROR] 要求は中止します。理由: [{}]", result.err().unwrap());
+			let error = result.err().unwrap();
+			println!("[ERROR] 要求は中止します。理由: [{}]", error);
 			return;
 		}
 		println!("[TRACE] Ok.");
