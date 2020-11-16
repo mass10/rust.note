@@ -56,7 +56,6 @@ mod example01 {
 }
 
 fn main() {
-
 	// Result のハンドリング
 	example00::run();
 	// 独自エラーの実装
