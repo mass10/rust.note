@@ -6,5 +6,6 @@ fn encode_base64(s: &str) -> String {
 }
 
 fn main() {
+	println!("[{}]", base64::encode("{\"alg\":\"RS256\",\"typ\":\"JWT\"}"));
 	println!("[{}]", base64::encode("Hello, world!"));
 }
