@@ -1,4 +1,6 @@
-# rust.note
+# About
+
+* Rust メモ
 
 # cargo bench 時の最適化に注意 (2018-05-17)
 
