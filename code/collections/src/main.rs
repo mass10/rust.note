@@ -88,4 +88,22 @@ fn main() {
 		println!("[TRACE] {:?}", map);
 		println!();
 	}
+
+	{
+		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+		let mut set: std::collections::HashSet<&str> = std::collections::HashSet::new();
+		set.insert("まどか");
+		set.insert("杏子");
+		set.insert("マミさん");
+		set.insert("さやか");
+		set.insert("ほむ");
+
+		println!("[TRACE] {}", set.contains("さやかちゃん"));
+
+		for e in &set {
+			println!("[TRACE] ENTRY: [{}]", e);
+		}
+		println!("[TRACE] {:?}", set);
+		println!();
+	}
 }
