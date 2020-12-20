@@ -12,32 +12,45 @@ fn main() {
 
 	{
 		println!("[TRACE] ========== std::vec::Vec<&str> のテスト ==========");
-		// let mut list: std::vec::Vec<&str> = vec![];
-		let mut list = std::vec::Vec::new();
+
+		let mut list: std::vec::Vec<&str> = vec![];
+
 		list.push("まどか");
 		list.push("さやか");
 		list.push("杏子");
 		list.push("マミさん");
 		list.push("ほむ");
-		println!("[TRACE] {:?}", list);
+
+		for e in list {
+			println!("[TRACE] {}", &e);
+		}
+
 		println!();
 	}
 
 	{
 		println!("[TRACE] ========== std::vec::Vec<String> のテスト ==========");
+
 		let mut list: std::vec::Vec<String> = vec![];
+
 		list.push(String::from("まどか"));
 		list.push(String::from("杏子"));
 		list.push(String::from("マミさん"));
 		list.push(String::from("さやか"));
 		list.push(String::from("ほむ"));
-		println!("[TRACE] {:?}", list);
+
+		for e in list {
+			println!("[TRACE] {}", &e);
+		}
+
 		println!();
 	}
 
 	{
 		println!("[TRACE] ========== std::collections::HashMap<String, i8> のテスト ==========");
+
 		let mut map: std::collections::HashMap<String, i8> = std::collections::HashMap::new();
+
 		map.insert(String::from("まどか"), 13);
 		map.insert(String::from("杏子"), 13);
 		map.insert(String::from("マミさん"), 15);
@@ -49,13 +62,17 @@ fn main() {
 		for (k, v) in &map {
 			println!("[TRACE] KEY: [{}], VALUE: [{}]", k, v);
 		}
+
 		println!("[TRACE] {:?}", map);
+
 		println!();
 	}
 
 	{
 		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+
 		let mut map: std::collections::HashMap<&str, i8> = std::collections::HashMap::new();
+
 		map.insert("まどか", 13);
 		map.insert("杏子", 13);
 		map.insert("マミさん", 15);
@@ -67,13 +84,17 @@ fn main() {
 		for (k, v) in &map {
 			println!("[TRACE] KEY: [{}], VALUE: [{}]", k, v);
 		}
+
 		println!("[TRACE] {:?}", map);
+
 		println!();
 	}
 
 	{
 		println!("[TRACE] ========== std::collections::BTreeMap<String, i8> のテスト ==========");
+
 		let mut map: std::collections::BTreeMap<String, i8> = std::collections::BTreeMap::new();
+
 		map.insert(String::from("まどか"), 13);
 		map.insert(String::from("杏子"), 13);
 		map.insert(String::from("マミさん"), 15);
@@ -85,13 +106,17 @@ fn main() {
 		for (k, v) in &map {
 			println!("[TRACE] KEY: [{}], VALUE: [{}]", k, v);
 		}
+
 		println!("[TRACE] {:?}", map);
+
 		println!();
 	}
 
 	{
 		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+
 		let mut set: std::collections::HashSet<&str> = std::collections::HashSet::new();
+
 		set.insert("まどか");
 		set.insert("杏子");
 		set.insert("マミさん");
@@ -103,7 +128,9 @@ fn main() {
 		for e in &set {
 			println!("[TRACE] ENTRY: [{}]", e);
 		}
+
 		println!("[TRACE] {:?}", set);
+
 		println!();
 	}
 }
