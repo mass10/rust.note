@@ -81,8 +81,9 @@ fn modify_vector_entries(students: &mut Vec<Box<String>>) {
 /// クラスルームのクラス
 ///
 struct Classroom {
-	_x: i32,
-	students: Vec<Box<String>>,
+	// 1 と 2 どっちが扱いやすいか
+	students1: Vec<Box<String>>,
+	students2: Vec<String>,
 	classroom: String,
 }
 
@@ -90,9 +91,9 @@ impl Classroom {
 	/// 新しいインスタンスを返します。
 	pub fn new(classroom: &str) -> Classroom {
 		let mut instance = Classroom {
-			_x: 0,
 			classroom: String::from(classroom),
-			students: vec![],
+			students1: vec![],
+			students2: vec![],
 		};
 		instance.initialize();
 		return instance;
@@ -104,19 +105,25 @@ impl Classroom {
 		let dba = DatabaseAccess::new();
 
 		//生徒名簿を抽出
-		self.students = dba.enum_students_boxed_type(&self.classroom).to_vec();
+		let students = dba.enum_students_boxed_type(&self.classroom);
+		self.students1 = students.to_vec();
+
+		self.students2.clear();
+		for e in students.into_iter() {
+			self.students2.push(*e);
+		}
 	}
 
 	#[allow(unused)]
 	/// 生徒名簿を返します。返却されるオブジェクトは複製です。
 	pub fn enum_students_clone(&self) -> Vec<Box<String>> {
-		return self.students.clone();
+		return self.students1.clone();
 	}
 
 	#[allow(unused)]
 	/// 生徒名簿を返します。返却されるオブジェクトは参照です。
 	pub fn enum_students_ref(&mut self) -> &mut Vec<Box<String>> {
-		return self.students.as_mut();
+		return self.students1.as_mut();
 	}
 }
 
