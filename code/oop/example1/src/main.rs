@@ -1,15 +1,17 @@
 //!
-//! 簡単なバッチプリケーションを例に、mut や borrow を練習する。
+//! 簡単なバッチ処理風プリケーションを例に、mut や borrow を練習する。
 //!
 
 extern crate chrono;
 
 mod utils {
 
+	#[allow(unused)]
 	pub struct StringUtil {}
 
 	impl StringUtil {}
 
+	/// タイムスタンプを返します。
 	pub fn get_timestamp() -> String {
 		let date = chrono::Local::now();
 		return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
@@ -24,23 +26,58 @@ mod models {
 	// データベース操作クラスの実装
 	impl StudentModel {
 		/// 複製された vec を返します。
-		pub fn enum_students() -> Vec<String> {
+		pub fn enum_students() -> Vec<Student> {
 			// 変更可能な vec を作成
-			let mut v: Vec<String> = vec![];
+			let mut v: Vec<Student> = vec![];
+
 			// vec に要素を追加
-			v.push(String::from("jimi.hendrix@gmail.com"));
-			v.push(String::from("paul.kossoff@gmail.com"));
-			v.push(String::from("freddie.mercury@gmail.com"));
-			v.push(String::from("billy.preston@gmail.com"));
-			v.push(String::from("steve.marriot@gmail.com"));
-			// vec の複製を返却
+			v.push(Student {
+				name: "Jimi Hendrix".to_string(),
+				email: "jimi.hendrix@gmail.com".to_string(),
+				team: "".to_string(),
+			});
+			v.push(Student {
+				name: "Paul Kossof".to_string(),
+				email: "paul.kossoff@gmail.com".to_string(),
+				team: "".to_string(),
+			});
+			v.push(Student {
+				name: "Freddie Mercury".to_string(),
+				email: "freddie.mercury@gmail.com".to_string(),
+				team: "".to_string(),
+			});
+			v.push(Student {
+				name: "Billy Preston".to_string(),
+				email: "billy.preston@gmail.com".to_string(),
+				team: "".to_string(),
+			});
+			v.push(Student {
+				name: "Steve Marriot".to_string(),
+				email: "steve.marriot@gmail.com".to_string(),
+				team: "".to_string(),
+			});
+
+			// vec を返却
 			return v;
 		}
 	}
 
+	///
+	/// 生徒クラス
+	///
+	#[derive(std::fmt::Debug)]
+	pub struct Student {
+		// 名前
+		pub name: String,
+		// メールアドレス
+		pub email: String,
+		// 所属チーム
+		pub team: String,
+	}
+
 	/// クラスモデルの宣言
 	pub struct ClassModel {
-		_vec: Vec<String>,
+		students: Vec<Student>,
 	}
 
 	/// クラスモデルの実装
@@ -48,34 +85,24 @@ mod models {
 		/// 新しいインスタンスを返します。
 		pub fn new() -> ClassModel {
 			// vec を初期化
-			return ClassModel {
-				_vec: StudentModel::enum_students(),
-			};
+			return ClassModel { students: StudentModel::enum_students() };
 		}
 
 		/// 生徒一覧を返します。
-		fn enum_students(&self) -> &Vec<String> {
-			return &self._vec;
+		pub fn get_students(&mut self) -> &mut Vec<Student> {
+			return &mut self.students;
 		}
 
 		/// クラスを解散します。★これは破壊的変更の発生するメソッドです。
 		pub fn free(&mut self) {
-			self._vec.clear();
+			self.students.clear();
 		}
 
-		#[allow(dead_code)]
-		/// ダミー
-		pub fn dummp1(&self) {
-			// self に破壊的変更が発生するような操作は一切認められません。
-			// self._vec.clear();
-		}
-
+		/// ダンプ
 		pub fn dump(&self) {
-			println!("[TRACE] $$$ begin dump $$$");
-			for e in self.enum_students() {
-				println!("{}", e);
+			for e in &self.students {
+				println!("[TRACE] {:?}", e);
 			}
-			println!("[TRACE] --- end dump ---");
 		}
 	}
 }
@@ -91,10 +118,14 @@ mod application {
 	pub struct Application {
 		/// アプリケーション名
 		name: String,
+		/// アプリケーションバージョン
+		version: String,
 		/// アプリケーション開始日時
 		start_timestamp: String,
 		/// アプリケーション終了日時
 		end_timestamp: String,
+		/// クラスモデル
+		class: models::ClassModel,
 	}
 
 	impl Application {
@@ -102,48 +133,112 @@ mod application {
 		pub fn new() -> Self {
 			return Self {
 				name: env!("CARGO_PKG_NAME").to_string(),
+				version: env!("CARGO_PKG_VERSION").to_string(),
 				start_timestamp: utils::get_timestamp(),
 				end_timestamp: "".to_string(),
+				class: models::ClassModel::new(),
 			};
 		}
 
-		pub fn get_start_timestamp(&self) -> &String {
-			return &self.start_timestamp;
+		/// アプリケーション名を返します。
+		/// ※ここは clone の方がよい。参照を返すと、呼び出し側変数の生存期間が邪魔になる。
+		#[allow(unused)]
+		pub fn get_name(&self) -> String {
+			return self.name.clone();
 		}
 
-		pub fn get_end_timestamp(&self) -> &String {
-			return &self.end_timestamp;
+		/// アプリケーションバージョンを返します。
+		/// ※ここは clone の方がよい。参照を返すと、呼び出し側変数の生存期間が邪魔になる。
+		#[allow(unused)]
+		pub fn get_version(&self) -> String {
+			return self.version.clone();
+		}
+
+		/// 処理開始日時を返します。
+		/// ※ここは clone の方がよい。参照を返すと、呼び出し側変数の生存期間が邪魔になる。
+		#[allow(unused)]
+		pub fn get_start_timestamp(&self) -> String {
+			return self.start_timestamp.clone();
+		}
+
+		/// 処理終了日時を返します。
+		/// ※ここは clone の方がよい。参照を返すと、呼び出し側変数の生存期間が邪魔になる。
+		#[allow(unused)]
+		pub fn get_end_timestamp(&self) -> String {
+			return self.end_timestamp.clone();
+		}
+
+		/// ランダムな文字列を生成します。
+		#[allow(unused)]
+		pub fn generate_random_string(&self) -> String {
+			return utils::get_timestamp();
 		}
 
 		/// アプリケーションのコンフィギュレーションを行います。
 		pub fn configure(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+			let _ = self.generate_random_string();
 			return Ok(());
 		}
 
-		pub fn task1(&self, c: &models::ClassModel) {
-			// mutable として borrow してないので、破壊的な変更は認められません。
-			// c.free();
+		/// タスク1を実行します。
+		pub fn update_paul(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+			// 生徒を列挙しつつ、一部の生徒情報に変更を加えます。
+			for student in self.class.get_students() {
+				if student.name.contains("Paul") {
+					student.name.push_str("★");
+				}
+			}
+			return Ok(());
+		}
+
+		/// タスク2を実行します。
+		pub fn update_jimi(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+			for student in self.class.get_students() {
+				if student.name.contains("Jimi") {
+					student.name.push_str("■");
+				}
+			}
+			return Ok(());
+		}
+
+		/// これまでの操作を確定します。
+		fn commit_operation(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
 			// ダンプ
-			c.dump();
+			self.class.dump();
+
+			// 解放
+			self.class.free();
+
+			return Ok(());
 		}
 
-		pub fn task2(&self, c: &mut models::ClassModel) {
-			// mutable として borrow しているため破壊的な変更ができます。
-			c.free();
-			// 再度ダンプ
-			c.dump();
-		}
+		/// アプリケーションを実行します。
+		pub fn run(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+			// アプリケーション名
+			let app_name = self.get_name();
 
-		pub fn run(&self) {
-			// オブジェクトを作成
-			let mut c = models::ClassModel::new();
-			self.task1(&c);
-			self.task2(&mut c);
+			println!("{} [TRACE] <{}> ### START ###", utils::get_timestamp(), app_name);
+
+			// Paul の変更処理
+			self.update_paul()?;
+
+			// Jimi の変更処理
+			self.update_jimi()?;
+
+			// ここまでの操作を確定します。
+			// ※アプリケーション本体に対する破壊的変更
+			self.commit_operation()?;
+
+			println!("{} [TRACE] <{}> --- END ---", utils::get_timestamp(), app_name);
+
+			return Ok(());
 		}
 	}
 }
 
+///
 /// エントリーポイント
+///
 fn main() {
 	// アプリケーション本体クラスを初期化します。
 	let mut app = application::Application::new();
@@ -155,7 +250,11 @@ fn main() {
 	}
 
 	// メイン処理を実行します。
-	app.run();
+	let result = app.run();
+	if result.is_err() {
+		println!("[ERROR] アプリケーションはエラーで終了しました。理由: [{}]", result.err().unwrap());
+		return;
+	}
 
 	println!("Ok.");
 }
