@@ -215,6 +215,7 @@ mod application {
 		/// アプリケーションを実行します。
 		pub fn run(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
 			// アプリケーション名
+			// こういう変数は複製として扱います。ここが &String になっていると参照が生存していて面倒。
 			let app_name = self.get_name();
 
 			println!("{} [TRACE] <{}> ### START ###", utils::get_timestamp(), app_name);
