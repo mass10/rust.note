@@ -26,7 +26,7 @@ mod models {
 	// データベース操作クラスの実装
 	impl StudentModel {
 		/// 複製された vec を返します。
-		pub fn enum_students() -> Vec<Student> {
+		pub fn enum_students() -> std::result::Result<Vec<Student>, Box<dyn std::error::Error>> {
 			// 変更可能な vec を作成
 			let mut v: Vec<Student> = vec![];
 
@@ -58,7 +58,7 @@ mod models {
 			});
 
 			// vec を返却
-			return v;
+			return Ok(v);
 		}
 	}
 
@@ -83,9 +83,10 @@ mod models {
 	/// クラスモデルの実装
 	impl ClassModel {
 		/// 新しいインスタンスを返します。
-		pub fn new() -> ClassModel {
+		pub fn new() -> std::result::Result<ClassModel, Box<dyn std::error::Error>> {
 			// vec を初期化
-			return ClassModel { students: StudentModel::enum_students() };
+			let instance = ClassModel { students: StudentModel::enum_students()? };
+			return Ok(instance);
 		}
 
 		/// 生徒一覧を返します。
@@ -130,14 +131,15 @@ mod application {
 
 	impl Application {
 		/// 新しいインスタンスを返します。
-		pub fn new() -> Self {
-			return Self {
+		pub fn new() -> std::result::Result<Self, Box<dyn std::error::Error>> {
+			let instance = Self {
 				name: env!("CARGO_PKG_NAME").to_string(),
 				version: env!("CARGO_PKG_VERSION").to_string(),
 				start_timestamp: utils::get_timestamp(),
 				end_timestamp: "".to_string(),
-				class: models::ClassModel::new(),
+				class: models::ClassModel::new()?,
 			};
+			return Ok(instance);
 		}
 
 		/// アプリケーション名を返します。
@@ -242,7 +244,12 @@ mod application {
 ///
 fn main() {
 	// アプリケーション本体クラスを初期化します。
-	let mut app = application::Application::new();
+	let result = application::Application::new();
+	if result.is_err() {
+		println!("[ERROR] アプリケーションはエラーで終了しました。理由: [{}]", result.err().unwrap());
+		return;
+	}
+	let mut app = result.unwrap();
 
 	// コンフィギュレーションを行います。
 	let result = app.configure();
