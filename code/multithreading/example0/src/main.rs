@@ -11,16 +11,29 @@ fn start_thread(tx: std::sync::mpsc::Sender<String>) -> std::result::Result<std:
 	let handle = std::thread::spawn(move || {
 		println!("{} [TRACE] ({:?}) $$$ begin thread $$$", get_timestamp(), std::thread::current().id());
 
-		std::thread::sleep(std::time::Duration::from_millis(1000 * 5));
+		loop {
+			// タイムスタンプ
+			let timestamp = get_timestamp();
 
-		// スレッドからのメッセージをメインスレッドへ送信します。
-		let thread_message = format!("{} スレッドからのメッセージ", get_timestamp());
-		let result = tx.send(thread_message);
-		if result.is_err() {
-			let error = result.err().unwrap();
-			println!("{} [ERROR] ({:?}) Unknown error. reason: [{}]", get_timestamp(), std::thread::current().id(), error);
+			std::thread::sleep(std::time::Duration::from_millis(234));
+
+			// スレッドからのメッセージをメインスレッドへ送信します。
+			let thread_message = format!("{} スレッドからのメッセージ", timestamp);
+			let result = tx.send(thread_message);
+			if result.is_err() {
+				let error = result.err().unwrap();
+				println!("{} [ERROR] ({:?}) Unknown error. reason: [{}]", get_timestamp(), std::thread::current().id(), error);
+				// 復旧不能とみなす
+				break;
+			}
+
+			// ある条件でスレッドは終了します。
+			if timestamp.ends_with("0") {
+				break;
+			}
 		}
 
+		// レスポンス
 		let response = "スレッドの応答";
 		println!("{} [TRACE] ({:?}) --- exit thread ---", get_timestamp(), std::thread::current().id());
 		return response.to_string();
@@ -51,12 +64,7 @@ fn main() {
 		println!("{} [TRACE] ({:?}) メッセージの受信を待っています。", get_timestamp(), std::thread::current().id());
 		let result = rx.recv();
 		if result.is_err() {
-			println!(
-				"{} [ERROR] ({:?}) スレッドメッセージの受信に失敗しました。理由: [{}]",
-				get_timestamp(),
-				std::thread::current().id(),
-				result.err().unwrap()
-			);
+			println!("{} [ERROR] ({:?}) スレッドメッセージの受信に失敗しました。理由: [{}]", get_timestamp(), std::thread::current().id(), result.err().unwrap());
 			break;
 		}
 		let result = result.unwrap();
