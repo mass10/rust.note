@@ -7,18 +7,22 @@ pub fn get_timestamp() -> String {
 }
 
 /// スレッドを起動します。
-fn start_thread(tx: std::sync::mpsc::Sender<String>) -> std::result::Result<std::thread::JoinHandle<String>, Box<dyn std::error::Error>> {
+fn start_thread(tx: std::sync::mpsc::Sender<String>, _map: &std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>>) -> std::result::Result<std::thread::JoinHandle<String>, Box<dyn std::error::Error>> {
 	let handle = std::thread::spawn(move || {
 		println!("{} [TRACE] ({:?}) $$$ begin thread $$$", get_timestamp(), std::thread::current().id());
 
 		loop {
+			// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
+			// map.lock();
+			// map.as_ref().set
+
 			// タイムスタンプ
 			let timestamp = get_timestamp();
-
-			std::thread::sleep(std::time::Duration::from_millis(234));
+			// ある条件が成立するとスレッドは終了します。
+			let exit_condition = if timestamp.ends_with("0") { true } else { false };
 
 			// スレッドからのメッセージをメインスレッドへ送信します。
-			let thread_message = format!("{} スレッドからのメッセージ", timestamp);
+			let thread_message = format!("{} スレッドからのメッセージ{}", timestamp, if exit_condition { "(終了)" } else { "" });
 			let result = tx.send(thread_message);
 			if result.is_err() {
 				let error = result.err().unwrap();
@@ -27,10 +31,12 @@ fn start_thread(tx: std::sync::mpsc::Sender<String>) -> std::result::Result<std:
 				break;
 			}
 
-			// ある条件でスレッドは終了します。
-			if timestamp.ends_with("0") {
+			// ある条件が成立するとスレッドは終了します。
+			if exit_condition {
 				break;
 			}
+
+			std::thread::sleep(std::time::Duration::from_millis(234));
 		}
 
 		// レスポンス
@@ -47,12 +53,15 @@ fn start_thread(tx: std::sync::mpsc::Sender<String>) -> std::result::Result<std:
 fn main() {
 	println!("{} [TRACE] ({:?}) ### START ###", get_timestamp(), std::thread::current().id());
 
+	// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
+	let shared_object: std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>> = std::sync::Arc::new(std::sync::Mutex::new(std::collections::BTreeMap::new()));
+
 	// 通信用インターフェイスを初期化します。
 	let (tx, rx): (std::sync::mpsc::Sender<String>, std::sync::mpsc::Receiver<String>) = std::sync::mpsc::channel();
 
 	// スレッドを起動します。
 	println!("{} [TRACE] ({:?}) スレッドを起動します。", get_timestamp(), std::thread::current().id());
-	let result = start_thread(tx);
+	let result = start_thread(tx, &shared_object);
 	if result.is_err() {
 		println!("{} [ERROR] ({:?}) {}", get_timestamp(), std::thread::current().id(), result.err().unwrap());
 		return;
