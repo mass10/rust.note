@@ -1,5 +1,24 @@
 [settings]
-email = "administrator@example.com"
-threshold = 2147483647
+string_value = "administrator@example.com"
+integral_value = 2147483647
 attributes.attribute01 = "属性01"
-unknown_attribute = true
+# attributes.attribute02 = "属性02"
+boolean_attribute = true
+
+[[groups]]
+name = "The Beatles"
+members = [
+	{ name = "Ringo Starr", email = "" },
+	{ name = "George Harrison", email = "" },
+	{ name = "John Lennon" },
+	{ name = "Paul McCartney", email = "" },
+]
+
+[[groups]]
+name = "FREE"
+members = [
+	{ name = "Andy Fraser", email = "" },
+	{ name = "Paul Rodgers", email = "" },
+	{ name = "Paul Kossoff" },
+	{ name = "Simon Kirke", email = "" },
+]
