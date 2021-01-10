@@ -27,7 +27,6 @@ fn parse_float(s: &str) -> f64 {
 
 /// エントリーポイント
 fn main() {
-
 	loop {
 		use std::io::Write;
 		print!("> ");
