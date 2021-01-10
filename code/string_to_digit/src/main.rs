@@ -36,6 +36,9 @@ fn main() {
 		if line == "" {
 			break;
 		}
+		if line == ":q" || line == ":Q" {
+			break;
+		}
 		let pos = line.find(".");
 		if pos.is_some() {
 			let digit = parse_float(&line);
