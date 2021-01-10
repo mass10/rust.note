@@ -38,11 +38,13 @@ fn main() {
 		if line == ":q" || line == ":Q" {
 			break;
 		}
-		let pos = line.find(".");
-		if pos.is_some() {
+
+		if line.find(".").is_some() {
+			// 整数
 			let digit = parse_float(&line);
 			println!("{}", digit);
 		} else {
+			// 小数
 			let digit = parse_int(&line);
 			println!("{}", digit);
 		}
