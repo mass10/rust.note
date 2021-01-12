@@ -3,3 +3,11 @@
 [[package]]
 name = "elapsed"
 version = "0.1.0"
+dependencies = [
+ "rust-stopwatch",
+]
+
+[[package]]
+name = "rust-stopwatch"
+version = "0.1.0"
+source = "git+https://github.com/mass10/rust-stopwatch.git?branch=main#c73265d765885f16a199b41cbeca0560b076d270"
