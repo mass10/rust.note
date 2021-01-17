@@ -1,34 +1,45 @@
+mod util {
+	pub fn parse_int_unsafe(s: &str) -> std::result::Result<i32, std::num::ParseIntError> {
+		return s.trim().parse::<i32>();
+	}
 
-fn parse_int_unsafe(s: &str) -> std::result::Result<i32, std::num::ParseIntError> {
-	return s.trim().parse::<i32>();
-}
-
-#[allow(unused)]
-fn parse_int(s: &str) -> i32 {
-	match s.trim().parse::<i32>() {
-		Ok(n) => n,
-		Err(err) => 0,
+	#[allow(unused)]
+	pub fn parse_int(s: &str) -> i32 {
+		match s.trim().parse::<i32>() {
+			Ok(n) => n,
+			Err(err) => 0,
+		}
 	}
 }
 
-#[allow(unused)]
-fn test1(s: &str) {
-	let result = parse_int_unsafe(&s);
-	match result {
-		Ok(value) => println!("\"{}\" >> ({})", s, value),
-		Err(e) => println!("\"{}\" >> ({})", s, e),
-	};
-}
+mod application {
+	use util;
 
-#[allow(unused)]
-fn test2(s: &str) {
-	let value = parse_int(&s);
-	println!("\"{}\" >> ({})", s, value);
+	/// 数値変換を行うテストです。
+	///
+	/// 変換結果を Result で表現する、安全な関数を使用しています。
+	#[allow(unused)]
+	pub fn test_parsing_with_result(s: &str) {
+		let result = util::parse_int_unsafe(&s);
+		match result {
+			Ok(value) => println!("\"{}\" >> ({})", s, value),
+			Err(e) => println!("\"{}\" >> ({})", s, e),
+		};
+	}
+
+	/// 数値変換を行うテストです。
+	///
+	/// 強制的に数値変換を行う安全な関数を使用しています。
+	#[allow(unused)]
+	pub fn test_parsing_with_value(s: &str) {
+		let value = util::parse_int(&s);
+		println!("\"{}\" >> ({})", s, value);
+	}
 }
 
 fn main() {
-	let test = test1;
-	// let test = test2;
+	let test = application::test_parsing_with_result;
+	// let test = application::test_parsing_with_value;
 	test("");
 	test("123");
 	test("0.0");
