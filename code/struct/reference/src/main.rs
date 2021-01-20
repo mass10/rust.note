@@ -1,9 +1,13 @@
-
+///
+/// 構造体 A
+///
 struct A {
-
+    /// 名前
     name: String
 }
 
+/// オブジェクト `A` の参照を受け取ります。(borrowed)
+/// * `a` ... type `A`
 fn dump(a: &A) {
 
     println!("{}", a.name);
@@ -12,6 +16,7 @@ fn dump(a: &A) {
     // a.name = "".to_string();
 }
 
+/// エントリーポイント
 fn main() {
 
     let a = A{name: "Hahaha".to_string()};
