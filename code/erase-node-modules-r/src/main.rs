@@ -40,6 +40,7 @@ fn usage() {
 	println!("パスを指定します");
 }
 
+/// エントリーポイント
 fn main() {
 	let args: Vec<String> = std::env::args().collect();
 	let mut count = 0;
@@ -53,6 +54,8 @@ fn main() {
 	}
 	if count == 0 {
 		usage();
+		std::thread::sleep(std::time::Duration::from_millis(2500));
 		return;
 	}
+	std::thread::sleep(std::time::Duration::from_millis(2500));
 }
