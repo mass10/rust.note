@@ -3,9 +3,18 @@ extern crate chrono;
 extern crate ctrlc;
 extern crate reqwest;
 
+///
+/// 各種ユーティリティを提供します。
+///
 mod util {
 
 	/// テキストファイル全体を読み込んで返します。
+	///
+	/// ### Arguments
+	/// * `path` ファイルへのパス
+	///
+	/// ### Returns
+	/// ファイル全体の内容を返します。
 	pub fn read_text_file(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
 		use std::io::Read;
 
@@ -16,6 +25,9 @@ mod util {
 	}
 
 	/// 現在のタイムスタンプを返します。
+	///
+	/// ### Returns
+	/// タイムスタンプ
 	#[allow(unused)]
 	pub fn get_current_timestamp() -> String {
 		let timestamp = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f");
@@ -23,6 +35,11 @@ mod util {
 	}
 
 	/// JSON をパースします。
+	///
+	/// ### Arguments
+	/// * `json_text` JSON 文字列
+	/// ### Returns
+	/// `serde_json::Value`
 	pub fn parse_json_to_value(json_text: &str) -> std::option::Option<serde_json::Value> {
 		let result = serde_json::from_str::<serde_json::Value>(json_text);
 		if result.is_err() {
@@ -32,23 +49,31 @@ mod util {
 	}
 }
 
+///
+/// コンフィギュレーション関連操作を提供します。
+///
 mod configuration {
 
 	use super::util;
 
+	///
 	/// コンフィギュレーション
+	///
 	pub struct Configuration {
 		access_token: String,
 	}
 
 	impl Configuration {
-		/// 単純な初期化
-		pub fn new() -> Configuration {
+		/// コンフィギュレーションオブジェクトを初期化します。
+		///
+		/// ### Returns
+		/// `Configuration` の新しいインスタンスを返します。
+		pub fn new() -> std::result::Result<Configuration, Box<dyn std::error::Error>> {
 			let conf = Configuration { access_token: String::new() };
-			return conf;
+			return Ok(conf);
 		}
 
-		/// コンフィギュレーション
+		/// コンフィギュレーションを行います。
 		pub fn configure(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
 			let content = util::read_text_file(".settings.json")?;
 			let settings = util::parse_json_to_value(&content);
@@ -62,35 +87,49 @@ mod configuration {
 		}
 
 		/// アクセストークンを返します。
+		///
+		/// ### Returns
+		/// アクセストークン
 		pub fn get_access_token(&self) -> String {
 			return self.access_token.clone();
 		}
 	}
 }
 
+//
+// アプリケーション本体に関連した操作を提供します。
+//
 mod application {
 
 	use super::configuration;
 
+	///
 	/// アプリケーション
+	///
 	pub struct Application {
 		conf: std::option::Option<configuration::Configuration>,
 	}
 
 	impl Application {
 		/// アプリケーションのインスタンスを返します。
+		///
+		/// ### Returns
+		/// `Application` の新しいインスタンス
 		pub fn new() -> std::result::Result<Application, Box<dyn std::error::Error>> {
 			let app = Application { conf: None };
 			return Ok(app);
 		}
 
 		/// コンフィギュレーション
+		///
+		/// ### Returns
+		/// 内部で保持している `configuration::Configuration` への参照
 		pub fn configure(&mut self) -> std::result::Result<Box<&configuration::Configuration>, Box<dyn std::error::Error>> {
 			if self.conf.is_some() {
 				let conf = self.conf.as_ref().unwrap();
 				return Ok(Box::new(conf));
 			}
-			let mut conf = configuration::Configuration::new();
+			let mut conf = configuration::Configuration::new()?;
 			conf.configure()?;
 			self.conf = Some(conf);
 			let conf = self.conf.as_ref().unwrap();
@@ -98,6 +137,10 @@ mod application {
 		}
 
 		/// コメントを付けてファイルを投稿します。
+		///
+		/// ### Arguments
+		/// * `text` コメント
+		/// * `path` ファイルへのパス
 		pub fn upload_file(&mut self, text: &str, path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 			let conf = self.configure()?;
 			let access_token = conf.get_access_token();
@@ -135,6 +178,9 @@ mod application {
 	}
 }
 
+///
+/// エントリーポイント
+///
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// アプリケーションオブジェクトを初期化します。
 	let mut app = application::Application::new()?;
