@@ -1,6 +1,3 @@
-// extern crate base64;
-// extern crate chrono;
-// extern crate ctrlc;
 extern crate reqwest;
 
 ///
