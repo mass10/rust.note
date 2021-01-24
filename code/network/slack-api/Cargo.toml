@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 reqwest = "0.9.0"
-chrono = "*"
-ctrlc = "*"
+# chrono = "*"
+# ctrlc = "*"
 serde_json = "*"
-base64 = "*"
+# base64 = "*"
