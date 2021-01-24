@@ -1,6 +1,6 @@
-extern crate base64;
-extern crate chrono;
-extern crate ctrlc;
+// extern crate base64;
+// extern crate chrono;
+// extern crate ctrlc;
 extern crate reqwest;
 
 ///
@@ -24,16 +24,6 @@ mod util {
 		return Ok(s);
 	}
 
-	/// 現在のタイムスタンプを返します。
-	///
-	/// ### Returns
-	/// タイムスタンプ
-	#[allow(unused)]
-	pub fn get_current_timestamp() -> String {
-		let timestamp = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f");
-		return format!("{}", timestamp);
-	}
-
 	/// JSON をパースします。
 	///
 	/// ### Arguments
@@ -46,6 +36,11 @@ mod util {
 			return None;
 		}
 		return Some(result.ok().unwrap());
+	}
+
+	pub fn get_file_name(path: &str) -> String {
+		let file = std::path::Path::new(path);
+		return file.file_name().unwrap().to_str().unwrap().to_string();
 	}
 }
 
@@ -102,6 +97,7 @@ mod configuration {
 mod application {
 
 	use super::configuration;
+	use super::util;
 
 	///
 	/// アプリケーション
@@ -152,6 +148,7 @@ mod application {
 			let form = reqwest::multipart::Form::new()
 				.text("initial_comment", text.to_string())
 				.text("channels", "notifications")
+				.text("title", util::get_file_name(path))
 				.file("file", path)?;
 
 			let mut response = client
