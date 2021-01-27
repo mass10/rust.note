@@ -39,8 +39,9 @@ pub fn shell_exec(commands: &String) -> std::result::Result<i32, Box<dyn std::er
 /// Visual Studio 2015 の dumpbin.exe を実行します。
 fn dumpbin2015(args: &str) -> std::result::Result<i32, Box<dyn std::error::Error>> {
 	let dumpbin_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\dumpbin.exe";
+	if !std::path::Path::new(dumpbin_path).exists() {}
 	let mut command = std::process::Command::new(dumpbin_path);
-	let mut command = command.args(&[args]).spawn()?;
+	let mut command = command.args(&["/DEPENDENTS", args]).spawn()?;
 	let status = command.wait()?;
 	if !status.success() {
 		let exit_code = status.code().unwrap();
@@ -50,9 +51,42 @@ fn dumpbin2015(args: &str) -> std::result::Result<i32, Box<dyn std::error::Error
 	return Ok(0);
 }
 
+#[allow(unused)]
 fn usage() {
 	println!("USAGE:");
 	println!("    dumpbin.bat [path to .exe/.dll]");
+}
+
+fn do_loop() {
+	loop {
+		println!("PATH?");
+		print!("> ");
+
+		use std::io::Write;
+		std::io::stdout().flush().unwrap();
+
+		let answer = input_line().to_uppercase();
+		if answer == "" {
+			continue;
+		}
+		if answer.to_uppercase() == "Q" {
+			break;
+		}
+		if answer.to_uppercase() == "QUIT" {
+			break;
+		}
+
+		println!();
+
+		let result = dumpbin2015(&answer);
+		if result.is_err() {
+			println!("[ERROR] {}", result.err().unwrap());
+		}
+
+		println!();
+		println!("Ok.");
+		println!();
+	}
 }
 
 /// エントリーポイントの定義です。
@@ -61,7 +95,8 @@ fn main() {
 	let args: Vec<String> = std::env::args().skip(1).collect();
 
 	if args.len() == 0 {
-		usage();
+		do_loop();
+		// usage();
 		return;
 	}
 
@@ -76,4 +111,7 @@ fn main() {
 	println!();
 	println!("Ok.");
 	println!();
+	println!("PRESS ENTER TO EXIT...");
+
+	input_line();
 }
