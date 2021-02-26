@@ -141,18 +141,20 @@ mod application {
 		/// * `text` コメント
 		/// * `path` ファイルへのパス
 		pub fn upload_file(&mut self, text: &str, path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+			// コンフィギュレーション
 			let conf = self.configure()?;
 
-			let url = "https://slack.com/api/files.upload";
-			let client = reqwest::Client::new();
-			let access_token_header = format!("Bearer {}", conf.access_token);
-
+			// multipart/form-data を作成
 			let form = reqwest::multipart::Form::new()
-				.text("initial_comment", text.to_string())
-				.text("channels", conf.channel.to_string())
-				.text("title", util::get_file_name(path))
-				.file("file", path)?;
-
+			.text("initial_comment", text.to_string())
+			.text("channels", conf.channel.to_string())
+			.text("title", util::get_file_name(path))
+			.file("file", path)?;
+			
+			// リクエスト送信
+			let access_token_header = format!("Bearer {}", conf.access_token);
+			let client = reqwest::Client::new();
+			let url = "https://slack.com/api/files.upload";
 			let mut response = client
 				.post(url)
 				.header("Content-Type", "multipart/form-data")
@@ -160,6 +162,7 @@ mod application {
 				.multipart(form)
 				.send()?;
 
+			// 応答
 			let content = response.text()?;
 			println!("{}", content);
 
