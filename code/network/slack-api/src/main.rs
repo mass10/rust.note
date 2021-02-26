@@ -35,6 +35,12 @@ mod util {
 		return Some(result.ok().unwrap());
 	}
 
+	/// ファイル、あるいはディレクトリーの名前部分を返します。
+	///
+	/// ### Arguments
+	/// * `path` ファイルのパス
+	/// ### Returns
+	/// ファイル名
 	pub fn get_file_name(path: &str) -> String {
 		let file = std::path::Path::new(path);
 		return file.file_name().unwrap().to_str().unwrap().to_string();
@@ -52,7 +58,10 @@ mod configuration {
 	/// コンフィギュレーション
 	///
 	pub struct Configuration {
-		access_token: String,
+		/// Slack BOT の access_token
+		pub access_token: String,
+		/// 投稿チャネル
+		pub channel: String,
 	}
 
 	impl Configuration {
@@ -61,7 +70,10 @@ mod configuration {
 		/// ### Returns
 		/// `Configuration` の新しいインスタンスを返します。
 		pub fn new() -> std::result::Result<Configuration, Box<dyn std::error::Error>> {
-			let conf = Configuration { access_token: String::new() };
+			let conf = Configuration {
+				access_token: String::new(),
+				channel: "".to_string(),
+			};
 			return Ok(conf);
 		}
 
@@ -74,16 +86,10 @@ mod configuration {
 			}
 			let settings = settings.unwrap();
 			let access_token = settings["access_token"].as_str().unwrap();
+			let channel = settings["channel"].as_str().unwrap();
 			self.access_token = access_token.to_string();
+			self.channel = channel.to_string();
 			return Ok(());
-		}
-
-		/// アクセストークンを返します。
-		///
-		/// ### Returns
-		/// アクセストークン
-		pub fn get_access_token(&self) -> String {
-			return self.access_token.clone();
 		}
 	}
 }
@@ -136,15 +142,14 @@ mod application {
 		/// * `path` ファイルへのパス
 		pub fn upload_file(&mut self, text: &str, path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 			let conf = self.configure()?;
-			let access_token = conf.get_access_token();
 
 			let url = "https://slack.com/api/files.upload";
 			let client = reqwest::Client::new();
-			let access_token_header = format!("Bearer {}", access_token);
+			let access_token_header = format!("Bearer {}", conf.access_token);
 
 			let form = reqwest::multipart::Form::new()
 				.text("initial_comment", text.to_string())
-				.text("channels", "notifications")
+				.text("channels", conf.channel.to_string())
 				.text("title", util::get_file_name(path))
 				.file("file", path)?;
 
