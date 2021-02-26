@@ -79,16 +79,24 @@ mod configuration {
 
 		/// コンフィギュレーションを行います。
 		pub fn configure(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+			// テキストファイル全体を読み込み
 			let content = util::read_text_file(".settings.json")?;
+
+			// JSON をパース
 			let settings = util::parse_json_to_value(&content);
 			if settings.is_none() {
 				return Ok(());
 			}
 			let settings = settings.unwrap();
+
+			// Slack BOT Access Token
 			let access_token = settings["access_token"].as_str().unwrap();
-			let channel = settings["channel"].as_str().unwrap();
 			self.access_token = access_token.to_string();
+
+			// Slack チャネル
+			let channel = settings["channel"].as_str().unwrap();
 			self.channel = channel.to_string();
+
 			return Ok(());
 		}
 	}
