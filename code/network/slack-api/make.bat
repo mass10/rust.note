@@ -1,3 +1,3 @@
 @SETLOCAL
 @CALL cargo fmt
-@CALL cargo build --release
+@CALL cargo build
