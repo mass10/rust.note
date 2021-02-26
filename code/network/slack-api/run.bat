@@ -1,2 +1,3 @@
 @SETLOCAL
-@CALL cargo run --release --quiet
+@CALL cargo fmt
+@CALL cargo run
