@@ -1,2 +1,2 @@
 @SETLOCAL
-@CALL cargo run --release --quiet %*
+@CALL cargo run --release --quiet -- %*

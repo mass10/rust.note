@@ -30,11 +30,16 @@ fn find_file(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> 
 	return Ok(());
 }
 
+/// node_modules を探して削除します。
+///
+/// ### Arguments
+/// `path` 起点のパス
 fn erase_node_modules_r(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	find_file(path)?;
-	Ok(())
+	return Ok(());
 }
 
+/// 使用方法
 fn usage() {
 	println!("node_modules ディレクトリーを削除します。");
 	println!("パスを指定します");
@@ -42,20 +47,22 @@ fn usage() {
 
 /// エントリーポイント
 fn main() {
-	let args: Vec<String> = std::env::args().collect();
-	let mut count = 0;
-	for arg in &args[1..] {
+	// コマンドライン引数
+	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
+	if args.len() == 0 {
+		usage();
+		std::thread::sleep(std::time::Duration::from_millis(2500));
+		return;
+	}
+
+	for arg in &args {
+		// node_modules ディレクトリをすべて削除
 		let result = erase_node_modules_r(arg.as_str());
 		if result.is_err() {
 			println!("[ERROR] {}", result.err().unwrap());
 			return;
 		}
-		count = count + 1;
 	}
-	if count == 0 {
-		usage();
-		std::thread::sleep(std::time::Duration::from_millis(2500));
-		return;
-	}
+
 	std::thread::sleep(std::time::Duration::from_millis(2500));
 }
