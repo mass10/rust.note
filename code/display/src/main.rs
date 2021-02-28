@@ -13,6 +13,13 @@ struct ApplicationError {
 }
 
 impl ApplicationError {
+	/// 新しいインスタンスを返します。
+	///
+	/// ### Arguments
+	/// `description` アプリケーション定義のエラーメッセージ
+	///
+	/// ### Returns
+	/// 新しいインスタンス
 	pub fn new(description: &str) -> ApplicationError {
 		return ApplicationError { description: description.to_string() };
 	}
@@ -34,10 +41,13 @@ impl std::error::Error for ApplicationError {
 	}
 }
 
+/// エントリーポイント
 fn main() {
+	// 緑の文字で表示します。
 	println_green("Hello, world!");
 	println_green(999);
 
+	// 赤の文字で表示します。
 	println_red(-1);
 	println_red(ApplicationError::new("エラーが発生しました！！"));
 }
