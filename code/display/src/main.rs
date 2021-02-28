@@ -1,7 +1,13 @@
+/// trait [std::fmt::Display] を実装した何らかの型 T を赤い文字でプリントします。
+///
+/// trait [std::fmt::Display] を実装している場合、T は "{}" によって文字列表現を得ることができます。
 fn println_red<T: std::fmt::Display>(s: T) {
 	println!("\x1b[31m{}\x1b[39m", s);
 }
 
+/// trait [std::fmt::Display] を実装した何らかの型 T を緑の文字でプリントします。
+///
+/// trait [std::fmt::Display] を実装している場合、T は "{}" によって文字列表現を得ることができます。
 fn println_green<T: std::fmt::Display>(s: T) {
 	println!("\x1b[32m{}\x1b[39m", s);
 }
@@ -34,6 +40,8 @@ impl std::fmt::Display for ApplicationError {
 }
 
 /// ApplicationError に [std::error::Error] としての振る舞いを実装します。
+///
+/// trait [std::error::Error] を実装する構造体は to_string() によって文字列表現を得ることができます。
 impl std::error::Error for ApplicationError {
 	/// 文字列表現を返す既定の動作です。
 	fn description(&self) -> &str {
