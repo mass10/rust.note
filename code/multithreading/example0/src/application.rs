@@ -1,6 +1,7 @@
 use thread;
 use util;
 
+/// アプリケーション構造体
 pub struct Application {
 	_x: String,
 }
