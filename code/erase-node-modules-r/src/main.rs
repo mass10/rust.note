@@ -1,3 +1,7 @@
+/// 指定されたディレクトリーを削除します。
+///
+/// ### Arguments
+/// `path` パス
 fn remove_dir_all(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	if !std::path::Path::new(path).exists() {
 		return Ok(());
@@ -6,12 +10,14 @@ fn remove_dir_all(path: &str) -> std::result::Result<(), Box<dyn std::error::Err
 	return Ok(());
 }
 
+/// ディレクトリー配下を走査します。
 fn find_file(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let source_path = std::path::Path::new(path);
 	if !source_path.exists() {
 		println!("[ERROR] invalid path {}", source_path.to_str().unwrap());
 		return Ok(());
 	}
+
 	if source_path.is_dir() {
 		let name = source_path.file_name().unwrap().to_str().unwrap();
 		if name == "node_modules" {
@@ -27,6 +33,7 @@ fn find_file(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> 
 		}
 		return Ok(());
 	}
+
 	return Ok(());
 }
 
