@@ -1,3 +1,2 @@
 @SETLOCAL
-
-@CALL cargo run --release --quiet %*
+@CALL target\release\simple-tcp-app.exe %*
