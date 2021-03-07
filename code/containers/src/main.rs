@@ -144,7 +144,7 @@ fn main() {
 	}
 
 	{
-		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+		println!("[TRACE] ========== std::collections::HashSet<&str> のテスト ==========");
 
 		let mut set: std::collections::HashSet<&str> = std::collections::HashSet::new();
 
