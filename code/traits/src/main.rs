@@ -5,7 +5,6 @@ mod case_vector;
 mod myutil;
 
 fn main() {
-
 	// 数値に trait を実装してみる
 	case_integral::execute();
 
