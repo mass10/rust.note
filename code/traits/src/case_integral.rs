@@ -1,13 +1,18 @@
+use my_helpers::TestableNumber;
+
 extern crate colored;
 
 mod my_helpers {
-	/// トレイトの宣言
+	///
+	/// 文字列を調べるトレイトの宣言
+	///
 	pub trait TestableNumber<T> {
 		/// この T が 'A' もしくは 'a' と同等である場合に true を返します。
 		fn is_a(&self) -> bool;
 	}
 
 	impl TestableNumber<i32> for i32 {
+		/// この i32 が 'A' もしくは 'a' と同等である場合に true を返します。
 		fn is_a(&self) -> bool {
 			match *self {
 				0x41 => true,
@@ -18,6 +23,7 @@ mod my_helpers {
 	}
 
 	impl TestableNumber<u32> for u32 {
+		/// この u32 が 'A' もしくは 'a' と同等である場合に true を返します。
 		fn is_a(&self) -> bool {
 			match *self {
 				0x41 => true,
