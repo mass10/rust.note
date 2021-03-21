@@ -1,13 +1,13 @@
-mod integral;
-mod string;
-mod string2;
-mod vector;
+mod case_integral;
+mod case_string;
+mod case_string2;
+mod case_vector;
 mod myutil;
 
 fn main() {
-	integral::main();
-	string::main();
-	string2::main();
-	vector::main();
+	case_integral::execute();
+	case_string::execute();
+	case_string2::execute();
+	case_vector::execute();
 	println!("Ok.");
 }
