@@ -28,19 +28,19 @@ impl TestableString<&str> for &str {
 	}
 }
 
-fn test_str(n: &str) {
+fn diagnose_string(n: &str) {
 	let result = ::myutil::result(n.is_alpha());
 	println!("{:?}.is_alpha() -> [{}]", n, result);
 }
 
 pub fn execute() {
 	println!("### 文字列をテストします ###");
-	test_str("_");
-	test_str("あいうえお");
-	test_str("hhHgsAYTWhnxbA");
-	test_str("892137981240");
-	test_str("_");
-	test_str("Ｊｉｍｉ");
-	test_str("Ａ");
+	diagnose_string("_");
+	diagnose_string("あいうえお");
+	diagnose_string("hhHgsAYTWhnxbA");
+	diagnose_string("892137981240");
+	diagnose_string("_");
+	diagnose_string("Ｊｉｍｉ");
+	diagnose_string("Ａ");
 	println!();
 }
