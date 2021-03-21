@@ -63,7 +63,9 @@ impl TestableString<&str> for &str {
 ///     * [self::TestableString]
 ///     * [std::fmt::Display]
 ///     * [std::fmt::Debug]
-fn diagnose_unknown_parameter<T: self::TestableString<T> + std::fmt::Display + std::fmt::Debug>(unknown: T) {
+fn diagnose_unknown_parameter<T: self::TestableString<T> + std::fmt::Display + std::fmt::Debug>(
+	unknown: T,
+) {
 	let result = ::myutil::result(unknown.is_alpha());
 
 	println!("{:?}.is_alpha() -> [{}]", unknown, result);
