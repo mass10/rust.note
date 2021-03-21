@@ -1,6 +1,17 @@
+// 独自の型を定義。入れ子になった型は trait の型パラメータに指定できない。
 type StringVectorType = std::vec::Vec<std::string::String>;
 
+///
+/// 文字列ベクタを操作するためのトレイトです。
+///
 trait StringVectorTrait<StringVectorType> {
+	/// この T の `index` 番目の要素を返します。
+	///
+	/// # Arguments
+	/// `index` 調べる位置
+	///
+	/// # Returns
+	/// 文字列
 	fn at(&self, index: usize) -> String;
 }
 
