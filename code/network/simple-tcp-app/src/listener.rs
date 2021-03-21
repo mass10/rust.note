@@ -26,12 +26,19 @@ fn parse_request_data_json(request_string: &str) -> std::result::Result<Applicat
 pub fn accept(mut peer_socket: std::net::TcpStream) -> Result<(), Box<dyn std::error::Error>> {
 	use std::io::Read;
 
+	println!("[TRACE] クライアント接続！");
+
 	// 読み込みタイムアウトは15秒
-	peer_socket.set_read_timeout(Some(std::time::Duration::from_secs(15)))?;
+	let result = peer_socket.set_read_timeout(Some(std::time::Duration::from_secs(15)));
+	if result.is_err() {
+		println!("[ERROR] タイムスト設定に失敗しています。(情報: {})", result.err().unwrap());
+		return Ok(());
+	}
 
 	// リクエストデータ
 	let mut line = "".to_string();
 	peer_socket.read_to_string(&mut line)?;
+	println!("[TRACE] 受信 [{}]", line);
 
 	// リクエストデータをパース
 	let result = parse_request_data_json(&line);
