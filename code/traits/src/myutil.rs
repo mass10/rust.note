@@ -9,6 +9,6 @@ pub fn green<T: std::fmt::Display>(s: T) -> String {
 pub fn result(b: bool) -> String {
 	match b {
 		true => green(b),
-		false => red(b)
+		false => red(b),
 	}
 }
