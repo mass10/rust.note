@@ -51,19 +51,17 @@ impl MyArchiver {
 		} else if unknown.is_file() {
 			println!("[TRACE] ファイル {} を追加中...", path);
 
-			// 名前
-			let name = unknown.file_name().unwrap().to_str().unwrap().to_string();
 			// zip 内におけるルートからの絶対パス "/a/b/c/d.txt"
-			let _relative_path = unknown.join(name).to_str().unwrap().to_string();
 			let relative_path = unknown.to_str().unwrap();
 			println!("[TRACE] >> ファイル {}", relative_path);
 
+			// ファイルをアーカイブ
 			let options = zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored);
 			archiver.start_file(relative_path, options)?;
 
 			let mut stream = std::fs::File::open(relative_path)?;
 			loop {
-				let mut buffer = [0; 5];
+				let mut buffer = [0; 1000];
 				let bytes_read = stream.read(&mut buffer)?;
 				if bytes_read == 0 {
 					break;
