@@ -1,1 +1,2 @@
-@CALL cargo run -- src
+@SETLOCAL
+@CALL cargo run -- %*
