@@ -23,31 +23,33 @@ fn file_handler(source_path: &str) -> std::result::Result<i32, Box<dyn std::erro
 	return Ok(1);
 }
 
+type FileHandler = dyn Fn(&str) -> std::result::Result<i32, Box<dyn std::error::Error>>;
+
 /// ディレクトリをコピーします。
 /// # Arguments
 /// * `path` パス
 /// * `handler` ファイルハンドラー
-fn find_file(path: &str, handler: &dyn Fn(&str) -> std::result::Result<i32, Box<dyn std::error::Error>>) -> std::result::Result<i32, Box<dyn std::error::Error>> {
+fn find_file(path: &str, handler: &FileHandler) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	let source_path = std::path::Path::new(path);
 	if !source_path.exists() {
 		println!("[TRACE] invalid path {}", source_path.to_str().unwrap());
-		return Ok(0);
+		return Ok(());
 	}
 	if source_path.is_dir() {
 		// ディレクトリ内エントリーを走査
-		let mut affected = 0;
 		for e in std::fs::read_dir(source_path)? {
 			let entry = e?;
 			let path = entry.path();
-			affected = affected + find_file(&path.to_str().unwrap(), handler)?;
+			find_file(&path.to_str().unwrap(), handler)?;
 		}
-		return Ok(affected);
+		return Ok(());
 	}
 	if source_path.is_file() {
-		return handler(path);
+		handler(path)?;
+		return Ok(());
 	}
 	println!("[WARN] 不明なファイルです。[{}]", path);
-	return Ok(0);
+	return Ok(());
 }
 
 /// ファイル、またはディレクトリを診断します。
@@ -56,6 +58,7 @@ fn find_file(path: &str, handler: &dyn Fn(&str) -> std::result::Result<i32, Box<
 /// * `source_path` パス
 pub fn stat(source_path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	find_file(source_path, &file_handler)?;
+	return Ok(());
 }
 
 /// アプリケーションのエントリーポイントです。
@@ -65,7 +68,7 @@ fn main() {
 
 	for e in args {
 		// ファイル、またはディレクトリを診断
-		let result = application::stat(&e);
+		let result = stat(&e);
 		if result.is_err() {
 			println!("[ERROR] <main()> {}", result.err().unwrap());
 		}
