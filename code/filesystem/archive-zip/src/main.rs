@@ -10,6 +10,14 @@ fn get_file_name(path: &str) -> String {
 	return unknown.file_name().unwrap().to_str().unwrap().to_string();
 }
 
+/// パスを正しい形式に変換します。
+fn canonicalize_path(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
+	let path = std::path::Path::new(path);
+	let path = path.canonicalize()?;
+	let path = path.to_str().unwrap().to_string();
+	return Ok(path);
+}
+
 /// ディレクトリまたはファイルを削除します。
 fn unlink(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	if path == "" {
@@ -134,20 +142,20 @@ impl MyArchiver {
 		return Ok(());
 	}
 
-	fn create_zip_name(path: &str) -> String {
-		let pathname = path.to_string() + ".zip";
-		return pathname;
-	}
-
 	/// ディレクトリをアーカイブします。
 	pub fn archive(&mut self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-		println!("archiving ... {}", path);
+
+		// パスを正規化
+		let path = canonicalize_path(path)?;
+
+		println!("archiving ... {}", &path);
 
 		// ファイル名を生成
-		let archive_path_name = MyArchiver::create_zip_name(path);
+		let archive_path_name = path.to_string() + ".zip";
+
+		println!("[TRACE] [{}]", archive_path_name);
 
 		// 起点となるディレクトリの名前
-		// let base_name = get_file_name(path);
 		let base_name = "";
 
 		// .zip ファイルがあれば削除
@@ -158,7 +166,7 @@ impl MyArchiver {
 		let mut archiver = zip::ZipWriter::new(w);
 
 		// ここから走査
-		self.append_entry(&mut archiver, &base_name, path)?;
+		self.append_entry(&mut archiver, &base_name, &path)?;
 
 		// アーカイバーを閉じます。
 		archiver.finish()?;
