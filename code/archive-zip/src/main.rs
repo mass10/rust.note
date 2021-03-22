@@ -34,12 +34,10 @@ fn unlink(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	}
 
 	if e.is_dir() {
-		println!("[TRACE] {} を削除", path);
 		std::fs::remove_dir_all(path)?;
 		return Ok(());
 	}
 	if e.is_file() {
-		println!("[TRACE] {} を削除", path);
 		std::fs::remove_file(path)?;
 		return Ok(());
 	}
@@ -63,22 +61,16 @@ impl MyArchiver {
 	}
 
 	fn append_entry(&mut self, archiver: &mut zip::ZipWriter<std::fs::File>, base_name: &str, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-		// #[allow(unused)]
 		use std::io::Write;
-
-		// println!("[TRACE] BASENAME: [{}]", base_name);
 
 		let unknown = std::path::Path::new(path);
 		if !unknown.exists() {
 			return Ok(());
 		} else if unknown.is_dir() {
-			// println!("[TRACE] ディレクトリ {} を検索中...", path);
-
 			let name = unknown.file_name().unwrap().to_str().unwrap();
 
 			// 内部ディレクトリエントリーを作成
 			if base_name != "" {
-				// build_path(base_name, name);
 				let options = zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored);
 				archiver.add_directory(build_path(base_name, name), options)?;
 			}
@@ -87,17 +79,11 @@ impl MyArchiver {
 			for e in it {
 				let entry = e?;
 
-				// println!("[TRACE] CHILD: {:?}", entry.path());
-
-				// ディレクトリ／ファイルの名前
-				// let name = entry.file_name().to_str().unwrap().to_string();
 				// base_name からの内部相対パスを生成
 				let sub_dir_name = build_path(base_name, &name);
 
 				let path_name = entry.path();
 				let path_name = path_name.to_str().unwrap();
-
-				// println!("[TRACE] (found {})", path_name);
 
 				self.append_entry(archiver, &sub_dir_name, path_name)?;
 			}
@@ -106,10 +92,8 @@ impl MyArchiver {
 			let name = unknown.file_name().unwrap().to_str().unwrap();
 
 			let relative_path = build_path(base_name, name);
-			println!("[TRACE] ファイル {} ({}) を追加中...", &relative_path, full_path);
 
-			// zip 内におけるルートからの絶対パス "/a/b/c/d.txt"
-			// println!("[TRACE] >> ファイル {}", unknown.to_str().unwrap());
+			println!("adding file ... {}", &relative_path);
 
 			let meta = unknown.metadata()?;
 			let last_modified = meta.modified()?;
@@ -157,7 +141,7 @@ impl MyArchiver {
 
 	/// ディレクトリをアーカイブします。
 	pub fn archive(&mut self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-		println!("[TRACE] {} をアーカイブ中...", path);
+		println!("archiving ... {}", path);
 
 		// ファイル名を生成
 		let archive_path_name = MyArchiver::create_zip_name(path);
