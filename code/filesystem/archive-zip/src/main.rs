@@ -52,6 +52,20 @@ fn unlink(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+fn convert_datetime1(time: std::time::SystemTime) -> chrono::DateTime<chrono::Local> {
+	return chrono::DateTime::<chrono::Local>::from(time);
+}
+
+fn convert_datetime2(time: chrono::DateTime<chrono::Local>) -> zip::DateTime {
+	return zip::DateTime::from_date_and_time(time.year() as u16, time.month() as u8, time.day() as u8, time.hour() as u8, time.minute() as u8, time.second() as u8).unwrap();
+}
+
+fn convert_datetime0(time: std::time::SystemTime) -> zip::DateTime {
+	let val1 = convert_datetime1(time);
+	let val2 = convert_datetime2(val1);
+	return val2;
+}
+
 struct MyArchiver {
 	// archiver: Option<zip::ZipWriter<std::fs::File>>,
 }
@@ -104,25 +118,15 @@ impl MyArchiver {
 			println!("adding file ... {}", &relative_path);
 
 			let meta = unknown.metadata()?;
-			let last_modified = meta.modified()?;
-			let chrono_timestamp = chrono::DateTime::<chrono::Local>::from(last_modified);
 
 			// ファイルをアーカイブ
 			let options = zip::write::FileOptions::default().compression_method(zip::CompressionMethod::Stored);
 
 			// 最終更新日時
-			let last_modified_time = zip::DateTime::from_date_and_time(
-				chrono_timestamp.year() as u16,
-				chrono_timestamp.month() as u8,
-				chrono_timestamp.day() as u8,
-				chrono_timestamp.hour() as u8,
-				chrono_timestamp.minute() as u8,
-				chrono_timestamp.second() as u8,
-			)
-			.unwrap();
-			let options = options.last_modified_time(last_modified_time);
+			let last_modified = meta.modified()?;
+			let last_modified = convert_datetime0(last_modified);
+			let options = options.last_modified_time(last_modified);
 
-			// let options = options.last_modified_time(last_modified);
 			archiver.start_file(&relative_path, options)?;
 
 			let mut stream = std::fs::File::open(full_path)?;
@@ -144,7 +148,6 @@ impl MyArchiver {
 
 	/// ディレクトリをアーカイブします。
 	pub fn archive(&mut self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-
 		// パスを正規化
 		let path = canonicalize_path(path)?;
 
