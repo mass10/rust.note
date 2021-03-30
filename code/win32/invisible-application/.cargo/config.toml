@@ -1,0 +1,8 @@
+# このスコープは効かない模様
+#-Clink-args="-Wl,--subsystem,windows"
+
+[build]
+rustflags = "-A dead_code"
+
+# ダメ
+#link_args = "-Wl,--subsystem,windows"
