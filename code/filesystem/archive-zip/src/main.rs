@@ -66,23 +66,24 @@ fn convert_datetime0(time: std::time::SystemTime) -> zip::DateTime {
 	return val2;
 }
 
-struct MyArchiver {
-	// archiver: Option<zip::ZipWriter<std::fs::File>>,
-}
-
 fn build_path(base_name: &str, name: &str) -> String {
 	let unknown = std::path::Path::new(base_name);
 	let path_name = unknown.join(name);
 	return path_name.to_str().unwrap().to_string();
 }
 
-impl MyArchiver {
+///
+/// アプリケーション本体
+///
+struct Application {}
+
+impl Application {
 	/// 作成
-	pub fn new() -> MyArchiver {
-		return MyArchiver {};
+	pub fn new() -> Application {
+		return Application {};
 	}
 
-	fn append_entry(&mut self, archiver: &mut zip::ZipWriter<std::fs::File>, base_name: &str, path: &str) -> Result<(), Box<dyn std::error::Error>> {
+	fn append_entry(&self, archiver: &mut zip::ZipWriter<std::fs::File>, base_name: &str, path: &str) -> Result<(), Box<dyn std::error::Error>> {
 		use std::io::Write;
 
 		let unknown = std::path::Path::new(path);
@@ -147,7 +148,10 @@ impl MyArchiver {
 	}
 
 	/// ディレクトリをアーカイブします。
-	pub fn archive(&mut self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
+	///
+	/// # Arguments
+	/// `path` パス
+	pub fn archive(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
 		// パスを正規化
 		let path = canonicalize_path(path)?;
 
@@ -155,8 +159,6 @@ impl MyArchiver {
 
 		// ファイル名を生成
 		let archive_path_name = path.to_string() + ".zip";
-
-		println!("[TRACE] [{}]", archive_path_name);
 
 		// 起点となるディレクトリの名前
 		let base_name = "";
@@ -193,7 +195,7 @@ fn main() {
 
 	for path in &args {
 		// それぞれを、それぞれの zip にアーカイブします。
-		let mut ar = MyArchiver::new();
+		let ar = Application::new();
 		let result = ar.archive(&path);
 		if result.is_err() {
 			let error = result.err();
