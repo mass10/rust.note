@@ -57,9 +57,7 @@ struct Configuration {
 	groups: Vec<Groups>,
 }
 
-///
 /// テキストファイル全体を String で返します。
-///
 fn read_text_file_all(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
 	use std::io::Read;
 
@@ -70,9 +68,7 @@ fn read_text_file_all(path: &str) -> std::result::Result<String, Box<dyn std::er
 	return Ok(content);
 }
 
-///
 /// TOML ファイルを解析します。
-///
 fn read_toml_file(path: &str) -> std::result::Result<Configuration, Box<dyn std::error::Error>> {
 	extern crate toml;
 
@@ -85,13 +81,19 @@ fn read_toml_file(path: &str) -> std::result::Result<Configuration, Box<dyn std:
 	return Ok(conf);
 }
 
-///
+/// ファイルパスの補完
+fn fix_conf_path(path: &str) -> String {
+	if path != "" {
+		return path.to_string();
+	}
+	return "settings.toml".to_string();
+}
+
 /// コンフィギュレーションを行います。
-///
-fn configure(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn configure1(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// TOML ファイル読み込み
-	let path = if path == "" { "settings.toml" } else { path };
-	let conf = read_toml_file(path)?;
+	let path = fix_conf_path(path);
+	let conf = read_toml_file(&path)?;
 
 	// [settings] の内容を表示します。
 	{
@@ -124,12 +126,43 @@ fn configure(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> 
 	return Ok(());
 }
 
-///
+/// コンフィギュレーションを行います。
+fn configure2(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	// TOML ファイル読み込み
+	let path = fix_conf_path(path);
+	let content = read_text_file_all(&path)?;
+
+	// toml 文字列を解析します。
+	let conf = toml::from_str::<toml::Value>(&content)?;
+
+	let settings = conf.get("settings");
+	println!("{:?}", &settings);
+
+	for node in conf.as_table() {
+		for key in node.keys() {
+			println!("{:?}", &key);
+		}
+	}
+
+	return Ok(());
+}
+
 /// エントリーポイントの定義です。
-///
 fn main() {
-	// コンフィギュレーション
-	let result = configure("");
+	// コマンドライン引数からパスを受け取る
+	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
+
+	let path_to_toml = if 0 < args.len() { &args[0] } else { "" };
+
+	// コンフィギュレーション(1)
+	let result = configure1(path_to_toml);
+	if result.is_err() {
+		let error = result.err().unwrap();
+		println!("[ERROR] Configuration error! reason: [{}]", error);
+	}
+
+	// コンフィギュレーション(2)
+	let result = configure2(path_to_toml);
 	if result.is_err() {
 		let error = result.err().unwrap();
 		println!("[ERROR] Configuration error! reason: [{}]", error);
