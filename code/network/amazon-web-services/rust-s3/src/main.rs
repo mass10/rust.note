@@ -120,8 +120,8 @@ impl AmazonS3Client {
 		let auth_string = format!("AWS {}:{}", conf.access_key_id, signature);
 
 		let client = reqwest::Client::new();
-		// let url = "https://s3-ap-northeast-1.amazonaws.com/my-bucket-name/";
-		let builder = client.get(url);
+		let url = format!("https://{}/{}/{}", host, bucket_name, key);
+		let builder = client.get(&url);
 		let builder = builder.header("Host", host);
 		let builder = builder.header("Authorization", auth_string);
 		let mut response = builder.send()?;
