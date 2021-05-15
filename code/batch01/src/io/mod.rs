@@ -1,22 +1,22 @@
 /// CSV ファイルを読み込むクラス
 pub struct CsvFileLoader {
-	_file: Option<std::fs::File>,
+	file: Option<std::fs::File>,
 }
 
 impl CsvFileLoader {
 	/// 新しいインすタンスを返します。
 	pub fn new() -> CsvFileLoader {
-		return CsvFileLoader { _file: None };
+		return CsvFileLoader { file: None };
 	}
 
 	pub fn open_csv_file(&mut self, path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		let file = std::fs::File::open(path)?;
-		self._file = Some(file);
+		self.file = Some(file);
 		return Ok(());
 	}
 
 	pub fn close(&self) {
-		if self._file.is_none() {
+		if self.file.is_none() {
 			return;
 		}
 	}
