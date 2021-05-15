@@ -2,6 +2,9 @@
 //! アプリケーションのメイン
 //!
 
+pub mod errors;
+
+use crate::application;
 use crate::io;
 use crate::services;
 
@@ -21,20 +24,37 @@ impl Application {
 
 	/// アプリケーションを実行します。
 	pub fn run(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
-		// CSV ファイルを読み込み
+		// TSV ファイルを読み込み
 		let mut loader = io::CsvFileLoader::new();
-		loader.open_csv_file(".rustfmt.toml")?;
+		loader.open_tsv_file("DATA.tsv")?;
 
-		// インポート
+		// ========== インポート ==========
+		let user_manager = services::UserManager::new();
 		loop {
-			let name = "";
-			let email = "";
-			let user_manager = services::UserManager::new();
-			user_manager.register_new_user(name, email)?;
-			break;
-		}
+			let result = loader.read_line()?;
+			if result.is_none() {
+				break;
+			}
+			let row = result.unwrap();
+			if row.len() == 0 {
+				continue;
+			}
+			if row.len() != 2 {
+				let error = application::errors::ApplicationError::new("入力検査のエラー(フィールド数が正しくない)");
+				return Err(Box::new(error));
+			}
 
-		loader.close();
+			// レコードからフィールドを取り出し
+			let (name, email) = (&row[0], &row[1]);
+
+			if name == "NAME" {
+				// これはヘッダー行です。
+				continue;
+			}
+
+			// ========== ユーザー登録 ==========
+			user_manager.register_new_user(name, email)?;
+		}
 
 		return Ok(());
 	}
