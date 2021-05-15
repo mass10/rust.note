@@ -9,7 +9,9 @@ mod services;
 
 /// エントリーポイント
 fn main() {
+	// アプリケーションを初期化
 	let mut app = application::Application::new();
+	// 実行
 	let result = app.run();
 	if result.is_err() {
 		println!("[ERROR] ERROR! REASON: {:?}", result.err());
