@@ -14,10 +14,12 @@ pub struct Application {
 }
 
 impl Application {
+	/// `Application` の新しいインスタンスを返します。
 	pub fn new() -> Application {
 		return Application { reserved: 0 };
 	}
 
+	/// アプリケーションを実行します。
 	pub fn run(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		// CSV ファイルを読み込み
 		let mut loader = io::CsvFileLoader::new();
