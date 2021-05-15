@@ -3,6 +3,8 @@ extern crate clap;
 /// コンフィギュレーション
 #[derive(Debug, Clone)]
 pub struct Configuration {
+	/// 予約
+	reserved: i32,
 	/// dry-run の指定
 	pub dry_run: bool,
 	/// 冗長モード
@@ -10,15 +12,6 @@ pub struct Configuration {
 }
 
 impl Configuration {
-	/// 唯一のインスタンスを返します。
-	pub fn get_instance() -> &'static mut super::configuration::Configuration {
-		// ※スレッドセーフでないスコープ
-		unsafe {
-			static mut INSTANCE: Configuration = Configuration { dry_run: false, verbose: false };
-			return &mut INSTANCE;
-		}
-	}
-
 	/// コンフィギュレーション
 	pub fn commandline_arguments() -> Configuration {
 		// creating an application
