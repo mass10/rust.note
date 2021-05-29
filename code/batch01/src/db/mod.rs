@@ -16,8 +16,10 @@ fn generate_uuid4() -> String {
 /// データベース接続
 ///
 pub struct DatabaseConnection {
+	#[allow(unused)]
+	reserved: i32,
 	// データベース接続
-	_connection: Option<sqlite::Connection>,
+	connection: Option<sqlite::Connection>,
 }
 
 impl DatabaseConnection {
@@ -26,7 +28,7 @@ impl DatabaseConnection {
 	/// # Returns
 	/// `DatabaseConnection` の新しいインスタンス
 	pub fn new() -> DatabaseConnection {
-		let instance = DatabaseConnection { _connection: None };
+		let instance = DatabaseConnection { reserved: 0, connection: None };
 		return instance;
 	}
 
@@ -45,18 +47,18 @@ impl DatabaseConnection {
 
 	fn open(&mut self) -> &mut sqlite::Connection {
 		// 既に開いている場合は既存の接続を返します。
-		if self._connection.is_some() {
-			return self._connection.as_mut().unwrap();
+		if self.connection.is_some() {
+			return self.connection.as_mut().unwrap();
 		}
 
 		// メモリ上の仮想データベースを開きます。
 		let connection = sqlite::open(":memory:").unwrap();
-		self._connection = Some(connection);
-		let connection = self._connection.as_mut().unwrap();
+		self.connection = Some(connection);
+		let connection = self.connection.as_mut().unwrap();
 		return connection;
 	}
 
-	fn initialize(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+	pub fn setup_db_schema(&mut self) -> Result<(), Box<dyn std::error::Error>> {
 		let connection = self.open();
 
 		connection.execute("CREATE TABLE USERS(ID VARCHAR(999) NOT NULL, NAME VARCHAR(255) NOT NULL)")?;

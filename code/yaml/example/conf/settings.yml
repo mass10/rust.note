@@ -1,16 +1,16 @@
-key1:
-	subkey1: "value of subkey1"
-	subkey2: "value of subkey2"
+tree_attributes:
+    email: "jimi.hendrix@docomo.ne.jp"
+    address: "〒812-0011 福岡県福岡市博多区博多駅前２丁目９−３"
 
 key2: "文字列 value of key2"
 
 key3: 123.456
 
-key4: [
-	-12,
-	0.12,
-	-1.098,
-	35.02,
-	192.01,
-	28
+array_od_entities: [
+    { value: -12 },
+    { value: 0.12},
+    { value: -1.098},
+    { value: 35.02},
+    { value: 192.01},
+    { value: 28 },
 ]

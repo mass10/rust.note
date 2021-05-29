@@ -22,6 +22,12 @@ impl Application {
 		return Application { reserved: 0 };
 	}
 
+	pub fn setup(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+		let mut db = crate::db::DatabaseConnection::new();
+		db.setup_db_schema()?;
+		return Ok(());
+	}
+
 	/// アプリケーションを実行します。
 	pub fn run(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		// TSV ファイルを読み込み
