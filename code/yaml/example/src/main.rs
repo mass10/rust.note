@@ -20,7 +20,8 @@ fn main() {
 
 	// println!("{:?}", doc["key1"].as_str().unwrap());
 	// println!("{:?}", doc["key2"].as_str().unwrap());
-	println!("{:?}", doc["key2"].as_str());
-	println!("{:?}", doc["key3"].as_f64());
-	println!("{:?}", doc["key4"].is_badvalue());
+	println!("[TRACE] key2: {:?}", doc["key2"].as_str());
+	println!("[TRACE] key3: {:?}", doc["key3"].as_f64());
+	println!("[TRACE] key4: {:?}", doc["key4"].as_vec());
+	println!("[TRACE] key5: {:?}", doc["key5"].is_badvalue());
 }
