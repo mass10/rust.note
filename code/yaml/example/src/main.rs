@@ -20,7 +20,7 @@ fn main() {
 
 	// Hash になる要素
 	if let Some(attributes) = doc["tree_attributes"].as_hash() {
-		println!("[TARCE] tree_attributes is {:?}", attributes);
+		println!("[TRACE] tree_attributes is {:?}", attributes);
 		println!("[TRACE] tree_attributes: {:?}", attributes[&yaml_rust::Yaml::String("email".to_string())]);
 		println!("[TRACE] tree_attributes: {:?}", attributes[&yaml_rust::Yaml::String("address".to_string())]);
 		println!("[TRACE] tree_attributes: {:?}", doc["tree_attributes"]["email"]);
