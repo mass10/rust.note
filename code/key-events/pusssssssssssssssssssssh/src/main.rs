@@ -43,11 +43,16 @@ impl TimeKeeper {
 
 	/// 計測を開始したか確認します。
 	///
-	/// #
+	/// # Returns
+	/// 開始されていれば `true`
 	fn started(&mut self) -> bool {
 		return self.start.is_some();
 	}
 
+	/// 終了判断
+	///
+	/// # Returns
+	/// 計画された時間が経過している場合は `true`
 	pub fn checkout(&mut self) -> bool {
 		if !self.started() {
 			// Not started.
@@ -137,6 +142,7 @@ fn run_app() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> 
 			continue;
 		}
 
+		// 経過時間の計測を開始します。
 		time_keeper.start();
 
 		match key.unwrap() {
@@ -165,7 +171,9 @@ fn run_app() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> 
 	return Ok(());
 }
 
+// アプリケーションのエントリーポイント
 fn main() {
+	// アプリケーションを実行します。
 	let result = run_app();
 	if result.is_err() {
 		let error = result.err().unwrap();
