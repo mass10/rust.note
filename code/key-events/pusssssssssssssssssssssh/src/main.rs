@@ -19,20 +19,31 @@ fn cls() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+///
+/// 簡易タイムキーパー
+///
 struct TimeKeeper {
 	start: Option<std::time::Instant>,
 	times: u32,
 }
 
 impl TimeKeeper {
+	/// 新しいインスタンスを生成します。
+	///
+	/// # Returns
+	/// 新しいインスタンス
 	pub fn new() -> TimeKeeper {
 		return TimeKeeper { start: None, times: 0 };
 	}
 
+	/// 計測を開始します。
 	pub fn start(&mut self) {
 		self.start = Some(std::time::Instant::now());
 	}
 
+	/// 計測を開始したか確認します。
+	///
+	/// #
 	fn started(&mut self) -> bool {
 		return self.start.is_some();
 	}
