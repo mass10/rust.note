@@ -30,6 +30,7 @@ fn main() {
 	// println!("{:?}", matches);
 	let configuration_path = matches.value_of("path to configuration file").unwrap_or(".settings.yaml");
 	let verbose_option = matches.is_present("verbose option");
+
 	println!("config: {}", configuration_path);
 	println!("config: {}", verbose_option);
 }
