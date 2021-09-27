@@ -15,6 +15,9 @@ fn cls() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 }
 
 /// キーイベント
+///
+/// # Arguments
+/// * `key` - キーイベント
 fn on_key_down(key: crossterm::event::Event) -> std::result::Result<bool, std::boxed::Box<dyn std::error::Error>> {
 	use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 	use crossterm::style::Print;
@@ -43,11 +46,14 @@ fn on_key_down(key: crossterm::event::Event) -> std::result::Result<bool, std::b
 	}
 }
 
+/// アプリケーションのエントリーポイント
 fn main() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	// RAW MODE
 	crossterm::terminal::enable_raw_mode()?;
+
 	// CLS
 	cls()?;
+
 	// キーイベントループ
 	loop {
 		// 次のキー操作を待ちます。
