@@ -14,6 +14,7 @@ fn cls() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+/// メニューアイテムを移動します。
 fn get_next_menuitem(current: &str, direction: &str) -> String {
 	if direction == "Up" {
 		if current == "B" {
@@ -22,6 +23,7 @@ fn get_next_menuitem(current: &str, direction: &str) -> String {
 		if current == "C" {
 			return "B".to_string();
 		}
+		return "C".to_string();
 	} else if direction == "Down" {
 		if current == "A" {
 			return "B".to_string();
@@ -29,6 +31,7 @@ fn get_next_menuitem(current: &str, direction: &str) -> String {
 		if current == "B" {
 			return "C".to_string();
 		}
+		return "A".to_string();
 	}
 	return current.to_string();
 }
@@ -46,44 +49,52 @@ fn main() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	// CLS
 	cls()?;
 
-	let mut current_section = "A".to_string();
+	let mut current_section = "".to_string();
 
 	// キーイベントループ
 	loop {
 		// メニューを表示
 		execute!(stdout, crossterm::cursor::MoveTo(0, 0))?;
+
 		println!("↓どうしますか？");
 
 		if current_section == "A" {
-			println!("[A] FUNCTION A: >  [ENTER]");
-			println!("[B] FUNCTION B:           ");
-			println!("[C] FUNCTION C:           ");
-			execute!(stdout, crossterm::cursor::MoveTo(18, 1))?;
+			println!("[*] FUNCTION A");
+			println!("[ ] FUNCTION B");
+			println!("[ ] FUNCTION C");
+
+			execute!(stdout, crossterm::cursor::MoveTo(1, 1))?;
 		} else if current_section == "B" {
-			println!("[A] FUNCTION A:           ");
-			println!("[B] FUNCTION B: >  [ENTER]");
-			println!("[C] FUNCTION C:           ");
-			execute!(stdout, crossterm::cursor::MoveTo(18, 2))?;
+			println!("[ ] FUNCTION A");
+			println!("[*] FUNCTION B");
+			println!("[ ] FUNCTION C");
+
+			execute!(stdout, crossterm::cursor::MoveTo(1, 2))?;
 		} else if current_section == "C" {
-			println!("[A] FUNCTION A:           ");
-			println!("[B] FUNCTION B:           ");
-			println!("[C] FUNCTION C: >  [ENTER]");
-			execute!(stdout, crossterm::cursor::MoveTo(18, 3))?;
+			println!("[ ] FUNCTION A");
+			println!("[ ] FUNCTION B");
+			println!("[*] FUNCTION C");
+
+			execute!(stdout, crossterm::cursor::MoveTo(1, 3))?;
 		} else {
-			println!("[A] FUNCTION A: >  [ENTER]");
-			println!("[B] FUNCTION B:           ");
-			println!("[C] FUNCTION C:           ");
-			execute!(stdout, crossterm::cursor::MoveTo(18, 1))?;
+			println!("[*] FUNCTION A");
+			println!("[ ] FUNCTION B");
+			println!("[ ] FUNCTION C");
+
+			execute!(stdout, crossterm::cursor::MoveTo(1, 1))?;
 		}
 
 		// 次のキー操作を待ちます。
 		let key = crossterm::event::read()?;
 
 		match key {
+			// [A]
 			Event::Key(KeyEvent { code: KeyCode::Char('a'), modifiers: KeyModifiers::NONE }) => current_section = "A".to_string(),
+			// [B]
 			Event::Key(KeyEvent { code: KeyCode::Char('b'), modifiers: KeyModifiers::NONE }) => current_section = "B".to_string(),
+			// [C]
 			Event::Key(KeyEvent { code: KeyCode::Char('c'), modifiers: KeyModifiers::NONE }) => current_section = "C".to_string(),
-			// [Ctrl][C] to quit.
+			// [Ctrl] + [C] to quit.
 			Event::Key(KeyEvent { code: KeyCode::Char('c'), modifiers: KeyModifiers::CONTROL }) => break,
 			// [Q] to quit.
 			Event::Key(KeyEvent { code: KeyCode::Char('q'), modifiers: KeyModifiers::NONE }) => break,
