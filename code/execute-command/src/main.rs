@@ -28,9 +28,34 @@ fn execute_windows_command_shell() -> std::result::Result<(), Box<dyn std::error
 	return Ok(());
 }
 
+/// Return system timestamp
+///
+/// # Returns
+/// timestamp
+pub fn get_current_timestamp() -> String {
+	let date = chrono::Local::now();
+	return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
+}
+
+fn execute_command(commands: &[&str]) -> std::result::Result<i32, Box<dyn std::error::Error>> {
+	let mut command = std::process::Command::new("cmd.exe");
+	let result = command.args(commands).spawn()?.wait()?;
+	let exit_code = result.code().unwrap();
+	return Ok(exit_code);
+}
+
+fn execute_continuous(commands: &[&str]) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	loop {
+		let exit_code = execute_command(commands)?;
+		println!("{} [INFO] execute ({})", get_current_timestamp(), exit_code);
+		std::thread::sleep(std::time::Duration::from_secs(3));
+	}
+}
+
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// execute_windows_command()?;
 	// execute_windows_command_shell()?;
-	execute_yarn_help_on_shell()?;
+	// execute_yarn_help_on_shell()?;
+	execute_continuous(&["PWD"])?;
 	return Ok(());
 }
