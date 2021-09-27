@@ -1,3 +1,7 @@
+//!
+//! キーイベントを受け取って処理をする単純なアプリケーションです。
+//!
+
 #[macro_use]
 extern crate crossterm;
 
