@@ -1,4 +1,10 @@
+///
+/// アプリケーション内のエラー関連
+///
 pub mod error {
+	///
+	/// アプリケーションのエラーを扱うための構造体を定義します。
+	///
 	#[derive(Debug, Clone)]
 	pub struct MyStringError {
 		pub message: String,
