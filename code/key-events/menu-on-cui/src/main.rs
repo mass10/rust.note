@@ -36,7 +36,7 @@ fn get_next_menuitem(current: &str, direction: &str) -> String {
 	return current.to_string();
 }
 
-fn main() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+fn test01() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	let mut stdout = std::io::stdout();
 	use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 	// use crossterm::style::Print;
@@ -126,4 +126,13 @@ fn main() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	println!("選択されたのは {}", current_section);
 
 	return Ok(());
+}
+
+fn main() {
+
+	let result = test01();
+	if result.is_err() {
+		println!("{}", result.unwrap_err());
+		return;
+	}
 }
