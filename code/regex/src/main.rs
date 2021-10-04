@@ -39,10 +39,6 @@ fn is_postcode(unknown: &str) -> bool {
 	return is_match("^[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$", unknown);
 }
 
-fn is_env_line(s: &str) -> bool {
-	return is_match("^ENV\\{[a-zA-Z0-9]+\\}$", s);
-}
-
 /// 数字のみ
 fn is_digit_all(unknown: &str) -> bool {
 	return is_match("^[0-9]+$", unknown);
@@ -118,8 +114,15 @@ fn validate_digit_string(unknown: &str) {
 	println!("[TRACE] [{}] is digit string? -> [{}]", unknown, text_status(result));
 }
 
+/// 文字列が `ENV{XXX_XXX_XXX}` にマッチした場合、文字列 `XXX_XXX_XXX` を返します。
+///
+/// # Arguments
+/// * `s` - 文字列
+///
+/// # Returns
+/// マッチした文字列
 fn detect_env_varname(s: &str) -> String {
-	let reg = regex::Regex::new("^ENV\\{([a-zA-Z0-9]+)\\}$").unwrap();
+	let reg = regex::Regex::new("^ENV\\{([_a-zA-Z0-9]+)\\}$").unwrap();
 	for it in reg.captures_iter(s) {
 		if 1 < it.len() {
 			return String::from(&it[1]);
@@ -129,9 +132,8 @@ fn detect_env_varname(s: &str) -> String {
 }
 
 fn validate_env_line(s: &str) {
-	let result = is_env_line(s);
 	let varname = detect_env_varname(s);
-	println!("[TRACE] [{}] is env line? -> [{}] ({})", s, text_status(result), varname);
+	println!("[TRACE] [{}] is env line? -> [{}]", s, varname);
 }
 
 /// エントリーポイント
@@ -228,5 +230,6 @@ fn main() {
 		validate_env_line("");
 		validate_env_line("a");
 		validate_env_line("ENV{FIELD01}");
+		validate_env_line("ENV{VAR_NAME_01}");
 	}
 }
