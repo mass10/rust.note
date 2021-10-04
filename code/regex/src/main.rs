@@ -8,12 +8,21 @@ fn green<T: std::fmt::Display>(s: T) -> String {
 	return format!("\x1b[32m{}\x1b[39m", s);
 }
 
+/// 正規表現にマッチする文字列があるかどうか調べます。
+///
+/// ※正しくない
+///
+/// # Arguments
+/// * `regex` - 正規表現
+/// * `text` - 文字列
 #[allow(unused)]
 fn matches(regex: &str, text: &str) -> bool {
 	let reg = regex::Regex::new(regex);
 	if reg.is_err() {
 		panic!("[ERROR] 正規表現がエラー (理由: {})", reg.err().unwrap());
 	}
+
+	// find では単純マッチを判定できません。
 	let result = reg.unwrap().find(text);
 	if result.is_none() {
 		return false;
@@ -28,6 +37,10 @@ fn is_match(exp: &str, text: &str) -> bool {
 /// 郵便番号の検査(妥当な用法)
 fn is_postcode(unknown: &str) -> bool {
 	return is_match("^[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$", unknown);
+}
+
+fn is_env_line(s: &str) -> bool {
+	return is_match("^ENV\\{[a-zA-Z0-9]+\\}$", s);
 }
 
 /// 数字のみ
@@ -103,6 +116,22 @@ fn validate_current_path(path: &str) {
 fn validate_digit_string(unknown: &str) {
 	let result = is_digit_all(unknown);
 	println!("[TRACE] [{}] is digit string? -> [{}]", unknown, text_status(result));
+}
+
+fn detect_env_varname(s: &str) -> String {
+	let reg = regex::Regex::new("^ENV\\{([a-zA-Z0-9]+)\\}$").unwrap();
+	for it in reg.captures_iter(s) {
+		if 1 < it.len() {
+			return String::from(&it[1]);
+		}
+	}
+	return "".to_string();
+}
+
+fn validate_env_line(s: &str) {
+	let result = is_env_line(s);
+	let varname = detect_env_varname(s);
+	println!("[TRACE] [{}] is env line? -> [{}] ({})", s, text_status(result), varname);
 }
 
 /// エントリーポイント
@@ -193,5 +222,11 @@ fn main() {
 		validate_current_path("C:/Users");
 
 		println!();
+	}
+
+	{
+		validate_env_line("");
+		validate_env_line("a");
+		validate_env_line("ENV{FIELD01}");
 	}
 }
