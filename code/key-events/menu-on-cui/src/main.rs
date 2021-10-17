@@ -1,3 +1,7 @@
+//!
+//! CLI ツールでメニューの選択を提供するサンプルです。
+//!
+
 #[macro_use]
 extern crate crossterm;
 
@@ -15,6 +19,10 @@ fn cls() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 }
 
 /// メニューアイテムを移動します。
+///
+/// # Arguments 
+/// * `current` - 基準となる(=現在の)メニューアイテム
+/// * `direction` - 移動方向
 fn get_next_menuitem(current: &str, direction: &str) -> String {
 	if direction == "Up" {
 		if current == "B" {
@@ -36,7 +44,8 @@ fn get_next_menuitem(current: &str, direction: &str) -> String {
 	return current.to_string();
 }
 
-fn test01() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+/// メニュー項目を表示してユーザーに選択させるサンプルです。
+fn test_show_menuitems() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	let mut stdout = std::io::stdout();
 	use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 	// use crossterm::style::Print;
@@ -123,14 +132,15 @@ fn test01() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	}
 
 	execute!(stdout, crossterm::cursor::MoveTo(0, 4))?;
+
 	println!("選択されたのは {}", current_section);
 
 	return Ok(());
 }
 
+/// アプリケーションのエントリーポイントです。
 fn main() {
-
-	let result = test01();
+	let result = test_show_menuitems();
 	if result.is_err() {
 		println!("{}", result.unwrap_err());
 		return;
