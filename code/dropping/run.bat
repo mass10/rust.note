@@ -1,2 +1,2 @@
 @SETLOCAL
-@CALL cargo run
+@CALL cargo run --quiet
