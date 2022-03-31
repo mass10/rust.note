@@ -3,11 +3,10 @@ extern crate serde_derive;
 extern crate serde_json;
 
 ///
-/// テスト
+/// 固定オブジェクトから JSON 文字列を生成します。
 ///
 mod test00 {
 
-	/// 固定オブジェクトから JSON 文字列を生成します。
 	pub fn run() {
 		let json_text = serde_json::json!({
 			"code": 200,
@@ -27,7 +26,7 @@ mod test00 {
 }
 
 ///
-/// テスト
+/// 文字列リテラルから [serde_json::Value] オブジェクトを生成します。
 ///
 mod test01 {
 
@@ -37,7 +36,7 @@ mod test01 {
 		return Ok(result);
 	}
 
-	/// JSON 文字列からオブジェクトを生成します。
+	/// JSON 文字列からオブジェクトを生成
 	pub fn run() -> std::result::Result<(), Box<dyn std::error::Error>> {
 		let json_text = r#"{
 			"name": "Jimi Hendrix",
@@ -55,7 +54,7 @@ mod test01 {
 }
 
 ///
-/// テスト
+/// 文字列リテラルからユーザーオブジェクトを生成します。
 ///
 mod test02 {
 
@@ -86,7 +85,6 @@ mod test02 {
 		return Ok(user);
 	}
 
-	// テストを実行します。
 	pub fn run() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 		return Ok(());
 	}
@@ -94,12 +92,17 @@ mod test02 {
 
 /// テストを実行します。
 fn run_tests() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+	// 固定オブジェクトから JSON 文字列を生成します。
 	if true {
 		test00::run();
 	}
+
+	// 文字列リテラルから [serde_json::Value] オブジェクトを生成します。
 	if true {
 		test01::run()?;
 	}
+
+	// 文字列リテラルからユーザーオブジェクトを生成します。
 	if false {
 		test02::run()?;
 	}
