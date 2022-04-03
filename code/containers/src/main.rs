@@ -29,7 +29,10 @@ fn main() {
 	{
 		println!("[TRACE] ========== LinkedList<String> のテスト ==========");
 
+		// ・コレクションの内容は挿入された順序を保持します。
+
 		let mut list: std::collections::LinkedList<String> = std::collections::LinkedList::new();
+
 		list.push_back("博多ラーメン".to_string());
 		list.push_back("のりラーメン".to_string());
 		list.push_back("ワンタンメン".to_string());
@@ -41,8 +44,10 @@ fn main() {
 		println!();
 	}
 
-	{
+	if false {
 		println!("[TRACE] ========== std::vec::Vec<&str> のテスト ==========");
+
+		// ・コレクションの内容は挿入された順序を保持します。
 
 		let mut list: std::vec::Vec<&str> = vec![];
 
@@ -59,8 +64,10 @@ fn main() {
 		println!();
 	}
 
-	{
+	if false {
 		println!("[TRACE] ========== std::vec::Vec<String> のテスト ==========");
+
+		// ・コレクションの内容は挿入された順序を保持します。
 
 		let mut list: std::vec::Vec<String> = vec![];
 
@@ -77,8 +84,10 @@ fn main() {
 		println!();
 	}
 
-	{
+	if false {
 		println!("[TRACE] ========== std::collections::HashMap<String, i8> のテスト ==========");
+
+		// ・コレクションの内容はソートされません。
 
 		let mut map: std::collections::HashMap<String, i8> = std::collections::HashMap::new();
 
@@ -99,8 +108,10 @@ fn main() {
 		println!();
 	}
 
-	{
+	if false {
 		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+
+		// ・コレクションの内容はソートされません。
 
 		let mut map: std::collections::HashMap<&str, i8> = std::collections::HashMap::new();
 
@@ -121,8 +132,10 @@ fn main() {
 		println!();
 	}
 
-	{
+	if false {
 		println!("[TRACE] ========== std::collections::BTreeMap<String, i8> のテスト ==========");
+
+		// ・コレクションの内容はソートされます。
 
 		let mut map: std::collections::BTreeMap<String, i8> = std::collections::BTreeMap::new();
 
@@ -143,8 +156,10 @@ fn main() {
 		println!();
 	}
 
-	{
+	if false {
 		println!("[TRACE] ========== std::collections::HashSet<&str> のテスト ==========");
+
+		// ・コレクションの内容はソートされません。
 
 		let mut set: std::collections::HashSet<&str> = std::collections::HashSet::new();
 
