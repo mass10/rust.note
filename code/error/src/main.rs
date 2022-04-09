@@ -48,10 +48,11 @@ mod error {
 ///
 mod example_case_00 {
 
+	/// 存在しないファイルのリネームを試みるテスト
 	pub fn run() {
 		let result = std::fs::rename("left", "right");
 		if result.is_err() {
-			println!("{}", result.unwrap_err());
+			println!("[ERROR] {}", result.unwrap_err());
 			return;
 		}
 		println!("[TRACE] ファイルをコピーしました。");
@@ -62,6 +63,7 @@ mod example_case_00 {
 /// 例
 ///
 mod example_case_01 {
+
 	/// 不正な処理を行う操作
 	fn operation_fails() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 		let reason = super::error::ApplicationError::new("アプリケーションのエラーです。要求はキャンセルされました。");
