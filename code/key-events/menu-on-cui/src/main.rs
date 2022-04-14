@@ -232,7 +232,7 @@ fn run() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	// execute!(stdout, crossterm::cursor::MoveTo(0, y + 4))?;
 
 	println!();
-	println!("選択されたのは {}", result);
+	println!("[{}] が選択されました。", result);
 
 	return Ok(());
 }
