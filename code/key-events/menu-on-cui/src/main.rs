@@ -29,6 +29,9 @@ struct MyMenuController {
 
 impl MyMenuController {
 	/// 新しいインスタンスを返します。
+	///
+	/// # Returns
+	/// * `MyMenuController`
 	pub fn new() -> Self {
 		return Self {
 			menuitems: std::collections::BTreeMap::new(),
@@ -53,6 +56,7 @@ impl MyMenuController {
 	pub fn show_menuitems(&self, current_section: &str) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 		let mut stdout = std::io::stdout();
 
+		// TODO: メニューアイテムの正しい判定
 		if current_section == "A" {
 			println!("[*] FUNCTION A");
 			println!("[ ] FUNCTION B");
@@ -158,6 +162,7 @@ impl MyMenuController {
 /// * `current` - 基準となる(=現在の)メニューアイテム
 /// * `direction` - 移動方向
 fn get_next_menuitem(current: &str, direction: &str) -> String {
+	// TODO: メニューアイテムの正しい判定
 	if direction == "Up" {
 		if current == "B" {
 			return "A".to_string();
