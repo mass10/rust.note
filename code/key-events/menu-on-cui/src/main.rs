@@ -24,7 +24,8 @@ struct MyMenuController {
 	/// メニューの表示項目を保持します。
 	menuitems: std::collections::BTreeMap<String, String>,
 	/// 現在選択中のメニュー項目を保持します。
-	_current_section: String,
+	#[allow(unused)]
+	current_section: String,
 }
 
 impl MyMenuController {
@@ -35,7 +36,7 @@ impl MyMenuController {
 	pub fn new() -> Self {
 		return Self {
 			menuitems: std::collections::BTreeMap::new(),
-			_current_section: String::from(""),
+			current_section: String::from(""),
 		};
 	}
 
