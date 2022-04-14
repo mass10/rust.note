@@ -24,7 +24,7 @@ struct MyMenuController {
 	/// メニューの表示項目を保持します。
 	menuitems: std::collections::BTreeMap<String, String>,
 	/// 現在選択中のメニュー項目を保持します。
-	current_section: String,
+	_current_section: String,
 }
 
 impl MyMenuController {
@@ -32,7 +32,7 @@ impl MyMenuController {
 	pub fn new() -> Self {
 		return Self {
 			menuitems: std::collections::BTreeMap::new(),
-			current_section: String::from(""),
+			_current_section: String::from(""),
 		};
 	}
 
@@ -230,6 +230,7 @@ fn run() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 
 	// execute!(stdout, crossterm::cursor::MoveTo(0, y + 4))?;
 
+	// TODO: 表示される位置を調整する
 	println!();
 	println!("選択されたのは {}", result);
 
