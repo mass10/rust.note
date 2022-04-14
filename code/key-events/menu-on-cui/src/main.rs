@@ -221,16 +221,16 @@ fn run() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 
 	// メニューを構築
 	let mut menu = MyMenuController::new();
-
 	menu.add_menuitem("A", "FUNCTION A")?;
 	menu.add_menuitem("B", "FUNCTION B")?;
 	menu.add_menuitem("X", "EXIT")?;
 
+	// メニューを表示してユーザー入力を得ます。
 	let result = menu.show()?;
 
+	// TODO: 表示される位置を調整する
 	// execute!(stdout, crossterm::cursor::MoveTo(0, y + 4))?;
 
-	// TODO: 表示される位置を調整する
 	println!();
 	println!("選択されたのは {}", result);
 
