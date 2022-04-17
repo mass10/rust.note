@@ -121,7 +121,6 @@ impl MyMenuController {
 
 	/// メニューを表示します。
 	pub fn show(&mut self) -> std::result::Result<String, std::boxed::Box<dyn std::error::Error>> {
-		use crossterm::event::{Event, KeyEvent, KeyModifiers};
 		// use crossterm::style::Print;
 		// use crossterm::terminal::{Clear, ClearType};
 		// use std::io::Write;
