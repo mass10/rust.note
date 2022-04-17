@@ -99,6 +99,8 @@ impl MyMenuController {
 		// use std::io::Write;
 		// let (_, y) = crossterm::cursor::position()?;
 
+		// TODO: メニュー項目の正しい判定
+
 		// デフォルトポジション
 		let mut current_section = "A".to_string();
 
