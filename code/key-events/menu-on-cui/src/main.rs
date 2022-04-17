@@ -2,7 +2,10 @@
 //! CLI ツールでメニューの選択を提供するサンプルです。
 //!
 
+use crossterm::cursor;
+use crossterm::event;
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
+use crossterm::terminal;
 
 #[macro_use]
 extern crate crossterm;
@@ -10,14 +13,11 @@ extern crate crossterm;
 /// 画面を消去します。
 #[allow(unused)]
 fn cls() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-	use crossterm::terminal::{Clear, ClearType};
-	// use std::io::Write;
-
 	let mut stdout = std::io::stdout();
 	// 画面を消去します。
-	execute!(stdout, Clear(ClearType::All))?;
+	execute!(stdout, terminal::Clear(terminal::ClearType::All))?;
 	// 左上 [0, 0] へ移動します。
-	execute!(stdout, crossterm::cursor::MoveTo(0, 0))?;
+	execute!(stdout, cursor::MoveTo(0, 0))?;
 	return Ok(());
 }
 
@@ -69,29 +69,29 @@ impl MyMenuController {
 			println!("[ ] FUNCTION B");
 			println!("[ ] EXIT");
 
-			let (_, y) = crossterm::cursor::position()?;
-			execute!(stdout, crossterm::cursor::MoveTo(1, y - 3))?;
+			let (_, y) = cursor::position()?;
+			execute!(stdout, cursor::MoveTo(1, y - 3))?;
 		} else if current_section == "B" {
 			println!("[ ] FUNCTION A");
 			println!("[*] FUNCTION B");
 			println!("[ ] EXIT");
 
-			let (_, y) = crossterm::cursor::position()?;
-			execute!(stdout, crossterm::cursor::MoveTo(1, y - 2))?;
+			let (_, y) = cursor::position()?;
+			execute!(stdout, cursor::MoveTo(1, y - 2))?;
 		} else if current_section == "X" {
 			println!("[ ] FUNCTION A");
 			println!("[ ] FUNCTION B");
 			println!("[*] EXIT");
 
-			let (_, y) = crossterm::cursor::position()?;
-			execute!(stdout, crossterm::cursor::MoveTo(1, y - 1))?;
+			let (_, y) = cursor::position()?;
+			execute!(stdout, cursor::MoveTo(1, y - 1))?;
 		} else {
 			println!("[*] FUNCTION A");
 			println!("[ ] FUNCTION B");
 			println!("[ ] EXIT");
 
-			let (_, y) = crossterm::cursor::position()?;
-			execute!(stdout, crossterm::cursor::MoveTo(1, y - 3))?;
+			let (_, y) = cursor::position()?;
+			execute!(stdout, cursor::MoveTo(1, y - 3))?;
 		}
 
 		return Ok(());
@@ -124,7 +124,7 @@ impl MyMenuController {
 		// use crossterm::style::Print;
 		// use crossterm::terminal::{Clear, ClearType};
 		// use std::io::Write;
-		// let (_, y) = crossterm::cursor::position()?;
+		// let (_, y) = cursor::position()?;
 
 		// TODO: メニュー項目の正しい判定
 
@@ -136,7 +136,7 @@ impl MyMenuController {
 		// キーイベントループ
 		loop {
 			// メニューを表示
-			// execute!(stdout, crossterm::cursor::MoveTo(0, y))?;
+			// execute!(stdout, cursor::MoveTo(0, y))?;
 
 			// メニュー項目を表示します。
 			reset_cursor_position(&prev_current_section)?;
@@ -145,7 +145,7 @@ impl MyMenuController {
 			prev_current_section = current_section.clone();
 
 			// 次のキー操作を待ちます。(*BLOCKING)
-			let key = crossterm::event::read()?;
+			let key = event::read()?;
 
 			// 初めにメニュー項目を検索します。
 			let id = self.find_menu_item(key);
@@ -164,13 +164,13 @@ impl MyMenuController {
 				Event::Key(KeyEvent { code: KeyCode::Up, modifiers: KeyModifiers::NONE }) => {
 					current_section = get_next_menuitem(&current_section, "Up");
 					// let mut stdout = std::io::stdout();
-					// execute!(stdout, crossterm::cursor::MoveTo(16, 1))?;
+					// execute!(stdout, cursor::MoveTo(16, 1))?;
 				}
 				// [Down]
 				Event::Key(KeyEvent { code: KeyCode::Down, modifiers: KeyModifiers::NONE }) => {
 					current_section = get_next_menuitem(&current_section, "Down");
 					// let mut stdout = std::io::stdout();
-					// execute!(stdout, crossterm::cursor::MoveTo(16, 2))?;
+					// execute!(stdout, cursor::MoveTo(16, 2))?;
 				}
 				// [Enter]
 				Event::Key(KeyEvent { code: KeyCode::Enter, modifiers: KeyModifiers::NONE }) => break,
@@ -225,14 +225,14 @@ fn move_y(amount: i16) -> std::result::Result<(), std::boxed::Box<dyn std::error
 	let mut stdout = std::io::stdout();
 
 	// 現在の位置
-	let (x, mut y) = crossterm::cursor::position()?;
+	let (x, mut y) = cursor::position()?;
 	if amount > 0 {
 		y = y + amount as u16;
 	} else {
 		y = y.saturating_sub(amount.abs() as u16);
 	}
 	// 移動
-	execute!(stdout, crossterm::cursor::MoveTo(x, y))?;
+	execute!(stdout, cursor::MoveTo(x, y))?;
 	return Ok(());
 }
 
@@ -245,14 +245,14 @@ fn reset_cursor_position(prev_current_section: &str) -> std::result::Result<(), 
 
 	// TODO: メニューアイテムの正しい判定
 	if prev_current_section == "A" {
-		let (_, y) = crossterm::cursor::position()?;
-		execute!(stdout, crossterm::cursor::MoveTo(0, y))?;
+		let (_, y) = cursor::position()?;
+		execute!(stdout, cursor::MoveTo(0, y))?;
 	} else if prev_current_section == "B" {
-		let (_, y) = crossterm::cursor::position()?;
-		execute!(stdout, crossterm::cursor::MoveTo(0, y - 1))?;
+		let (_, y) = cursor::position()?;
+		execute!(stdout, cursor::MoveTo(0, y - 1))?;
 	} else if prev_current_section == "X" {
-		let (_, y) = crossterm::cursor::position()?;
-		execute!(stdout, crossterm::cursor::MoveTo(0, y - 2))?;
+		let (_, y) = cursor::position()?;
+		execute!(stdout, cursor::MoveTo(0, y - 2))?;
 	}
 	return Ok(());
 }
@@ -260,7 +260,7 @@ fn reset_cursor_position(prev_current_section: &str) -> std::result::Result<(), 
 /// メニュー項目を表示してユーザーに選択させるサンプルです。
 fn run() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	// RAW MODE
-	crossterm::terminal::enable_raw_mode()?;
+	terminal::enable_raw_mode()?;
 
 	// CLS
 	if false {
