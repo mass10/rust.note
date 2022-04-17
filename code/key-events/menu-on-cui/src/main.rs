@@ -163,25 +163,15 @@ impl MyMenuController {
 				// [Up]
 				Event::Key(KeyEvent { code: KeyCode::Up, modifiers: KeyModifiers::NONE }) => {
 					current_section = get_next_menuitem(&current_section, "Up");
-					// let mut stdout = std::io::stdout();
-					// execute!(stdout, cursor::MoveTo(16, 1))?;
 				}
 				// [Down]
 				Event::Key(KeyEvent { code: KeyCode::Down, modifiers: KeyModifiers::NONE }) => {
 					current_section = get_next_menuitem(&current_section, "Down");
-					// let mut stdout = std::io::stdout();
-					// execute!(stdout, cursor::MoveTo(16, 2))?;
 				}
 				// [Enter]
 				Event::Key(KeyEvent { code: KeyCode::Enter, modifiers: KeyModifiers::NONE }) => break,
 				// Else
-				_ => {
-					// 画面を消去します。
-					// cls()?;
-					// キーを表示します。
-					// print!("> KEY: {:?}", e);
-					// std::io::stdout().flush()?;
-				}
+				_ => {}
 			}
 		}
 
