@@ -197,9 +197,14 @@ fn move_y(amount: i16) -> std::result::Result<(), std::boxed::Box<dyn std::error
 	return Ok(());
 }
 
+/// カーソルの位置をリセットします。
+///
+/// # Arguments
+/// * `prev_current_section` - 基準となる(=現在の)メニューアイテム
 fn reset_cursor_position(prev_current_section: &str) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	let mut stdout = std::io::stdout();
 
+	// TODO: メニューアイテムの正しい判定
 	if prev_current_section == "A" {
 		let (_, y) = crossterm::cursor::position()?;
 		execute!(stdout, crossterm::cursor::MoveTo(0, y))?;
