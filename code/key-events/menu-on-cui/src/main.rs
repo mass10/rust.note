@@ -184,15 +184,22 @@ fn get_next_menuitem(current: &str, direction: &str) -> String {
 	return current.to_string();
 }
 
+/// カーソル位置をY方向に移動します。
+///
+/// # Arguments
+/// * `amount` - 移動量
 #[allow(unused)]
 fn move_y(amount: i16) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	let mut stdout = std::io::stdout();
+
+	// 現在の位置
 	let (x, mut y) = crossterm::cursor::position()?;
 	if amount > 0 {
 		y = y + amount as u16;
 	} else {
 		y = y.saturating_sub(amount.abs() as u16);
 	}
+	// 移動
 	execute!(stdout, crossterm::cursor::MoveTo(x, y))?;
 	return Ok(());
 }
