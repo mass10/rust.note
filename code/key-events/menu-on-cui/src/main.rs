@@ -2,6 +2,8 @@
 //! CLI ツールでメニューの選択を提供するサンプルです。
 //!
 
+use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
+
 #[macro_use]
 extern crate crossterm;
 
@@ -19,10 +21,12 @@ fn cls() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	return Ok(());
 }
 
+type MenuItem = (String, KeyCode);
+
 /// メニューを表示します。
 struct MyMenuController {
 	/// メニューの表示項目を保持します。
-	menuitems: std::collections::BTreeMap<String, String>,
+	menu_items: std::collections::BTreeMap<String, MenuItem>,
 	/// 現在選択中のメニュー項目を保持します。
 	#[allow(unused)]
 	current_section: String,
@@ -35,7 +39,7 @@ impl MyMenuController {
 	/// * `MyMenuController`
 	pub fn new() -> Self {
 		return Self {
-			menuitems: std::collections::BTreeMap::new(),
+			menu_items: std::collections::BTreeMap::new(),
 			current_section: String::from(""),
 		};
 	}
@@ -43,10 +47,12 @@ impl MyMenuController {
 	/// メニューアイテムを追加します。
 	///
 	/// # Arguments
-	/// * `key` - 内部キー
+	/// * `id` - 内部ID
 	/// * `description` - メニューアイテム
-	pub fn add_menuitem(&mut self, key: &str, description: &str) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-		self.menuitems.insert(key.to_string(), description.to_string());
+	/// * `key_code` - メニューアイテムに関連付けられるショートカットキー
+	pub fn add_menuitem(&mut self, id: &str, description: &str, key_code: KeyCode) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+		let menu_item = (description.to_string(), key_code);
+		self.menu_items.insert(id.to_string(), menu_item);
 		return Ok(());
 	}
 
@@ -91,9 +97,31 @@ impl MyMenuController {
 		return Ok(());
 	}
 
+	/// 指定されたキーコードでメニュー項目を検索します。
+	///
+	/// # Arguments
+	/// * `key_code` - 検索するキーコード
+	///
+	/// # Returns
+	/// * 検索結果
+	fn find_menu_item(&self, e: Event) -> String {
+		// 全メニューアイテムを走査
+		for (id, menu_item) in self.menu_items.iter() {
+			// メニューアイテムに関連付けられたキーコード
+			let key_code = menu_item.1;
+
+			// 修飾キーなしでマッチング
+			if Event::Key(KeyEvent { code: key_code, modifiers: KeyModifiers::NONE }) == e {
+				return id.clone();
+			}
+		}
+		// 該当なし
+		return "".to_string();
+	}
+
 	/// メニューを表示します。
 	pub fn show(&mut self) -> std::result::Result<String, std::boxed::Box<dyn std::error::Error>> {
-		use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
+		use crossterm::event::{Event, KeyEvent, KeyModifiers};
 		// use crossterm::style::Print;
 		// use crossterm::terminal::{Clear, ClearType};
 		// use std::io::Write;
@@ -117,20 +145,22 @@ impl MyMenuController {
 
 			prev_current_section = current_section.clone();
 
-			// 次のキー操作を待ちます。
+			// 次のキー操作を待ちます。(*BLOCKING)
 			let key = crossterm::event::read()?;
 
+			// 初めにメニュー項目を検索します。
+			let id = self.find_menu_item(key);
+			if id != "" {
+				// キーがヒットした
+				current_section = id;
+				continue;
+			}
+
 			match key {
-				// [A]
-				Event::Key(KeyEvent { code: KeyCode::Char('a'), modifiers: KeyModifiers::NONE }) => current_section = "A".to_string(),
-				// [B]
-				Event::Key(KeyEvent { code: KeyCode::Char('b'), modifiers: KeyModifiers::NONE }) => current_section = "B".to_string(),
-				// [X]
-				Event::Key(KeyEvent { code: KeyCode::Char('x'), modifiers: KeyModifiers::NONE }) => current_section = "X".to_string(),
 				// [Ctrl] + [C] to quit.
-				Event::Key(KeyEvent { code: KeyCode::Char('c'), modifiers: KeyModifiers::CONTROL }) => break,
+				Event::Key(KeyEvent { code: KeyCode::Char('c'), modifiers: KeyModifiers::CONTROL }) => return Ok("".to_string()),
 				// [Q] to quit.
-				Event::Key(KeyEvent { code: KeyCode::Char('q'), modifiers: KeyModifiers::NONE }) => break,
+				Event::Key(KeyEvent { code: KeyCode::Char('q'), modifiers: KeyModifiers::NONE }) => return Ok("".to_string()),
 				// [Up]
 				Event::Key(KeyEvent { code: KeyCode::Up, modifiers: KeyModifiers::NONE }) => {
 					current_section = get_next_menuitem(&current_section, "Up");
@@ -143,6 +173,7 @@ impl MyMenuController {
 					// let mut stdout = std::io::stdout();
 					// execute!(stdout, crossterm::cursor::MoveTo(16, 2))?;
 				}
+				// [Enter]
 				Event::Key(KeyEvent { code: KeyCode::Enter, modifiers: KeyModifiers::NONE }) => break,
 				// Else
 				_ => {
@@ -241,9 +272,9 @@ fn run() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 
 	// メニューを構築
 	let mut menu = MyMenuController::new();
-	menu.add_menuitem("A", "FUNCTION A")?;
-	menu.add_menuitem("B", "FUNCTION B")?;
-	menu.add_menuitem("X", "EXIT")?;
+	menu.add_menuitem("A", "FUNCTION A", KeyCode::Char('a'))?;
+	menu.add_menuitem("B", "FUNCTION B", KeyCode::Char('b'))?;
+	menu.add_menuitem("X", "EXIT", KeyCode::Char('x'))?;
 
 	// メニューを表示してユーザー入力を得ます。
 	let result = menu.show()?;
