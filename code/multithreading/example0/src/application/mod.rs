@@ -18,7 +18,8 @@ impl Application {
 		println!("{} [TRACE] ({:?}) ### START ###", util::get_timestamp(), std::thread::current().id());
 
 		// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
-		let shared_object: std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>> = std::sync::Arc::new(std::sync::Mutex::new(std::collections::BTreeMap::new()));
+		let shared_object: std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>> =
+			std::sync::Arc::new(std::sync::Mutex::new(std::collections::BTreeMap::new()));
 
 		// 通信用インターフェイスを初期化します。
 		let (tx, rx): (std::sync::mpsc::Sender<String>, std::sync::mpsc::Receiver<String>) = std::sync::mpsc::channel();
@@ -42,11 +43,21 @@ impl Application {
 			println!("{} [TRACE] ({:?}) メッセージの受信を待っています。", util::get_timestamp(), std::thread::current().id());
 			let result = rx.recv();
 			if result.is_err() {
-				println!("{} [ERROR] ({:?}) スレッドメッセージの受信に失敗しました。理由: [{}]", util::get_timestamp(), std::thread::current().id(), result.err().unwrap());
+				println!(
+					"{} [ERROR] ({:?}) スレッドメッセージの受信に失敗しました。理由: [{}]",
+					util::get_timestamp(),
+					std::thread::current().id(),
+					result.err().unwrap()
+				);
 				break;
 			}
 			let result = result.unwrap();
-			println!("{} [TRACE] ({:?}) スレッドからのメッセージ: [{}]", util::get_timestamp(), std::thread::current().id(), result);
+			println!(
+				"{} [TRACE] ({:?}) スレッドからのメッセージ: [{}]",
+				util::get_timestamp(),
+				std::thread::current().id(),
+				result
+			);
 			std::thread::sleep(std::time::Duration::from_millis(1));
 		}
 
@@ -62,7 +73,12 @@ impl Application {
 
 		// スレッドの応答
 		let thread_response = result.unwrap();
-		println!("{} [TRACE] ({:?}) スレッドの応答: [{}]", util::get_timestamp(), std::thread::current().id(), thread_response);
+		println!(
+			"{} [TRACE] ({:?}) スレッドの応答: [{}]",
+			util::get_timestamp(),
+			std::thread::current().id(),
+			thread_response
+		);
 
 		// ========== 終了 ==========
 
