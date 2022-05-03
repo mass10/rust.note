@@ -27,7 +27,7 @@ impl Application {
 
 		// スレッドを起動します。
 		println!("{} [TRACE] ({:?}) スレッドを起動します。", util::get_timestamp(), std::thread::current().id());
-		let thread = thread::Thread {};
+		let thread = thread::Thread::new();
 		let result = thread.start(tx, &shared_object);
 		if result.is_err() {
 			println!("{} [ERROR] ({:?}) {}", util::get_timestamp(), std::thread::current().id(), result.err().unwrap());
