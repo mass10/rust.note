@@ -13,7 +13,7 @@ impl Application {
 	}
 
 	/// アプリケーションをスタートします。
-	pub fn start_app(&self) {
+	pub fn run(&self) {
 		// ========== 初期化 ==========
 		println!("{} [TRACE] ({:?}) ### START ###", util::get_timestamp(), std::thread::current().id());
 
@@ -28,7 +28,7 @@ impl Application {
 		// スレッドを起動します。
 		println!("{} [TRACE] ({:?}) スレッドを起動します。", util::get_timestamp(), std::thread::current().id());
 		let thread = thread::Thread {};
-		let result = thread.start_thread(tx, &shared_object);
+		let result = thread.start(tx, &shared_object);
 		if result.is_err() {
 			println!("{} [ERROR] ({:?}) {}", util::get_timestamp(), std::thread::current().id(), result.err().unwrap());
 			return;

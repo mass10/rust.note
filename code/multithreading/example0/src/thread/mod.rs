@@ -1,3 +1,5 @@
+//! スレッド関連
+
 use util;
 
 /// スレッドの実装
@@ -5,7 +7,7 @@ pub struct Thread {}
 
 impl Thread {
 	/// スレッドを起動します。
-	pub fn start_thread(&self, tx: std::sync::mpsc::Sender<String>, _map: &std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>>) -> std::result::Result<std::thread::JoinHandle<String>, Box<dyn std::error::Error>> {
+	pub fn start(&self, tx: std::sync::mpsc::Sender<String>, _map: &std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>>) -> std::result::Result<std::thread::JoinHandle<String>, Box<dyn std::error::Error>> {
 		let handle = std::thread::spawn(move || {
 			println!("{} [TRACE] ({:?}) $$$ begin thread $$$", util::get_timestamp(), std::thread::current().id());
 

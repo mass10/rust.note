@@ -1,12 +1,13 @@
+//! アプリケーションのエントリーポイント
 extern crate chrono;
 
 mod application;
 mod thread;
 mod util;
 
-/// エントリーポイント
+/// アプリケーションのエントリーポイントです。
 fn main() {
-	// スタート
+	// アプリケーションを初期化して起動します。
 	let app = application::Application::new();
-	app.start_app();
+	app.run();
 }
