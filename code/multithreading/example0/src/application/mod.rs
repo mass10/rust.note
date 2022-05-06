@@ -1,3 +1,5 @@
+use crate::debug;
+use crate::error;
 use thread;
 use util;
 
@@ -13,9 +15,9 @@ impl Application {
 	}
 
 	/// アプリケーションをスタートします。
-	pub fn run(&self) {
+	pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
 		// ========== 初期化 ==========
-		println!("{} [TRACE] ({:?}) ### START ###", util::get_timestamp(), std::thread::current().id());
+		debug!("### START ###");
 
 		// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
 		let shared_object = std::sync::Arc::new(std::sync::Mutex::new(std::collections::BTreeMap::new()));
@@ -26,12 +28,12 @@ impl Application {
 		// ========== スレッドを起動 ==========
 
 		// スレッドを起動します。
-		println!("{} [TRACE] ({:?}) スレッドを起動します。", util::get_timestamp(), std::thread::current().id());
+		debug!("スレッドを起動します。");
 		let thread = thread::Thread::new();
 		let result = thread.start(tx, &shared_object);
 		if result.is_err() {
-			println!("{} [ERROR] ({:?}) {}", util::get_timestamp(), std::thread::current().id(), result.err().unwrap());
-			return;
+			error!("{}", result.err().unwrap());
+			return Ok(());
 		}
 		let handle = result.ok().unwrap();
 
@@ -39,48 +41,35 @@ impl Application {
 
 		// メッセージの受信
 		loop {
-			println!("{} [TRACE] ({:?}) メッセージの受信を待っています。", util::get_timestamp(), std::thread::current().id());
+			debug!("メッセージの受信を待っています。",);
 			let result = rx.recv();
 			if result.is_err() {
-				println!(
-					"{} [ERROR] ({:?}) スレッドメッセージの受信に失敗しました。理由: [{}]",
-					util::get_timestamp(),
-					std::thread::current().id(),
-					result.err().unwrap()
-				);
+				error!("スレッドメッセージの受信に失敗しました。理由: [{}]", result.err().unwrap());
 				break;
 			}
 			let result = result.unwrap();
-			println!(
-				"{} [TRACE] ({:?}) スレッドからのメッセージ: [{}]",
-				util::get_timestamp(),
-				std::thread::current().id(),
-				result
-			);
+			debug!("スレッドからのメッセージ: [{}]", result);
 			std::thread::sleep(std::time::Duration::from_millis(1));
 		}
 
 		// ========== 待機 ==========
 
 		// スレッド終了まで待機します。
-		println!("{} [TRACE] ({:?}) スレッド終了まで待機しています...", util::get_timestamp(), std::thread::current().id());
+		debug!("スレッド終了まで待機しています...",);
 		let result = handle.join();
 		if result.is_err() {
-			println!("{} [ERROR] ({:?}) {:?}", util::get_timestamp(), std::thread::current().id(), result.err().unwrap());
-			return;
+			error!("{:?}", result.err().unwrap());
+			return Ok(());
 		}
 
 		// スレッドの応答
 		let thread_response = result.unwrap();
-		println!(
-			"{} [TRACE] ({:?}) スレッドの応答: [{}]",
-			util::get_timestamp(),
-			std::thread::current().id(),
-			thread_response
-		);
+		debug!("スレッドの応答: [{}]", thread_response);
 
 		// ========== 終了 ==========
 
-		println!("{} [TRACE] ({:?}) --- END ---", util::get_timestamp(), std::thread::current().id());
+		debug!("--- END ---");
+
+		return Ok(());
 	}
 }
