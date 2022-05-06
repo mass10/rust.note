@@ -11,6 +11,7 @@ fn main() {
 	let app = application::Application::new();
 	let result = app.run();
 	if result.is_err() {
+		// ハンドルされなかった全てのエラー
 		error!("{}", result.err().unwrap());
 		return;
 	}
