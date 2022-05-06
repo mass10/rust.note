@@ -19,15 +19,24 @@ impl Thread {
 	}
 
 	/// スレッド内の何かの処理
+	///
+	/// # Parameters
+	/// * `tx` - メッセージ送信用のチャネル
+	/// # Returns
+	/// 処理結果
 	fn try_respond(tx: &std::sync::mpsc::Sender<String>) -> Result<bool, Box<dyn std::error::Error>> {
 		// タイムスタンプ
 		let timestamp = util::get_current_timestamp();
-		// ある条件が成立するとスレッドは終了します。
-		let exit_condition = if timestamp.ends_with("0") { true } else { false };
+		if !timestamp.ends_with("0") {
+			// 何もしない
+			return Ok(false);
+		}
+
 		// スレッドからのメッセージをメインスレッドへ送信します。
-		let thread_message = format!("{} スレッドからのメッセージ{}", timestamp, if exit_condition { "(終了)" } else { "" });
+		let thread_message = format!("{} スレッドからのメッセージ", timestamp);
 		tx.send(thread_message)?;
-		return Ok(exit_condition);
+
+		return Ok(true);
 	}
 
 	/// スレッドを起動します。
