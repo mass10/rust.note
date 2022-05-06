@@ -21,10 +21,11 @@ impl Thread {
 	/// スレッド内の何かの処理
 	///
 	/// # Parameters
+	/// * `success_count` - 現在の成功カウンター
 	/// * `tx` - メッセージ送信用のチャネル
 	/// # Returns
 	/// 処理結果
-	fn try_respond(tx: &std::sync::mpsc::Sender<String>) -> Result<bool, Box<dyn std::error::Error>> {
+	fn try_respond(success_count: i32, tx: &std::sync::mpsc::Sender<String>) -> Result<bool, Box<dyn std::error::Error>> {
 		// タイムスタンプ
 		let timestamp = util::get_current_timestamp();
 		if !timestamp.ends_with("0") {
@@ -33,7 +34,8 @@ impl Thread {
 		}
 
 		// スレッドからのメッセージをメインスレッドへ送信します。
-		let thread_message = format!("{} スレッドからのメッセージ", timestamp);
+		let thread_message = format!("{} スレッドからのメッセージ({})", timestamp, success_count);
+
 		tx.send(thread_message)?;
 
 		return Ok(true);
@@ -64,7 +66,7 @@ impl Thread {
 
 				// ================ 一定期間で実施する何らかの処理 ================
 				// ※このスコープでメソッドを呼び出すことはできない。
-				let result = Self::try_respond(&tx);
+				let result = Self::try_respond(success_count, &tx);
 				if result.is_err() {
 					let error = result.err().unwrap();
 					error!("Unknown error. reason: [{}]", error);
@@ -79,7 +81,7 @@ impl Thread {
 				}
 
 				// 少し待機
-				std::thread::sleep(std::time::Duration::from_millis(234));
+				std::thread::sleep(std::time::Duration::from_millis(75));
 			}
 
 			// レスポンス
