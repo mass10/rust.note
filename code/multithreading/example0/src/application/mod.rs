@@ -1,7 +1,7 @@
 use crate::debug;
 use crate::error;
-use thread;
-use util;
+use crate::thread;
+use crate::util;
 
 /// アプリケーション構造体
 pub struct Application {
