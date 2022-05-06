@@ -9,5 +9,9 @@ mod util;
 fn main() {
 	// アプリケーションを初期化して起動します。
 	let app = application::Application::new();
-	app.run();
+	let result = app.run();
+	if result.is_err() {
+		error!("{}", result.err().unwrap());
+		return;
+	}
 }
