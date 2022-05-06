@@ -18,11 +18,10 @@ impl Application {
 		println!("{} [TRACE] ({:?}) ### START ###", util::get_timestamp(), std::thread::current().id());
 
 		// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
-		let shared_object: std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>> =
-			std::sync::Arc::new(std::sync::Mutex::new(std::collections::BTreeMap::new()));
+		let shared_object = std::sync::Arc::new(std::sync::Mutex::new(std::collections::BTreeMap::new()));
 
 		// 通信用インターフェイスを初期化します。
-		let (tx, rx): (std::sync::mpsc::Sender<String>, std::sync::mpsc::Receiver<String>) = std::sync::mpsc::channel();
+		let (tx, rx) = std::sync::mpsc::channel();
 
 		// ========== スレッドを起動 ==========
 
