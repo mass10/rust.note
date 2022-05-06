@@ -12,7 +12,8 @@ pub fn get_current_timestamp() -> String {
 macro_rules! debug {
 	($($arg:tt)*) => ({
 		let line = format!($($arg)*);
-		println!("{} [DEBUG] {} ({:?}) {}", util::get_current_timestamp(), std::process::id(), std::thread::current().id(), line);
+		println!("{} [DEBUG] {} ({:?}) {}", util::get_current_timestamp(),
+			std::process::id(), std::thread::current().id(), line);
 	})
 }
 
@@ -21,7 +22,7 @@ macro_rules! debug {
 macro_rules! info {
 	($($arg:tt)*) => ({
 		let line = format!($($arg)*);
-		println!("{} [INFO] {} ({}) {}", util::get_current_timestamp(),
+		println!("{} [INFO] {} ({:?}) {}", util::get_current_timestamp(),
 			std::process::id(), std::thread::current().id(), line);
 	})
 }
@@ -31,7 +32,7 @@ macro_rules! info {
 macro_rules! error {
 	($($arg:tt)*) => ({
 		let line = format!($($arg)*);
-		println!("{} [ERROR] {} ({:?}) {}",
-			util::get_current_timestamp(), std::process::id(), std::thread::current().id(), line);
+		println!("{} [ERROR] {} ({:?}) {}", util::get_current_timestamp(),
+			std::process::id(), std::thread::current().id(), line);
 	})
 }
