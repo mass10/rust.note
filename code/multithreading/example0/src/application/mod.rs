@@ -41,11 +41,12 @@ impl Application {
 		// ========== メインループ ==========
 
 		// メッセージの受信
+		// TODO: 受信ループを別のスレッドにする
 		loop {
 			debug!("メッセージの受信を待っています。",);
 			let result = rx.recv();
 			if result.is_err() {
-				// TODO: 失敗でない穏やかな終了方法
+				// TODO: 失敗(receiving on a closed channel)ではなく、確かな終了ステータスで終了させる
 				error!("スレッドメッセージの受信に失敗しました。理由: [{}]", result.err().unwrap());
 				break;
 			}
