@@ -1,7 +1,8 @@
 //! スレッド関連
 
 use crate::debug;
-use util;
+use crate::error;
+use crate::util;
 
 /// スレッドの実装
 pub struct Thread {
@@ -41,12 +42,7 @@ impl Thread {
 				let result = tx.send(thread_message);
 				if result.is_err() {
 					let error = result.err().unwrap();
-					println!(
-						"{} [ERROR] ({:?}) Unknown error. reason: [{}]",
-						util::get_current_timestamp(),
-						std::thread::current().id(),
-						error
-					);
+					error!("Unknown error. reason: [{}]", error);
 					// 復旧不能とみなす
 					break;
 				}
