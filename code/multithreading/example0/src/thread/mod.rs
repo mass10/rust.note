@@ -5,9 +5,7 @@ use crate::error;
 use crate::util;
 
 /// スレッドの実装
-pub struct Thread {
-	_x: String,
-}
+pub struct Thread {}
 
 impl Thread {
 	/// 新しいインスタンスを返します。
@@ -15,7 +13,7 @@ impl Thread {
 	/// # Returns
 	/// `Thread`
 	pub fn new() -> Thread {
-		return Thread { _x: "".to_string() };
+		return Thread {};
 	}
 
 	/// スレッド内の何かの処理
