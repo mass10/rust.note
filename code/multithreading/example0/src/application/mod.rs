@@ -45,6 +45,7 @@ impl Application {
 			debug!("メッセージの受信を待っています。",);
 			let result = rx.recv();
 			if result.is_err() {
+				// TODO: 失敗でない穏やかな終了方法
 				error!("スレッドメッセージの受信に失敗しました。理由: [{}]", result.err().unwrap());
 				break;
 			}
