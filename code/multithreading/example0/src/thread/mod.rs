@@ -54,6 +54,7 @@ impl Thread {
 				}
 
 				// ================ 一定期間で実施する何らかの処理 ================
+				// ※このスコープでメソッドを呼び出すことはできない。
 				let result = Self::try_respond(&tx);
 				if result.is_err() {
 					let error = result.err().unwrap();
