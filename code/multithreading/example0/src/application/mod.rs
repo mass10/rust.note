@@ -4,14 +4,15 @@ use crate::thread;
 use crate::util;
 
 /// アプリケーション構造体
-pub struct Application {
-	_x: String,
-}
+pub struct Application {}
 
 impl Application {
 	/// 新しいインスタンスを返します。
+	///
+	/// # Returns
+	/// 新しいインスタンス
 	pub fn new() -> Application {
-		return Application { _x: "".to_string() };
+		return Application {};
 	}
 
 	/// アプリケーションをスタートします。
