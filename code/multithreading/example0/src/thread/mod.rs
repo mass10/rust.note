@@ -1,5 +1,6 @@
 //! スレッド関連
 
+use crate::debug;
 use util;
 
 /// スレッドの実装
@@ -23,7 +24,7 @@ impl Thread {
 		_map: &std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>>,
 	) -> std::result::Result<std::thread::JoinHandle<String>, Box<dyn std::error::Error>> {
 		let handle = std::thread::spawn(move || {
-			println!("{} [TRACE] ({:?}) $$$ begin thread $$$", util::get_timestamp(), std::thread::current().id());
+			debug!("$$$ begin thread $$$");
 
 			loop {
 				// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
@@ -31,7 +32,7 @@ impl Thread {
 				// map.as_ref().set
 
 				// タイムスタンプ
-				let timestamp = util::get_timestamp();
+				let timestamp = util::get_current_timestamp();
 				// ある条件が成立するとスレッドは終了します。
 				let exit_condition = if timestamp.ends_with("0") { true } else { false };
 
@@ -40,7 +41,12 @@ impl Thread {
 				let result = tx.send(thread_message);
 				if result.is_err() {
 					let error = result.err().unwrap();
-					println!("{} [ERROR] ({:?}) Unknown error. reason: [{}]", util::get_timestamp(), std::thread::current().id(), error);
+					println!(
+						"{} [ERROR] ({:?}) Unknown error. reason: [{}]",
+						util::get_current_timestamp(),
+						std::thread::current().id(),
+						error
+					);
 					// 復旧不能とみなす
 					break;
 				}
@@ -55,11 +61,11 @@ impl Thread {
 
 			// レスポンス
 			let response = "スレッドの応答";
-			println!("{} [TRACE] ({:?}) --- exit thread ---", util::get_timestamp(), std::thread::current().id());
+			debug!("--- exit thread ---");
 			return response.to_string();
 		});
 
-		println!("{} [TRACE] ({:?}) スレッドは正常に実行されました。", util::get_timestamp(), std::thread::current().id());
+		debug!("スレッドは正常に実行されました。");
 
 		return Ok(handle);
 	}
