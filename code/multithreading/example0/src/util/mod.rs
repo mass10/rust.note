@@ -1,7 +1,7 @@
 /// タイムスタンプを生成します。
 ///
 /// # Returns
-/// タイムスタンプ
+/// タイムスタンプ (例: "2020-01-01 00:00:00.000")
 pub fn get_current_timestamp() -> String {
 	let date = chrono::Local::now();
 	return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
