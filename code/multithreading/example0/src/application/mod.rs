@@ -49,8 +49,11 @@ impl Application {
 				error!("スレッドメッセージの受信に失敗しました。理由: [{}]", result.err().unwrap());
 				break;
 			}
-			let result = result.unwrap();
-			debug!("スレッドからのメッセージ: [{}]", result);
+
+			let message = result.unwrap();
+
+			debug!("スレッドからのメッセージ: [{}]", message);
+
 			std::thread::sleep(std::time::Duration::from_millis(1));
 		}
 
