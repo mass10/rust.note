@@ -5,15 +5,15 @@ use crate::error;
 use crate::util;
 
 /// スレッドの実装
-pub struct Thread {}
+pub struct Thread01 {}
 
-impl Thread {
+impl Thread01 {
 	/// 新しいインスタンスを返します。
 	///
 	/// # Returns
 	/// `Thread`
-	pub fn new() -> Thread {
-		return Thread {};
+	pub fn new() -> Thread01 {
+		return Thread01 {};
 	}
 
 	/// スレッド内の何かの処理
