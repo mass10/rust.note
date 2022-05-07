@@ -30,7 +30,7 @@ impl Application {
 
 		// スレッドを起動します。
 		debug!("スレッドを起動します。");
-		let thread = thread::Thread::new();
+		let thread = thread::Thread01::new();
 		let result = thread.start(tx, &shared_object);
 		if result.is_err() {
 			error!("{}", result.err().unwrap());
