@@ -30,13 +30,12 @@ impl Application {
 
 		// スレッドを起動します。
 		debug!("スレッドを起動します。");
-		let thread = thread::Thread01::new();
+		let mut thread = thread::Thread01::new();
 		let result = thread.start(tx, &shared_object);
 		if result.is_err() {
 			error!("{}", result.err().unwrap());
 			return Ok(());
 		}
-		let handle = result.ok().unwrap();
 
 		// ========== メインループ ==========
 
@@ -62,7 +61,7 @@ impl Application {
 
 		// スレッド終了まで待機します。
 		debug!("スレッド終了まで待機しています...",);
-		let result = handle.join();
+		let result = thread.join();
 		if result.is_err() {
 			error!("{:?}", result.err().unwrap());
 			return Ok(());
@@ -70,6 +69,7 @@ impl Application {
 
 		// スレッドの応答
 		let thread_response = result.unwrap();
+
 		debug!("スレッドの応答: [{}]", thread_response);
 
 		// ========== 終了 ==========
