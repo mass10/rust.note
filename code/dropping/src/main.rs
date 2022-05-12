@@ -3,28 +3,32 @@ struct Lock {}
 impl Lock {
 	/// 新しいインスタンスを返します。
 	pub fn new() -> Lock {
-		println!("(lock)");
+		println!("[Lock::new] locked.");
 		return Lock {};
 	}
 
 	/// 何かしらの操作
+	#[allow(unused)]
 	pub fn hello(&self) {
-		println!("(hello)");
+		// println!("[Lock::new] hello)");
 	}
 }
 
 impl Drop for Lock {
 	/// 解放の実装
 	fn drop(&mut self) {
-		println!("(unlock)");
+		println!("[Lock::drop] unlocked.");
 	}
 }
 
 /// エントリーポイント
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	println!("### START ###");
-	let lock = Lock::new();
-	lock.hello();
+
+	#[allow(unused)]
+	let dummy = Lock::new();
+
 	println!("--- END ---");
+
 	return Ok(());
 }

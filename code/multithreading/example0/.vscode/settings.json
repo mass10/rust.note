@@ -1,0 +1,6 @@
+{
+    "[bat]": {
+        "editor.formatOnSave": true,
+        "files.encoding": "shiftjis",
+    }
+}
