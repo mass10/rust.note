@@ -261,7 +261,7 @@ mod example_case_02 {
 	}
 
 	pub fn run() {
-		// 何らかの処理
+		// タイミングによってよく失敗する何らかの処理
 		let result = execute();
 		if result.is_err() {
 			// すべてのエラーがここでハンドルされます。
