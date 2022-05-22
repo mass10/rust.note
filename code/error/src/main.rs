@@ -191,6 +191,8 @@ mod example_case_01 {
 /// enum を利用して、異なる Error のハンドリングを行う試み
 #[allow(unused)]
 mod example_case_02 {
+	use std::any::Any;
+
 	use rand::{thread_rng, Rng};
 
 	/// アプリケーションのエラーを扱うための列挙型を定義します。
@@ -259,12 +261,28 @@ mod example_case_02 {
 	}
 
 	pub fn run() {
+		// 何らかの処理
 		let result = execute();
 		if result.is_err() {
-			let error = result.err().unwrap();
-			println!("[ERROR] エラー: [{:?}]", error);
+			// すべてのエラーがここでハンドルされます。
+			let error = result.unwrap_err();
+			if error.is::<ApplicationErrorEnum>() {
+				// どうしても必要ならダウンキャストも可能です。
+				let inner_type = error.downcast_ref::<ApplicationErrorEnum>().unwrap();
+				// 列挙型の型名
+				let inner_type_name = format!("{error:?}");
+				// 文字列表現(fmt による)
+				let source_message = format!("{inner_type}");
+				println!("[ERROR] アプリケーションの定義済みエラーです。error: [{inner_type_name}], message: [{source_message}]");
+			} else {
+				// それ以外のすべてのエラー
+				println!("[ERROR] 予期しない実行時のエラー: [{}]", error.to_string());
+			}
+
 			return;
 		}
+
+		println!("[INFO] 正常終了");
 	}
 }
 
