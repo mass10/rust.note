@@ -62,27 +62,27 @@ mod error {
 	/// アプリケーションのエラーを扱うための構造体を定義します。
 	///
 	#[derive(Debug, Clone)]
-	pub struct MyErrorA {
+	pub struct DatabaseError {
 		/// エラーのメッセージ
 		pub message: String,
 	}
 
-	impl MyErrorA {
+	impl DatabaseError {
 		/// アプリケーションエラーを表すオブジェクトを返します。
 		#[allow(unused)]
-		pub fn new(message: &str) -> MyErrorA {
+		pub fn new(message: &str) -> DatabaseError {
 			return Self { message: message.to_string() };
 		}
 	}
 
-	impl std::fmt::Display for MyErrorA {
+	impl std::fmt::Display for DatabaseError {
 		/// [std::fmt::Display] としての振る舞いを提供します。
 		///
 		/// # Examples
 		///
 		/// ```
 		/// fn main() {
-		///     let error = MyErrorA::new("error message");
+		///     let error = DatabaseError::new("error message");
 		///     println!("{}", error);
 		/// }
 		/// ```
@@ -92,7 +92,7 @@ mod error {
 	}
 
 	/// std::error::Error としての振る舞いを実装します。
-	impl std::error::Error for MyErrorA {
+	impl std::error::Error for DatabaseError {
 		fn description(&self) -> &str {
 			&self.message
 		}
@@ -260,6 +260,7 @@ mod example_case_02 {
 		return Ok(());
 	}
 
+	/// スタート
 	pub fn run() {
 		// タイミングによってよく失敗する何らかの処理
 		let result = execute();
@@ -290,36 +291,38 @@ mod example_case_02 {
 mod example_case_03 {
 	use rand::{thread_rng, Rng};
 
-	// use std::error::Error;
-
-	#[allow(unused)]
-	pub fn run() {
-		let result = execute();
-		if result.is_err() {
-			let err = result.err().unwrap();
-			let source = err.source();
-			if source.is_some() {
-				let reason = source.unwrap();
-				println!("[ERROR] error: [{}] source: [{}]", err, reason);
-			} else {
-				println!("[ERROR] error: [{}], source: []", err);
-			}
-			return;
-		}
-	}
-
 	fn execute() -> std::result::Result<(), Box<dyn std::error::Error>> {
 		let n = thread_rng().gen_range(0..9);
-
-		if 8 <= n {
-			// let source = super::error::MyFatal::new("復旧不可能なエラーです。");
-			let err = super::error::ApplicationError::new("アプリケーションのエラーです。");
+		if 7 <= n {
+			let err = super::error::ApplicationError::new("対象の出荷指示票はただいま操作中です。");
+			return Err(Box::new(err));
+		} else if 3 <= n {
+			let err = super::error::DatabaseError::new("指定された組織情報がみつかりません。");
 			return Err(Box::new(err));
 		} else if 1 <= n {
-			let err = super::error::MyErrorA::new("アプリケーションのエラーです。");
+			let err = super::error::MyFatal::new("設定ファイルがみつかりませんでした。");
 			return Err(Box::new(err));
 		}
 		return Ok(());
+	}
+
+	/// スタート
+	pub fn run() {
+		// 様々なきっかけで失敗する何らかの処理
+		let result = execute();
+		if result.is_err() {
+			let err = result.unwrap_err();
+			if err.is::<super::error::ApplicationError>() {
+				println!("[ERROR] アプリケーションのエラーです。原因: [{}]", err);
+			} else if err.is::<super::error::DatabaseError>() {
+				println!("[ERROR] データベースのエラーです。原因: [{}]", err);
+			} else if err.is::<super::error::MyFatal>() {
+				println!("[ERROR] 致命的エラーです。原因: [{}]", err);
+			} else {
+				println!("[ERROR] 予期しないエラーです。原因: [{}]", err);
+			}
+			return;
+		}
 	}
 }
 
@@ -331,5 +334,7 @@ fn main() {
 	// example_case_01::run();
 
 	// enumn を用いた詳細なエラーハンドリング
-	example_case_02::run();
+	// example_case_02::run();
+
+	example_case_03::run();
 }
