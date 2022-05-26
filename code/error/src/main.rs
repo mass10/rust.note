@@ -165,10 +165,11 @@ mod example_case_00 {
 /// Error をキャッチする例
 #[allow(unused)]
 mod example_case_01 {
-	use rand::{thread_rng, Rng};
 
-	/// たまに失敗する処理
-	fn operation_fails() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+	/// 様々な要因により、ちょくちょく失敗する何らかの処理
+	fn operation_fails() -> std::result::Result<(), Box<dyn std::error::Error>> {
+		use rand::{thread_rng, Rng};
+
 		let n = thread_rng().gen_range(0..3);
 		if n == 0 {
 			let error = super::error::ApplicationError::new("アプリケーションのエラーです。");
@@ -192,8 +193,6 @@ mod example_case_01 {
 #[allow(unused)]
 mod example_case_02 {
 	use std::any::Any;
-
-	use rand::{thread_rng, Rng};
 
 	/// アプリケーションのエラーを扱うための列挙型を定義します。
 	#[derive(Debug)]
@@ -228,22 +227,19 @@ mod example_case_02 {
 	impl std::error::Error for ApplicationErrorEnum {
 		fn description(&self) -> &str {
 			match self {
-				ApplicationErrorEnum::UserNotFound => "ユーザーが見つかりませんでした。",
-				ApplicationErrorEnum::DeptNotFound => "部署が見つかりませんでした。",
+				ApplicationErrorEnum::UserNotFound => "ユーザーが見つかりません。",
+				ApplicationErrorEnum::DeptNotFound => "部署が見つかりません。",
 				ApplicationErrorEnum::InvalidEmail => "不正なメールアドレスです。",
 				ApplicationErrorEnum::UnknownError => "不明なエラーです。",
 			}
 		}
 	}
 
-	/// 何らかの処理を実行します。
-	/// タイムスタンプによってエラーをシミュレートしています。
-	///
-	/// # Returns
-	/// ランダムなエラー(enum)
+	/// 様々な要因により、ちょくちょく失敗する何らかの処理
 	fn execute() -> std::result::Result<(), Box<dyn std::error::Error>> {
-		let n = thread_rng().gen_range(0..99);
+		use rand::{thread_rng, Rng};
 
+		let n = thread_rng().gen_range(0..99);
 		if 90 <= n {
 			return Err(Box::new(ApplicationErrorEnum::UnknownError));
 		}
@@ -270,6 +266,13 @@ mod example_case_02 {
 			if error.is::<ApplicationErrorEnum>() {
 				// どうしても必要ならダウンキャストも可能です。
 				let inner_type = error.downcast_ref::<ApplicationErrorEnum>().unwrap();
+				// 必要ならパターンマッチ可能
+				match inner_type {
+					ApplicationErrorEnum::UserNotFound => println!("[ERROR] ユーザーが見つかりません。"),
+					ApplicationErrorEnum::DeptNotFound => println!("[ERROR] 部署が見つかりません。"),
+					ApplicationErrorEnum::InvalidEmail => println!("[ERROR] 不正なメールアドレスです。"),
+					ApplicationErrorEnum::UnknownError => println!("[ERROR] 不明なエラーです。"),
+				}
 				// 列挙型の型名
 				let inner_type_name = format!("{error:?}");
 				// 文字列表現(fmt による)
@@ -289,9 +292,11 @@ mod example_case_02 {
 
 /// enum ではなく、複数種類の Error でエラーハンドリングを試みる
 mod example_case_03 {
-	use rand::{thread_rng, Rng};
 
+	/// 様々な要因により、ちょくちょく失敗する何らかの処理
 	fn execute() -> std::result::Result<(), Box<dyn std::error::Error>> {
+		use rand::{thread_rng, Rng};
+
 		let n = thread_rng().gen_range(0..9);
 		if 7 <= n {
 			let err = super::error::ApplicationError::new("対象の出荷指示票はただいま操作中です。");
@@ -333,8 +338,9 @@ fn main() {
 	// 独自エラーの実装
 	// example_case_01::run();
 
-	// enumn を用いた詳細なエラーハンドリング
+	// アプリケーション定義の enumn を用いた詳細なエラーハンドリング
 	// example_case_02::run();
 
+	// アプリケーション定義の Error trait を使用した、細かなエラーハンドリング
 	example_case_03::run();
 }
