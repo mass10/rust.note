@@ -1,6 +1,3 @@
-// mod case_string;
-mod case_string2;
-mod case_vector;
 mod my_traits;
 mod myutil;
 
@@ -67,11 +64,16 @@ fn main() {
 		diagnose_unknown_parameter("Ａ");
 	}
 
-	// 文字列に trait を実装してみる
-	case_string2::execute();
-
 	// Vec に trait を実装してみる
-	case_vector::execute();
+	{
+		use crate::my_traits::StringVectorTrait;
+
+		let v = vec![String::from(""), String::from("bbbbbb"), String::from("ジミヘン")];
+
+		println!("{}", v.at(0));
+		println!("{}", v.at(2));
+		println!("{}", v.at(99));
+	}
 
 	println!("Ok.");
 }

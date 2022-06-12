@@ -125,3 +125,40 @@ impl TestableString<&str> for &str {
 		return true;
 	}
 }
+
+// 独自の型を定義。入れ子になった型は trait の型パラメータに指定できない。
+type MyStringVector = std::vec::Vec<std::string::String>;
+
+///
+/// 文字列ベクタを操作するためのトレイトです。
+///
+pub trait StringVectorTrait<T> {
+	/// この T の `index` 番目の要素を返します。
+	///
+	/// # Arguments
+	/// `index` 調べる位置
+	///
+	/// # Returns
+	/// 文字列
+	fn at(&self, index: usize) -> String;
+
+	fn has(&self, e: &T) -> bool;
+}
+
+impl StringVectorTrait<T> for MyStringVector {
+	fn at(&self, index: usize) -> String {
+		if self.len() <= index {
+			return "".to_string();
+		}
+		return self[index].to_string();
+	}
+
+	fn has(&self, e: &String) -> bool {
+		for i in 0..self.len() {
+			if self[i] == *e {
+				return true;
+			}
+		}
+		return false;
+	}
+}
