@@ -129,10 +129,12 @@ impl TestableString<&str> for &str {
 // 独自の型を定義。入れ子になった型は trait の型パラメータに指定できない。
 type MyStringVector = std::vec::Vec<std::string::String>;
 
+type MyU32Vector = std::vec::Vec<u32>;
+
 ///
 /// 文字列ベクタを操作するためのトレイトです。
 ///
-pub trait StringVectorTrait<T> {
+pub trait VectorHelper<T> {
 	/// この T の `index` 番目の要素を返します。
 	///
 	/// # Arguments
@@ -140,22 +142,42 @@ pub trait StringVectorTrait<T> {
 	///
 	/// # Returns
 	/// 文字列
-	fn at(&self, index: usize) -> String;
+	fn at(&self, index: usize) -> Option<T>;
 
-	fn has(&self, e: &T) -> bool;
+	fn has(&self, e: T) -> bool;
 }
 
-impl StringVectorTrait<String> for MyStringVector {
-	fn at(&self, index: usize) -> String {
+impl VectorHelper<String> for MyStringVector {
+	/// [MyStringVector] に at の振る舞いを実装します。
+	fn at(&self, index: usize) -> Option<String> {
 		if self.len() <= index {
-			return "".to_string();
+			return None;
 		}
-		return self[index].to_string();
+		return Some(self[index].to_string());
 	}
 
-	fn has(&self, e: &String) -> bool {
+	/// [MyStringVector] に has の振る舞いを実装します。
+	fn has(&self, e: String) -> bool {
 		for i in 0..self.len() {
 			if self[i] == *e {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+impl VectorHelper<u32> for MyU32Vector {
+	fn at(&self, index: usize) -> Option<u32> {
+		if self.len() <= index {
+			return None;
+		}
+		return Some(self[index]);
+	}
+
+	fn has(&self, e: u32) -> bool {
+		for i in 0..self.len() {
+			if self[i] == e {
 				return true;
 			}
 		}
