@@ -184,3 +184,18 @@ impl VectorHelper<u32> for MyU32Vector {
 		return false;
 	}
 }
+
+type MyCharVector = std::vec::Vec<char>;
+
+impl VectorHelper<char> for MyCharVector {
+	fn at(&self, index: usize) -> Option<char> {
+		if self.len() <= index {
+			return None;
+		}
+		return Some(self[index]);
+	}
+
+	fn has(&self, e: char) -> bool {
+		return self.contains(&e);
+	}
+}
