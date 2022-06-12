@@ -64,15 +64,24 @@ fn main() {
 		diagnose_unknown_parameter("Ａ");
 	}
 
-	// Vec に trait を実装してみる
+	// ==================== Vec<String> に trait を実装してみる ====================
 	{
-		use crate::my_traits::StringVectorTrait;
-
+		use crate::my_traits::VectorHelper;
 		let v = vec![String::from(""), String::from("bbbbbb"), String::from("ジミヘン")];
+		println!("{:?}", v.at(0));
+		println!("{:?}", v.at(2));
+		println!("{:?}", v.at(99));
+	}
 
-		println!("{}", v.at(0));
-		println!("{}", v.at(2));
-		println!("{}", v.at(99));
+	// ==================== Vec<u32> に trait を実装してみる ====================
+	{
+		use crate::my_traits::VectorHelper;
+		let v: Vec<u32> = vec![
+			0, 2, 76, 101, 982, 19837
+		];
+		println!("{:?}", v.at(0));
+		println!("{:?}", v.at(2));
+		println!("{:?}", v.at(99));
 	}
 
 	println!("Ok.");
