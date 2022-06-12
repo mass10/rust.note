@@ -27,11 +27,7 @@ impl StringVectorTrait<StringVectorType> for StringVectorType {
 pub fn execute() {
 	println!("### vec をテストします ###");
 
-	let v = vec![
-		String::from(""),
-		String::from("bbbbbb"),
-		String::from("ジミヘン"),
-	];
+	let v = vec![String::from(""), String::from("bbbbbb"), String::from("ジミヘン")];
 
 	println!("{}", v.at(0));
 	println!("{}", v.at(2));

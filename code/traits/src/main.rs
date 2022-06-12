@@ -1,4 +1,4 @@
-mod case_string;
+// mod case_string;
 mod case_string2;
 mod case_vector;
 mod my_traits;
@@ -7,15 +7,28 @@ mod myutil;
 fn test_integral_value(n: i32) {
 	use my_traits::TestableNumber;
 
-	let result = ::myutil::result(n.is_alphabet());
-	println!("{:?}.is_a() -> [{}]", n, result);
+	let result = n.is_alphabet();
+	println!("{:?}.is_a() -> [{}]", n, ::myutil::result(result));
 }
 
 fn test_all_999(n: i32) {
 	use my_traits::TestableNumber;
 
-	let result = ::myutil::result(n.is_999());
-	println!("{:?}.is_999() -> [{}]", n, result);
+	let result = n.is_999();
+	println!("{:?}.is_999() -> [{}]", n, ::myutil::result(result));
+}
+
+/// 文字列の中身を診断します。
+///
+/// # Arguments
+/// * `unknown` 次を実装する型 'T' を指定します。
+///     * [self::TestableString]
+///     * [std::fmt::Display]
+///     * [std::fmt::Debug]
+fn diagnose_unknown_parameter<T: crate::my_traits::TestableString<T> + std::fmt::Display + std::fmt::Debug>(unknown: T) {
+	let result = unknown.is_alpha();
+
+	println!("{:?}.is_alpha() -> [{}]", unknown, ::myutil::result(result));
 }
 
 fn main() {
@@ -37,7 +50,22 @@ fn main() {
 	}
 
 	// ==================== 文字列に trait を実装してみる ====================
-	case_string::execute();
+	{
+		diagnose_unknown_parameter(String::from("くぃうえお"));
+		diagnose_unknown_parameter(String::from("A"));
+		diagnose_unknown_parameter(String::from("_"));
+		diagnose_unknown_parameter(String::from("my namE Is BABO"));
+		diagnose_unknown_parameter(String::from(" A"));
+		diagnose_unknown_parameter(String::from("Ｊｉｍｉ"));
+		diagnose_unknown_parameter(String::from("Ａ"));
+		diagnose_unknown_parameter("_");
+		diagnose_unknown_parameter("あいうえお");
+		diagnose_unknown_parameter("hhHgsAYTWhnxbA");
+		diagnose_unknown_parameter("892137981240");
+		diagnose_unknown_parameter("_");
+		diagnose_unknown_parameter("Ｊｉｍｉ");
+		diagnose_unknown_parameter("Ａ");
+	}
 
 	// 文字列に trait を実装してみる
 	case_string2::execute();
