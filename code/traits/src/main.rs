@@ -29,6 +29,8 @@ fn diagnose_unknown_parameter<T: crate::my_traits::TestableString<T> + std::fmt:
 }
 
 fn main() {
+	use crate::my_traits::VectorHelper;
+
 	// ==================== 数値にアプリケーション固有のメソッドを生やしてみる ====================
 	{
 		test_integral_value(63);
@@ -46,7 +48,7 @@ fn main() {
 		test_all_999(0);
 	}
 
-	// ==================== 文字列に trait を実装してみる ====================
+	// ==================== 文字列(String) に都合のいい操作を実装してみる ====================
 	{
 		diagnose_unknown_parameter(String::from("くぃうえお"));
 		diagnose_unknown_parameter(String::from("A"));
@@ -64,10 +66,8 @@ fn main() {
 		diagnose_unknown_parameter("Ａ");
 	}
 
-	// ==================== Vec<String> に trait を実装してみる ====================
+	// ==================== Vec<String> に都合のいい操作を実装してみる ====================
 	{
-		use crate::my_traits::VectorHelper;
-
 		let v = vec![String::from(""), String::from("bbbbbb"), String::from("ジミヘン")];
 
 		println!("{:?}", v.at(0));
@@ -75,10 +75,8 @@ fn main() {
 		println!("{:?}", v.at(99));
 	}
 
-	// ==================== Vec<u32> に trait を実装してみる ====================
+	// ==================== Vec<u32> に都合のいい操作を実装してみる ====================
 	{
-		use crate::my_traits::VectorHelper;
-
 		let v: Vec<u32> = vec![0, 2, 76, 101, 982, 19837];
 
 		println!("{:?}", v.at(0));
@@ -86,10 +84,8 @@ fn main() {
 		println!("{:?}", v.at(99));
 	}
 
-	// ==================== Vec<char> に trait を実装してみる ====================
+	// ==================== Vec<char> に都合のいい操作を実装してみる ====================
 	{
-		use crate::my_traits::VectorHelper;
-
 		let v: Vec<char> = vec!['a', 'u', 'K', '0'];
 
 		println!("{:?}", v.at(0));
