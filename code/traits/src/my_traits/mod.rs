@@ -145,7 +145,7 @@ pub trait StringVectorTrait<T> {
 	fn has(&self, e: &T) -> bool;
 }
 
-impl StringVectorTrait<T> for MyStringVector {
+impl StringVectorTrait<String> for MyStringVector {
 	fn at(&self, index: usize) -> String {
 		if self.len() <= index {
 			return "".to_string();
