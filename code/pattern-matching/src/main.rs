@@ -21,11 +21,13 @@ fn to_string(age: i64) -> String {
 	}
 }
 
+/// 年齢 age を説明します。
 fn describe_age(age: i64) {
 	let description = to_string(age);
 	println!("{} 歳は {:?} です。", age, description);
 }
 
+/// エントリーポイントです。
 fn main() {
 	describe_age(-123);
 	describe_age(-1);
