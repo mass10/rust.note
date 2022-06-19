@@ -25,8 +25,7 @@ impl Drop for Lock {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	println!("### START ###");
 
-	#[allow(unused)]
-	let dummy = Lock::new();
+	let _dummy = Lock::new();
 
 	println!("--- END ---");
 
