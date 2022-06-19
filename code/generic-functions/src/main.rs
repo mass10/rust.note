@@ -40,8 +40,19 @@ impl ObjectSomethingDescribable for i32 {
 /// * 同じ操作でそれぞれの実装を呼びだしたい
 ///
 /// Java で interface を用いる場面に似ているかも
+///
+/// # Arguments
+/// * `unknown` - 不明なオブジェクト
 fn test_describe<T: ObjectSomethingDescribable>(unknown: T) {
 	println!("フォーマットされた形式: {}", unknown.describe());
+}
+
+/// 不明なオブジェクト T を出力します。
+///
+/// # Arguments
+/// * `unknown` - 不明なオブジェクト
+fn trace_unknown_object<T: std::fmt::Debug>(unknown: &T) {
+	println!("{:?}", unknown);
 }
 
 /// エントリーポイント
@@ -63,4 +74,6 @@ fn main() {
 
 	// 型パラメーター自体も省略できる。
 	test_describe(2147483647);
+
+	trace_unknown_object(&["111", "bbb", "~~~"]);
 }
