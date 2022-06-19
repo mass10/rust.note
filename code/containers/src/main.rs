@@ -1,7 +1,7 @@
 fn main() {
 	// コマンドライン引数の取り出し
 	{
-		println!("[TRACE] ========== コマンドライン引数のテスト ==========");
+		println!("[TRACE] ========== コマンドライン引数の操作 ==========");
 		let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
 		println!("[TRACE] 引数の数は {}", args.len());
 		for e in args {
@@ -11,7 +11,7 @@ fn main() {
 	}
 
 	{
-		println!("[TRACE] ========== 固定長配列 のテスト ==========");
+		println!("[TRACE] ========== 固定長配列 の操作 ==========");
 
 		let mut array_container = [0, 2, 27, 82, 102, 255];
 
@@ -23,11 +23,31 @@ fn main() {
 			println!("[TRACE] [{}]", &e);
 		}
 
+		// 配列を分割([先頭], [その他, その他, その他, ...])
+		{
+			let (head, latter) = [1, 2, 3].split_at(1);
+
+			println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
+
+			assert_eq!(head, &[1]);
+			assert_eq!(latter, &[2, 3]);
+		}
+
+		// 配列を分割(先頭, [その他, その他, その他, ...])
+		{
+			let (head, latter) = [1, 2, 3].split_first().unwrap();
+
+			println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
+
+			assert_eq!(head, &1);
+			assert_eq!(latter, &[2, 3]);
+		}
+
 		println!();
 	}
 
 	{
-		println!("[TRACE] ========== LinkedList<String> のテスト ==========");
+		println!("[TRACE] ========== LinkedList<String> の操作 ==========");
 
 		// ・コレクションの内容は挿入された順序を保持します。
 
@@ -45,7 +65,7 @@ fn main() {
 	}
 
 	if false {
-		println!("[TRACE] ========== std::vec::Vec<&str> のテスト ==========");
+		println!("[TRACE] ========== std::vec::Vec<&str> の操作 ==========");
 
 		// ・コレクションの内容は挿入された順序を保持します。
 
@@ -65,7 +85,7 @@ fn main() {
 	}
 
 	if false {
-		println!("[TRACE] ========== std::vec::Vec<String> のテスト ==========");
+		println!("[TRACE] ========== std::vec::Vec<String> の操作 ==========");
 
 		// ・コレクションの内容は挿入された順序を保持します。
 
@@ -85,7 +105,7 @@ fn main() {
 	}
 
 	if false {
-		println!("[TRACE] ========== std::collections::HashMap<String, i8> のテスト ==========");
+		println!("[TRACE] ========== std::collections::HashMap<String, i8> の操作 ==========");
 
 		// ・コレクションの内容はソートされません。
 
@@ -109,7 +129,7 @@ fn main() {
 	}
 
 	if false {
-		println!("[TRACE] ========== std::collections::HashMap<&str, i8> のテスト ==========");
+		println!("[TRACE] ========== std::collections::HashMap<&str, i8> の操作 ==========");
 
 		// ・コレクションの内容はソートされません。
 
@@ -133,7 +153,7 @@ fn main() {
 	}
 
 	if false {
-		println!("[TRACE] ========== std::collections::BTreeMap<String, i8> のテスト ==========");
+		println!("[TRACE] ========== std::collections::BTreeMap<String, i8> の操作 ==========");
 
 		// ・コレクションの内容はソートされます。
 
@@ -157,7 +177,7 @@ fn main() {
 	}
 
 	if false {
-		println!("[TRACE] ========== std::collections::HashSet<&str> のテスト ==========");
+		println!("[TRACE] ========== std::collections::HashSet<&str> の操作 ==========");
 
 		// ・コレクションの内容はソートされません。
 

@@ -1,2 +1,2 @@
 @CALL cargo fmt
-@CALL cargo run --release
+@CALL cargo run
