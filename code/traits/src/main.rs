@@ -1,18 +1,18 @@
+mod helpers;
 mod my_traits;
-mod myutil;
 
 fn test_integral_value(n: i32) {
 	use my_traits::TestableNumber;
 
 	let result = n.is_alphabet();
-	println!("{:?}.is_a() -> [{}]", n, ::myutil::result(result));
+	println!("{:?}.is_a() -> [{}]", n, helpers::result(result));
 }
 
 fn test_all_999(n: i32) {
 	use my_traits::TestableNumber;
 
 	let result = n.is_999();
-	println!("{:?}.is_999() -> [{}]", n, ::myutil::result(result));
+	println!("{:?}.is_999() -> [{}]", n, helpers::result(result));
 }
 
 /// 文字列の中身を診断します。
@@ -25,7 +25,7 @@ fn test_all_999(n: i32) {
 fn diagnose_unknown_parameter<T: crate::my_traits::TestableString<T> + std::fmt::Display + std::fmt::Debug>(unknown: T) {
 	let result = unknown.is_alpha();
 
-	println!("{:?}.is_alpha() -> [{}]", unknown, ::myutil::result(result));
+	println!("{:?}.is_alpha() -> [{}]", unknown, helpers::result(result));
 }
 
 fn main() {
