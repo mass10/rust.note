@@ -3,6 +3,19 @@
 # 配列の先頭とその他を切断するには
 
 ```Rust
-	let items = &["a", "b", "c"];
-	let (head, latter) = items.split_first().unwrap();
+	// 配列を配列に分割します。
+	{
+		let (head, latter) = ["a", "b", "c"].split_at(1);
+
+		assert_eq!(head, &["a"]);
+		assert_eq!(latter, &["b", "c"]);
+	}
+
+	// 先頭要素と配列に分割します。
+	{
+		let (head, latter) = ["a", "b", "c"].split_first().unwrap();
+
+		assert_eq!(head, &"a");
+		assert_eq!(latter, &["b", "c"]);
+	}
 ```
