@@ -2,14 +2,14 @@ mod helpers;
 mod my_traits;
 
 fn test_integral_value(n: i32) {
-	use my_traits::TestableNumber;
+	use my_traits::MyHelper1;
 
 	let result = n.is_alphabet();
 	println!("{:?}.is_a() -> [{}]", n, helpers::result(result));
 }
 
 fn test_all_999(n: i32) {
-	use my_traits::TestableNumber;
+	use my_traits::MyHelper1;
 
 	let result = n.is_999();
 	println!("{:?}.is_999() -> [{}]", n, helpers::result(result));
