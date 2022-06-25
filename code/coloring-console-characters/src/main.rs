@@ -40,21 +40,21 @@ mod decorator {
 
 fn main() {
 
-    println!("{}", decorator::black("COLORING EXAMPLE"));
-    println!("{}", decorator::red("COLORING EXAMPLE"));
-    println!("{}", decorator::green("COLORING EXAMPLE"));
-    println!("{}", decorator::yellow("COLORING EXAMPLE"));
-    println!("{}", decorator::blue("COLORING EXAMPLE"));
-    println!("{}", decorator::magenta("COLORING EXAMPLE"));
-    println!("{}", decorator::cyan("COLORING EXAMPLE"));
-    println!("{}", decorator::white("COLORING EXAMPLE"));
+    println!("black         : {}", decorator::black("COLORING EXAMPLE"));
+    println!("red           : {}", decorator::red("COLORING EXAMPLE"));
+    println!("green         : {}", decorator::green("COLORING EXAMPLE"));
+    println!("yellow        : {}", decorator::yellow("COLORING EXAMPLE"));
+    println!("blue          : {}", decorator::blue("COLORING EXAMPLE"));
+    println!("magenta       : {}", decorator::magenta("COLORING EXAMPLE"));
+    println!("cyan          : {}", decorator::cyan("COLORING EXAMPLE"));
+    println!("white         : {}", decorator::white("COLORING EXAMPLE"));
 
-    println!("{}", decorator::bold(&decorator::black("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::red("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::green("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::yellow("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::blue("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::magenta("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::cyan("COLORING EXAMPLE")));
-    println!("{}", decorator::bold(&decorator::white("COLORING EXAMPLE")));
+    println!("black   (bold): {}", decorator::bold(&decorator::black("COLORING EXAMPLE")));
+    println!("red     (bold): {}", decorator::bold(&decorator::red("COLORING EXAMPLE")));
+    println!("green   (bold): {}", decorator::bold(&decorator::green("COLORING EXAMPLE")));
+    println!("yellow  (bold): {}", decorator::bold(&decorator::yellow("COLORING EXAMPLE")));
+    println!("blue    (bold): {}", decorator::bold(&decorator::blue("COLORING EXAMPLE")));
+    println!("magenta (bold): {}", decorator::bold(&decorator::magenta("COLORING EXAMPLE")));
+    println!("cyan    (bold): {}", decorator::bold(&decorator::cyan("COLORING EXAMPLE")));
+    println!("white   (bold): {}", decorator::bold(&decorator::white("COLORING EXAMPLE")));
 }
