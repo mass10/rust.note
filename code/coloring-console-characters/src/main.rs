@@ -70,12 +70,12 @@ mod decorator {
 			return self;
 		}
 
-		pub fn close(&self) -> &Self {
+		pub fn off(&self) -> &Self {
 			print!("{CANCEL}");
 			return self;
 		}
 
-		pub fn close_line(&self) -> &Self {
+		pub fn eol(&self) -> &Self {
 			println!("{CANCEL}");
 			return self;
 		}
@@ -109,5 +109,5 @@ fn main() {
 
 	// へんなプリンター実装
 	let printer = decorator::ColorPrinter::new();
-	printer.yellow("黄色？").red("赤？").close().print("標準に戻ってる？").close_line();
+	printer.yellow("黄色？").red("赤？").off().print("標準に戻ってる？").eol();
 }
