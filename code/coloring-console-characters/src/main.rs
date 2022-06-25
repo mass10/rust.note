@@ -1,39 +1,39 @@
 /// 文字修飾の提供
 mod decorator {
 
-	pub fn black(s: &str) -> String {
+	pub fn black<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[30m{}\x1b[0m", s);
 	}
 
-	pub fn red(s: &str) -> String {
+	pub fn red<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[31m{}\x1b[0m", s);
 	}
 
-	pub fn green(s: &str) -> String {
+	pub fn green<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[32m{}\x1b[0m", s);
 	}
 
-	pub fn yellow(s: &str) -> String {
+	pub fn yellow<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[33m{}\x1b[0m", s);
 	}
 
-	pub fn blue(s: &str) -> String {
+	pub fn blue<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[34m{}\x1b[0m", s);
 	}
 
-	pub fn magenta(s: &str) -> String {
+	pub fn magenta<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[35m{}\x1b[0m", s);
 	}
 
-	pub fn cyan(s: &str) -> String {
+	pub fn cyan<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[36m{}\x1b[0m", s);
 	}
 
-	pub fn white(s: &str) -> String {
+	pub fn white<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[37m{}\x1b[0m", s);
 	}
 
-	pub fn bold(s: &str) -> String {
+	pub fn bold<T: std::fmt::Display>(s: T) -> String {
 		return format!("\x1b[1m{}\x1b[0m", s);
 	}
 
@@ -47,7 +47,6 @@ mod decorator {
 
 	pub const CANCEL: &str = "\x1b[0m";
 
-	/// builder style operator
 	pub struct ColorPrinter;
 
 	impl ColorPrinter {
@@ -55,17 +54,17 @@ mod decorator {
 			Self
 		}
 
-		pub fn print(&self, text: &str) -> &Self {
+		pub fn print<T: std::fmt::Display>(&self, text: T) -> &Self {
 			print!("{}", text);
 			return self;
 		}
 
-		pub fn yellow(&self, text: &str) -> &Self {
+		pub fn yellow<T: std::fmt::Display>(&self, text: T) -> &Self {
 			print!("{YELLOW}{}", text);
 			return self;
 		}
 
-		pub fn red(&self, text: &str) -> &Self {
+		pub fn red<T: std::fmt::Display>(&self, text: T) -> &Self {
 			print!("{RED}{}", text);
 			return self;
 		}
@@ -95,15 +94,14 @@ fn main() {
 	println!("{}", cyan("CYAN EXAMPLE"));
 	println!("{}", white("WHITE EXAMPLE"));
 
-	// TODO: std::fmt::Display などで受けることによって、"&" を除去できない？
-	println!("{}", bold(&black("BLACK EXAMPLE (STRONG)")));
-	println!("{}", bold(&red("RED EXAMPLE (STRONG)")));
-	println!("{}", bold(&green("GREEN EXAMPLE (STRONG)")));
-	println!("{}", bold(&yellow("YELLOW EXAMPLE (STRONG)")));
-	println!("{}", bold(&blue("BLUE EXAMPLE (STRONG)")));
-	println!("{}", bold(&magenta("MAGENTA EXAMPLE (STRONG)")));
-	println!("{}", bold(&cyan("CYAN EXAMPLE (STRONG)")));
-	println!("{}", bold(&white("WHITE EXAMPLE (STRONG)")));
+	println!("{}", bold(black("BLACK EXAMPLE (STRONG)")));
+	println!("{}", bold(red("RED EXAMPLE (STRONG)")));
+	println!("{}", bold(green("GREEN EXAMPLE (STRONG)")));
+	println!("{}", bold(yellow("YELLOW EXAMPLE (STRONG)")));
+	println!("{}", bold(blue("BLUE EXAMPLE (STRONG)")));
+	println!("{}", bold(magenta("MAGENTA EXAMPLE (STRONG)")));
+	println!("{}", bold(cyan("CYAN EXAMPLE (STRONG)")));
+	println!("{}", bold(white("WHITE EXAMPLE (STRONG)")));
 
 	println!("{GREEN}{STRONG}STRONG GREEN{CANCEL}{CANCEL}");
 
