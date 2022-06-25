@@ -1,3 +1,4 @@
+/// 文字修飾の提供
 mod decorator {
 
 	pub fn black(s: &str) -> String {
@@ -35,24 +36,78 @@ mod decorator {
 	pub fn bold(s: &str) -> String {
 		return format!("\x1b[1m{}\x1b[0m", s);
 	}
+
+	pub const RED: &str = "\x1b[31m";
+
+	pub const YELLOW: &str = "\x1b[33m";
+
+	pub const GREEN: &str = "\x1b[32m";
+
+	pub const STRONG: &str = "\x1b[1m";
+
+	pub const CANCEL: &str = "\x1b[0m";
+
+	/// builder style operator
+	pub struct ColorPrinter;
+
+	impl ColorPrinter {
+		pub fn new() -> Self {
+			Self
+		}
+
+		pub fn print(&self, text: &str) -> &Self {
+			print!("{}", text);
+			return self;
+		}
+
+		pub fn yellow(&self, text: &str) -> &Self {
+			print!("{YELLOW}{}", text);
+			return self;
+		}
+
+		pub fn red(&self, text: &str) -> &Self {
+			print!("{RED}{}", text);
+			return self;
+		}
+
+		pub fn close(&self) -> &Self {
+			print!("{CANCEL}");
+			return self;
+		}
+
+		pub fn close_line(&self) -> &Self {
+			println!("{CANCEL}");
+			return self;
+		}
+	}
 }
 
+/// エントリーポイント
 fn main() {
-	println!("black         : {}", decorator::black("COLORING EXAMPLE"));
-	println!("red           : {}", decorator::red("COLORING EXAMPLE"));
-	println!("green         : {}", decorator::green("COLORING EXAMPLE"));
-	println!("yellow        : {}", decorator::yellow("COLORING EXAMPLE"));
-	println!("blue          : {}", decorator::blue("COLORING EXAMPLE"));
-	println!("magenta       : {}", decorator::magenta("COLORING EXAMPLE"));
-	println!("cyan          : {}", decorator::cyan("COLORING EXAMPLE"));
-	println!("white         : {}", decorator::white("COLORING EXAMPLE"));
+	use decorator::{black, blue, bold, cyan, green, magenta, red, white, yellow, CANCEL, GREEN, STRONG};
 
-	println!("black   (bold): {}", decorator::bold(&decorator::black("COLORING EXAMPLE")));
-	println!("red     (bold): {}", decorator::bold(&decorator::red("COLORING EXAMPLE")));
-	println!("green   (bold): {}", decorator::bold(&decorator::green("COLORING EXAMPLE")));
-	println!("yellow  (bold): {}", decorator::bold(&decorator::yellow("COLORING EXAMPLE")));
-	println!("blue    (bold): {}", decorator::bold(&decorator::blue("COLORING EXAMPLE")));
-	println!("magenta (bold): {}", decorator::bold(&decorator::magenta("COLORING EXAMPLE")));
-	println!("cyan    (bold): {}", decorator::bold(&decorator::cyan("COLORING EXAMPLE")));
-	println!("white   (bold): {}", decorator::bold(&decorator::white("COLORING EXAMPLE")));
+	println!("{}", black("BLACK EXAMPLE"));
+	println!("{}", red("RED EXAMPLE"));
+	println!("{}", green("GREEN EXAMPLE"));
+	println!("{}", yellow("YELLOW EXAMPLE"));
+	println!("{}", blue("BLUE EXAMPLE"));
+	println!("{}", magenta("MAGENTA EXAMPLE"));
+	println!("{}", cyan("CYAN EXAMPLE"));
+	println!("{}", white("WHITE EXAMPLE"));
+
+	// TODO: std::fmt::Display などで受けることによって、"&" を除去できない？
+	println!("{}", bold(&black("BLACK EXAMPLE (STRONG)")));
+	println!("{}", bold(&red("RED EXAMPLE (STRONG)")));
+	println!("{}", bold(&green("GREEN EXAMPLE (STRONG)")));
+	println!("{}", bold(&yellow("YELLOW EXAMPLE (STRONG)")));
+	println!("{}", bold(&blue("BLUE EXAMPLE (STRONG)")));
+	println!("{}", bold(&magenta("MAGENTA EXAMPLE (STRONG)")));
+	println!("{}", bold(&cyan("CYAN EXAMPLE (STRONG)")));
+	println!("{}", bold(&white("WHITE EXAMPLE (STRONG)")));
+
+	println!("{GREEN}{STRONG}STRONG GREEN{CANCEL}{CANCEL}");
+
+	// へんなプリンター実装
+	let printer = decorator::ColorPrinter::new();
+	printer.yellow("黄色？").red("赤？").close().print("標準に戻ってる？").close_line();
 }
