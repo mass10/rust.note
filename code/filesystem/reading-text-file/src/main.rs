@@ -20,11 +20,13 @@ fn test2(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 
 	let file = std::fs::File::open(path)?;
 	let r = std::io::BufReader::new(file);
+
+	// lines() はイテレーターを返す。全体をメモリにロードするわけではなさそう？
 	for e in r.lines() {
 		let line = e.unwrap();
-		let line = line.trim();
 		println!("{}", line);
 	}
+
 	return Ok(());
 }
 
