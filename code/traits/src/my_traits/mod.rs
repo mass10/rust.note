@@ -3,14 +3,14 @@ extern crate colored;
 ///
 /// 文字列を調べるトレイトの宣言
 ///
-pub trait TestableNumber<T> {
+pub trait MyHelper1<T> {
 	/// この T が a-z もしくは A-Z とみなせる場合に true を返します。
 	fn is_alphabet(&self) -> bool;
 	/// この T が、オール9の場合に true を返します。
 	fn is_999(&self) -> bool;
 }
 
-impl TestableNumber<i32> for i32 {
+impl MyHelper1<i32> for i32 {
 	/// この i32 が 'A' もしくは 'a' と同等である場合に true を返します。
 	fn is_alphabet(&self) -> bool {
 		const SMALL_A: i32 = 'a' as i32;
@@ -39,7 +39,7 @@ impl TestableNumber<i32> for i32 {
 	}
 }
 
-impl TestableNumber<u32> for u32 {
+impl MyHelper1<u32> for u32 {
 	/// この u32 が 'A' もしくは 'a' と同等である場合に true を返します。
 	fn is_alphabet(&self) -> bool {
 		const SMALL_A: u32 = 'a' as u32;
