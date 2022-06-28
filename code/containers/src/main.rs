@@ -22,42 +22,62 @@ fn main() {
 		for e in &array_container {
 			println!("[TRACE] [{}]", &e);
 		}
+	}
 
-		// 配列を分割([先頭], [その他, その他, その他, ...])
-		{
-			let (head, latter) = [1, 2, 3].split_at(1);
+	{
+		println!("[TRACE] ========== 配列 を 配列 と 配列 に分割 ==========");
 
-			println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
+		let (head, latter) = [1, 2, 3].split_at(1);
 
-			assert_eq!(head, &[1]);
-			assert_eq!(latter, &[2, 3]);
-		}
+		println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
 
-		{
-			let (head, latter) = ["a", "b", "c"].split_at(1);
+		assert_eq!(head, &[1]);
+		assert_eq!(latter, &[2, 3]);
+	}
 
-			println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
+	{
+		println!("[TRACE] ========== 配列 を 配列 と 配列 に分割 ==========");
 
-			assert_eq!(head, &["a"]);
-			assert_eq!(latter, &["b", "c"]);
-		}
+		let (head, latter) = ["a", "b", "c"].split_at(1);
 
-		// 配列を分割(先頭, [その他, その他, その他, ...])
-		{
-			let (head, latter) = [1, 2, 3].split_first().unwrap();
+		println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
 
-			println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
+		assert_eq!(head, &["a"]);
+		assert_eq!(latter, &["b", "c"]);
+	}
 
-			assert_eq!(head, &1);
-			assert_eq!(latter, &[2, 3]);
-		}
+	{
+		println!("[TRACE] ========== 配列 を 先頭要素 と 配列 に分割 ==========");
 
-		{
-			let (head, latter) = ["a", "b", "c"].split_first().unwrap();
+		let (head, latter) = [1, 2, 3].split_first().unwrap();
 
-			assert_eq!(head, &"a");
-			assert_eq!(latter, &["b", "c"]);
-		}
+		println!("[TRACE] head: {:?}, latter: {:?}", head, latter);
+
+		assert_eq!(head, &1);
+		assert_eq!(latter, &[2, 3]);
+	}
+
+	{
+		println!("[TRACE] ========== 配列 を 先頭要素 と 配列 に分割 ==========");
+
+		let (head, latter) = ["a", "b", "c"].split_first().unwrap();
+
+		assert_eq!(head, &"a");
+		assert_eq!(latter, &["b", "c"]);
+
+		println!();
+	}
+
+	{
+		println!("[TRACE] ========== 配列 と 配列 を 結合 ==========");
+
+		let left = ["a", "b", "c"];
+		let right = ["d", "e", "f"];
+
+		let result = [left, right].concat();
+		let result = result.as_ref();
+
+		assert_eq!(result, ["a", "b", "c", "d", "e", "f"]);
 
 		println!();
 	}
