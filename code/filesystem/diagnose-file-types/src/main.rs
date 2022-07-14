@@ -5,17 +5,6 @@
 #[allow(unused)]
 type FileHandler = dyn FnMut(&std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>>;
 
-#[allow(unused)]
-fn search2(path: &std::path::Path, handler: &mut FileHandler) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-	let tmp = path.to_path_buf();
-	let tmp_path = tmp.to_str().unwrap();
-	if tmp_path == "" {
-		let path = std::path::Path::new("/");
-		search(&path, handler)?;
-	}
-	return Ok(());
-}
-
 /// ファイル走査
 ///
 /// # Arguments
