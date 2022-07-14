@@ -2,6 +2,9 @@
 //! ファイルの拡張子を分析する
 //!
 
+/// ファイルハンドラー
+///
+/// ※型に置き換えるとコンパイルエラーになる🔥
 #[allow(unused)]
 type FileHandler = dyn FnMut(&std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>>;
 
@@ -10,15 +13,13 @@ type FileHandler = dyn FnMut(&std::path::Path) -> std::result::Result<(), std::b
 /// # Arguments
 /// * `e` パス
 /// * `handler` ファイルハンドラー
-fn search(
-	path: &std::path::Path,
-	handler: &mut dyn FnMut(&std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>>,
-) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+fn search(path: &std::path::Path, handler: &mut dyn FnMut(&std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>>) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	if !path.exists() {
 		println!("[TRACE] invalid path {}", path.to_str().unwrap());
 		return Ok(());
 	}
-	if path.is_dir() {
+
+    if path.is_dir() {
 		let name = path.file_name().unwrap_or_default();
 		if name == "node_modules" {
 			return Ok(());
@@ -41,17 +42,22 @@ fn search(
 	return Ok(());
 }
 
+/// 拡張子診断クラス
 struct Calculator {
+	/// 拡張子と件数を管理します。
 	map: std::collections::HashMap<String, u32>,
 }
 
 impl Calculator {
+	/// `Calculator` の新しいインスタンスを返します。
+	///
+	/// # Returns
+	/// `Calculator` の新しいインスタンス
 	pub fn new() -> Self {
-		return Self {
-			map: std::collections::HashMap::new(),
-		};
+		return Self { map: std::collections::HashMap::new() };
 	}
 
+	/// 診断結果を出力します。
 	pub fn summary(&mut self) {
 		let mut total: u32 = 0;
 		for e in &self.map {
@@ -61,6 +67,10 @@ impl Calculator {
 		println!("TOTAL: {:?}", total);
 	}
 
+	/// ファイルパスを診断します。
+	///
+	/// # Arguments
+	/// `path` ファイルのパス
 	pub fn diagnose(&mut self, path: &std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 		// ファイル名
 		let name = path.file_name().unwrap_or_default();
@@ -104,7 +114,6 @@ impl Calculator {
 }
 
 /// エントリーポイント
-#[allow(unused)]
 fn main() {
 	// コマンドライン引数
 	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
