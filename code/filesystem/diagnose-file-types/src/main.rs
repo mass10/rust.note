@@ -128,11 +128,11 @@ fn main() {
 	let path = std::path::Path::new(path_to_target);
 
 	// 計算機
-	let mut calc = Calculator::new();
+	let mut calculator = Calculator::new();
 
 	// ハンドラー
 	let mut handler = |arg: &std::path::Path| -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-		calc.diagnose(arg)?;
+		calculator.diagnose(arg)?;
 		return Ok(());
 	};
 
@@ -145,5 +145,5 @@ fn main() {
 	}
 
 	// サマリーを表示
-	calc.summary();
+	calculator.summary();
 }
