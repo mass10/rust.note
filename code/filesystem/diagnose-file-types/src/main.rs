@@ -19,12 +19,18 @@ fn search(path: &std::path::Path, handler: &mut dyn FnMut(&std::path::Path) -> s
 		return Ok(());
 	}
 
-    if path.is_dir() {
+	if path.is_dir() {
 		let name = path.file_name().unwrap_or_default();
 		if name == "node_modules" {
 			return Ok(());
 		}
 		if name == "target" {
+			return Ok(());
+		}
+		if name == ".git" {
+			return Ok(());
+		}
+		if name == ".vscode" {
 			return Ok(());
 		}
 		let it = std::fs::read_dir(path)?;
@@ -99,14 +105,12 @@ impl Calculator {
 
 		let value = self.map.get_key_value(extension);
 		if value.is_none() {
-			// 1
-			println!("NEW FILE> [{}] = 1", &extension);
+			// 初めての拡張子
 			self.map.insert(extension.to_string(), 1);
 		} else {
-			// 加算
+			// 既知の拡張子
 			let current = value.unwrap().1;
 			let new_value = *current;
-			println!("INCREMENT> [{}] = ({})", &extension, new_value);
 			self.map.insert(extension.to_string(), new_value + 1);
 		}
 		return Ok(());
