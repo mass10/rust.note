@@ -7,7 +7,7 @@ key2: "文字列 value of key2"
 key3: 123.456
 
 array_od_entities: [
-    { value: -12 },
+    { value: -12, label: "マイナス" },
     { value: 0.12},
     { value: -1.098},
     { value: 35.02},
