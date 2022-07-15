@@ -4,11 +4,11 @@
 
 extern crate serde_derive;
 
-mod io;
 mod configuration;
+mod io;
 
-use io::search;
 use configuration::Configuration;
+use io::search;
 
 /// 拡張子診断クラス
 struct Calculator<'a> {
