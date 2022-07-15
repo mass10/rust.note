@@ -1,0 +1,20 @@
+exclude_dirs = [
+    ".git",
+    ".nuxt",
+    ".vscode",
+    ".vs",
+    "Debug",
+    "dist",
+    "ipch",
+    "node_modules",
+    "Release",
+    "target",
+    "x64",
+]
+
+exclude_files = [
+    ".ipch",
+    ".VC.db",
+    ".vcxproj.user",
+    ".zip",
+]
