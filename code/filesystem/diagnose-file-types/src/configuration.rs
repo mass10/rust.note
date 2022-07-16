@@ -55,10 +55,10 @@ pub struct Configuration {
 #[derive(serde_derive::Deserialize, std::fmt::Debug, std::clone::Clone)]
 struct SettingsToml {
 	/// 除外するディレクトリ名
-	pub exclude_dirs: Option<std::collections::HashSet<String>>,
+	pub exclude_dirs: std::collections::HashSet<String>,
 
 	/// 除外するファイル名
-	pub exclude_files: Option<std::collections::HashSet<String>>,
+	pub exclude_files: std::collections::HashSet<String>,
 }
 
 impl Configuration {
@@ -89,10 +89,12 @@ impl Configuration {
 		return &self.path;
 	}
 
+	/// 除外フォルダーリスト
 	pub fn get_exclude_dirs(&self) -> &std::collections::HashSet<String> {
 		return &self.exclude_dirs;
 	}
 
+	/// 除外ファイルリスト
 	pub fn get_exclude_files(&self) -> &std::collections::HashSet<String> {
 		return &self.exclude_files;
 	}
@@ -112,12 +114,8 @@ impl Configuration {
 
 		// settings.toml をパースします。
 		let settings = Self::parse_settings_toml(path)?;
-		if settings.exclude_dirs.is_some() {
-			self.exclude_dirs = settings.exclude_dirs.unwrap();
-		}
-		if settings.exclude_files.is_some() {
-			self.exclude_files = settings.exclude_files.unwrap();
-		}
+		self.exclude_dirs = settings.exclude_dirs;
+		self.exclude_files = settings.exclude_files;
 
 		return Ok(());
 	}
