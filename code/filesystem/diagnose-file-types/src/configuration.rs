@@ -1,6 +1,11 @@
 use toml;
 
+/// テキストファイル全体を読み込みます。
 ///
+/// # Arguments
+/// * `path` ファイルのパス
+/// # Returns
+/// ファイルの内容
 pub fn read_text_file_all(path: &str) -> std::result::Result<String, std::boxed::Box<dyn std::error::Error>> {
 	use std::io::Read;
 
@@ -17,18 +22,38 @@ fn join_as_string(path: &std::path::Path, child: &str) -> std::result::Result<St
 	return Ok(s);
 }
 
+/// 設定ファイルのパスを検出します。
+///
+/// # Returns
+/// 設定ファイルのパス、存在しない場合は ""
 fn find_settings_toml() -> std::result::Result<String, std::boxed::Box<dyn std::error::Error>> {
 	const NAME: &str = "settings.toml";
+
 	// カレントディレクトリを調べます。
 	if std::path::Path::new(NAME).is_file() {
 		return Ok(NAME.to_string());
 	}
-	// みつからない
+
+	// なし
 	return Ok("".to_string());
 }
 
-#[derive(serde_derive::Deserialize, std::fmt::Debug, std::clone::Clone)]
+/// コンフィギュレーションクラス
+#[derive(std::fmt::Debug)]
 pub struct Configuration {
+	/// コンフィギュレーションファイルへのパス
+	path: String,
+
+	/// 除外するディレクトリ名
+	exclude_dirs: std::collections::HashSet<String>,
+
+	/// 除外するファイル名
+	exclude_files: std::collections::HashSet<String>,
+}
+
+// TOML の内容
+#[derive(serde_derive::Deserialize, std::fmt::Debug, std::clone::Clone)]
+struct SettingsToml {
 	/// 除外するディレクトリ名
 	pub exclude_dirs: Option<std::collections::HashSet<String>>,
 
@@ -37,13 +62,21 @@ pub struct Configuration {
 }
 
 impl Configuration {
+	/// コンフィギュレーションを行います。
 	pub fn new() -> std::result::Result<Configuration, std::boxed::Box<dyn std::error::Error>> {
+		// コマンドライン引数
+		let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
+
+		let arg = if 0 < args.len() { &args[0] } else { "" };
+
 		// 新しいインスタンス
 		let mut conf = Configuration {
-			exclude_dirs: Some(std::collections::HashSet::new()),
-			exclude_files: Some(std::collections::HashSet::new()),
+			path: String::from(arg),
+			exclude_dirs: std::collections::HashSet::new(),
+			exclude_files: std::collections::HashSet::new(),
 		};
 
+		// 設定ファイルのパス
 		let path = find_settings_toml()?;
 
 		// コンフィギュレーション
@@ -52,17 +85,16 @@ impl Configuration {
 		return Ok(conf);
 	}
 
-	pub fn get_exclude_dirs(&self) -> &std::collections::HashSet<String> {
-		let dirs = self.exclude_dirs.as_ref();
-		let dirs = dirs.unwrap();
-		return dirs;
+	pub fn get_path(&self) -> &String {
+		return &self.path;
 	}
 
-	#[allow(unused)]
+	pub fn get_exclude_dirs(&self) -> &std::collections::HashSet<String> {
+		return &self.exclude_dirs;
+	}
+
 	pub fn get_exclude_files(&self) -> &std::collections::HashSet<String> {
-		let files = self.exclude_files.as_ref();
-		let files = files.unwrap();
-		return files;
+		return &self.exclude_files;
 	}
 
 	/// コンフィギュレーション
@@ -78,17 +110,24 @@ impl Configuration {
 			return Ok(());
 		}
 
-		// テキストファイル全体を読み込み
-		let content = read_text_file_all(&path)?;
-
-		*self = toml::from_str(&content)?;
-		if self.exclude_dirs.is_none() {
-			self.exclude_dirs = Some(std::collections::HashSet::new());
+		// settings.toml をパースします。
+		let settings = Self::parse_settings_toml(path)?;
+		if settings.exclude_dirs.is_some() {
+			self.exclude_dirs = settings.exclude_dirs.unwrap();
 		}
-		if self.exclude_files.is_none() {
-			self.exclude_files = Some(std::collections::HashSet::new());
+		if settings.exclude_files.is_some() {
+			self.exclude_files = settings.exclude_files.unwrap();
 		}
 
 		return Ok(());
+	}
+
+	fn parse_settings_toml(path: &str) -> std::result::Result<SettingsToml, std::boxed::Box<dyn std::error::Error>> {
+		// テキストファイル全体を読み込み
+		let content = read_text_file_all(&path)?;
+		// toml をパース
+		let settings: SettingsToml = toml::from_str(&content)?;
+
+		return Ok(settings);
 	}
 }
