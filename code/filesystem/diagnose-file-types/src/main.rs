@@ -32,7 +32,7 @@ fn main() {
 	let path = std::path::Path::new(conf.get_path_to_run());
 
 	// 計算機
-	let mut calculator = core::Calculator::new(&conf);
+	let mut calculator = core::Application::new(&conf);
 
 	// ハンドラー
 	let mut handler = |arg: &std::path::Path| -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
