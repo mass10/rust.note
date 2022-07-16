@@ -25,9 +25,9 @@ pub fn search(conf: &Configuration, path: &std::path::Path, handler: &mut dyn Fn
 		let name = name.to_str().unwrap();
 
 		// 名前のフィルタリング
-		for e in conf.get_exclude_dirs() {
+		for pat in &conf.exclude_dirs {
 			// TODO: ちゃんとする
-			if name == e {
+			if name == pat {
 				return Ok(());
 			}
 		}
@@ -44,7 +44,7 @@ pub fn search(conf: &Configuration, path: &std::path::Path, handler: &mut dyn Fn
 		let name = name.to_str().unwrap();
 
 		// 名前のフィルタリング
-		for pat in conf.get_exclude_files() {
+		for pat in &conf.exclude_files {
 			// TODO: ちゃんとする
 			if name.contains(pat) {
 				return Ok(());
