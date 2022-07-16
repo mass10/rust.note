@@ -70,8 +70,9 @@ fn validate_record(record: &MyRecord) {
 /// TODO: テストケース実装誤り
 fn run_test_a(service: &DataService) {
 	// レコードのイテレーション
-    // mut でないオブジェクトを move なイテレーションすることはできない。TODO:
-	for record in service.records {
+	// mut でないオブジェクトを move なイテレーションすることはできない。TODO:
+	// for record in service.records {
+	for record in &service.records {
 		validate_record(&record);
 	}
 }
