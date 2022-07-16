@@ -1,4 +1,10 @@
+mod util;
+
+use util::Stopwatch;
+
 fn main() {
+	let stopwatch = Stopwatch::new();
+
 	// コマンドライン引数の取り出し
 	{
 		println!("[TRACE] ========== コマンドライン引数の操作 ==========");
@@ -235,4 +241,6 @@ fn main() {
 
 		println!();
 	}
+
+	println!("[INFO] 処理時間: [{}]", stopwatch);
 }
