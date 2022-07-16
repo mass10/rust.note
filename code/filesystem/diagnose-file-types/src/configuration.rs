@@ -41,8 +41,8 @@ fn find_settings_toml() -> std::result::Result<String, std::boxed::Box<dyn std::
 /// コンフィギュレーションクラス
 #[derive(std::fmt::Debug)]
 pub struct Configuration {
-	/// コンフィギュレーションファイルへのパス
-	path: String,
+	/// 走査するパス
+	path_to_run: String,
 
 	/// 除外するディレクトリ名
 	exclude_dirs: std::collections::HashSet<String>,
@@ -71,7 +71,7 @@ impl Configuration {
 
 		// 新しいインスタンス
 		let mut conf = Configuration {
-			path: String::from(arg),
+			path_to_run: String::from(arg),
 			exclude_dirs: std::collections::HashSet::new(),
 			exclude_files: std::collections::HashSet::new(),
 		};
@@ -85,16 +85,29 @@ impl Configuration {
 		return Ok(conf);
 	}
 
-	pub fn get_path(&self) -> &String {
-		return &self.path;
+	/// 走査するパス
+	pub fn get_path_to_run(&self) -> &String {
+		return &self.path_to_run;
 	}
 
 	/// 除外フォルダーリスト
+    /// 
+    /// 参照を返すことによって、ループが確実に参照イテレーションになります。
+    /// 通常の for は、参照イテレーションではなく、String の反復コピーです。
+    ///
+    /// # Returns
+    /// フォルダーリスト
 	pub fn get_exclude_dirs(&self) -> &std::collections::HashSet<String> {
 		return &self.exclude_dirs;
 	}
 
 	/// 除外ファイルリスト
+    ///
+    /// 参照を返すことによって、ループが確実に参照イテレーションになります。
+    /// 通常の for は、参照イテレーションではなく、String の反復コピーです。
+    /// 
+    /// # Returns
+    /// ファイルリスト
 	pub fn get_exclude_files(&self) -> &std::collections::HashSet<String> {
 		return &self.exclude_files;
 	}
