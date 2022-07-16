@@ -16,7 +16,9 @@ fn main() {
 	// コンフィギュレーション
 	let result = Configuration::new();
 	if result.is_err() {
-		println!("[ERROR] {:?}", result.unwrap_err());
+		let error = result.unwrap_err();
+		println!("[ERROR] コンフィギュレーションのエラーです。理由: [{:?}]", error);
+		std::thread::sleep(std::time::Duration::from_millis(700));
 		return;
 	}
 	let conf = result.unwrap();
@@ -41,7 +43,8 @@ fn main() {
 	// ファイル走査
 	let result = search(&conf, &path, &mut handler);
 	if result.is_err() {
-		println!("[ERROR] Runtime error. reason: {:?}", result.err().unwrap());
+		let error = result.unwrap_err();
+		println!("[ERROR] 予期しない実行時のエラーです。理由: [{:?}]", error);
 		std::thread::sleep(std::time::Duration::from_secs(3));
 		return;
 	}
