@@ -91,23 +91,23 @@ impl Configuration {
 	}
 
 	/// 除外フォルダーリスト
-    /// 
-    /// 参照を返すことによって、ループが確実に参照イテレーションになります。
-    /// 通常の for は、参照イテレーションではなく、String の反復コピーです。
-    ///
-    /// # Returns
-    /// フォルダーリスト
+	///
+	/// 参照を返すことによって、ループが確実に参照イテレーションになります。
+	/// 通常の for は、参照イテレーションではなく、String の反復コピーです。
+	///
+	/// # Returns
+	/// フォルダーリスト
 	pub fn get_exclude_dirs(&self) -> &std::collections::HashSet<String> {
 		return &self.exclude_dirs;
 	}
 
 	/// 除外ファイルリスト
-    ///
-    /// 参照を返すことによって、ループが確実に参照イテレーションになります。
-    /// 通常の for は、参照イテレーションではなく、String の反復コピーです。
-    /// 
-    /// # Returns
-    /// ファイルリスト
+	///
+	/// 参照を返すことによって、ループが確実に参照イテレーションになります。
+	/// 通常の for は、参照イテレーションではなく、String の反復コピーです。
+	///
+	/// # Returns
+	/// ファイルリスト
 	pub fn get_exclude_files(&self) -> &std::collections::HashSet<String> {
 		return &self.exclude_files;
 	}
