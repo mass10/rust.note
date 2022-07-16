@@ -61,6 +61,22 @@ struct SettingsToml {
 	pub exclude_files: std::collections::HashSet<String>,
 }
 
+/// settings.toml をパースします。
+///
+/// # Arguments
+/// * `path` ファイルのパス
+///
+/// # Returns
+/// `SettingsToml` 構造体
+fn parse_settings_toml(path: &str) -> std::result::Result<SettingsToml, std::boxed::Box<dyn std::error::Error>> {
+	// テキストファイル全体を読み込み
+	let content = read_text_file_all(&path)?;
+	// toml をパース
+	let settings: SettingsToml = toml::from_str(&content)?;
+
+	return Ok(settings);
+}
+
 impl Configuration {
 	/// コンフィギュレーションを行います。
 	pub fn new() -> std::result::Result<Configuration, std::boxed::Box<dyn std::error::Error>> {
@@ -126,19 +142,10 @@ impl Configuration {
 		}
 
 		// settings.toml をパースします。
-		let settings = Self::parse_settings_toml(path)?;
+		let settings = parse_settings_toml(path)?;
 		self.exclude_dirs = settings.exclude_dirs;
 		self.exclude_files = settings.exclude_files;
 
 		return Ok(());
-	}
-
-	fn parse_settings_toml(path: &str) -> std::result::Result<SettingsToml, std::boxed::Box<dyn std::error::Error>> {
-		// テキストファイル全体を読み込み
-		let content = read_text_file_all(&path)?;
-		// toml をパース
-		let settings: SettingsToml = toml::from_str(&content)?;
-
-		return Ok(settings);
 	}
 }
