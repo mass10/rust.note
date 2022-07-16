@@ -24,12 +24,12 @@ fn main() {
 	let conf = result.unwrap();
 
 	// パスの確認
-	if conf.get_path() == "" {
+	if conf.get_path_to_run() == "" {
 		println!("Path to directory needed.");
 		std::thread::sleep(std::time::Duration::from_millis(700));
 		return;
 	}
-	let path = std::path::Path::new(conf.get_path());
+	let path = std::path::Path::new(conf.get_path_to_run());
 
 	// 計算機
 	let mut calculator = core::Calculator::new(&conf);
