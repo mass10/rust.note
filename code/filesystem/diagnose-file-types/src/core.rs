@@ -3,6 +3,7 @@ use crate::configuration::Configuration;
 /// 拡張子診断クラス
 ///
 /// lifetime 'a の明示によって、`Calculator` と `Configuration` の生存期間をコンパイル時に保証
+#[allow(unused)]
 pub struct Application<'a> {
 	/// コンフィギュレーションへの参照
 	conf: &'a Configuration,
@@ -16,10 +17,7 @@ impl<'a> Application<'a> {
 	/// # Returns
 	/// `Calculator` の新しいインスタンス
 	pub fn new(conf: &'a Configuration) -> Self {
-		return Self {
-			conf: conf,
-			map: std::collections::HashMap::new(),
-		};
+		return Self { conf: conf, map: std::collections::HashMap::new() };
 	}
 
 	/// 診断結果を出力します。
@@ -37,7 +35,6 @@ impl<'a> Application<'a> {
 	/// # Arguments
 	/// `path` ファイルのパス
 	pub fn diagnose(&mut self, path: &std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-
 		// ファイル名
 		let name = path.file_name().unwrap_or_default();
 		let name = name.to_str();
