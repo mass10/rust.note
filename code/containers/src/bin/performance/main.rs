@@ -67,8 +67,10 @@ fn validate_record(record: &MyRecord) {
 }
 
 /// CASE:A コピーによるイテレーション操作
+/// TODO: テストケース実装誤り
 fn run_test_a(service: &DataService) {
 	// レコードのイテレーション
+    // mut でないオブジェクトを move なイテレーションすることはできない。TODO:
 	for record in service.records {
 		validate_record(&record);
 	}
