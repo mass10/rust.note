@@ -49,10 +49,12 @@ impl<'a> Application<'a> {
 	/// 診断結果を出力します。
 	fn summary(&self) {
 		let mut total: u32 = 0;
+
 		for e in &self.map {
 			println!("{}\t{}", e.0, e.1);
 			total += e.1;
 		}
+
 		println!("TOTAL: {:?}", total);
 	}
 
