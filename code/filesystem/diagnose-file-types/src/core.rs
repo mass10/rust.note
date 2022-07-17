@@ -4,7 +4,7 @@ use crate::configuration::Configuration;
 
 /// 拡張子診断クラス
 ///
-/// lifetime 'a の明示によって、`Calculator` と `Configuration` の生存期間をコンパイル時に保証
+/// lifetime 'a の明示によって、`Calculator` と `Configuration` の生存期間をコンパイル時に保証しています。
 #[allow(unused)]
 pub struct Application<'a> {
 	/// コンフィギュレーションへの参照
@@ -37,10 +37,10 @@ impl<'a> Application<'a> {
 			return Ok(());
 		};
 
-		// ファイル走査
+		// ファイルを走査し、拡張子の種類を集計します。
 		io::search(&conf, &path, &mut handler)?;
 
-		// サマリーを表示
+		// サマリーを表示します。
 		self.summary();
 
 		return Ok(());
