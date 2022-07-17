@@ -1,3 +1,5 @@
+use crate::io;
+
 use crate::configuration::Configuration;
 
 /// 拡張子診断クラス
@@ -8,7 +10,7 @@ pub struct Application<'a> {
 	/// コンフィギュレーションへの参照
 	conf: &'a Configuration,
 	/// 拡張子と件数を管理します。
-	map: std::collections::HashMap<String, u32>,
+	map: std::collections::BTreeMap<String, u32>,
 }
 
 impl<'a> Application<'a> {
@@ -17,11 +19,35 @@ impl<'a> Application<'a> {
 	/// # Returns
 	/// `Calculator` の新しいインスタンス
 	pub fn new(conf: &'a Configuration) -> Self {
-		return Self { conf: conf, map: std::collections::HashMap::new() };
+		return Self {
+			conf: conf,
+			map: std::collections::BTreeMap::new(),
+		};
+	}
+
+	/// アプリケーションを実行します。
+	pub fn run(&mut self) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+		// コンフィギュレーション
+		let conf = self.conf;
+		let path = std::path::Path::new(&conf.path_to_run);
+
+		// ハンドラー
+		let mut handler = |arg: &std::path::Path| -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+			self.diagnose(arg)?;
+			return Ok(());
+		};
+
+		// ファイル走査
+		io::search(&conf, &path, &mut handler)?;
+
+		// サマリーを表示
+		self.summary();
+
+		return Ok(());
 	}
 
 	/// 診断結果を出力します。
-	pub fn summary(&mut self) {
+	fn summary(&self) {
 		let mut total: u32 = 0;
 		for e in &self.map {
 			println!("{}\t{}", e.0, e.1);
@@ -34,7 +60,7 @@ impl<'a> Application<'a> {
 	///
 	/// # Arguments
 	/// `path` ファイルのパス
-	pub fn diagnose(&mut self, path: &std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+	fn diagnose(&mut self, path: &std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 		// ファイル名
 		let name = path.file_name().unwrap_or_default();
 		let name = name.to_str();
