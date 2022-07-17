@@ -58,25 +58,17 @@ impl Application {
 		}
 
 		// ========== 待機 ==========
-
-		// スレッド終了まで待機します。
 		debug!("スレッド終了まで待機しています...",);
-
-		// TODO: 結果をスマートに受け取る
 		let result = thread.join();
-
-		// スレッドの応答
-		let thread_response = if result.is_err() {
-			error!("{:?}", result.err().unwrap());
-			"".to_string()
+		if result.is_err() {
+			let error = result.err().unwrap();
+			error!("スレッドは正常に終了しませんでした。エラー: {:?}", error);
 		} else {
-			result.unwrap()
-		};
-
-		debug!("スレッドの応答: [{}]", thread_response);
+			let thread_response = result.unwrap();
+			debug!("スレッドの応答: [{}]", thread_response);
+		}
 
 		// ========== 終了 ==========
-
 		debug!("--- END ---");
 
 		return Ok(());
