@@ -9,10 +9,11 @@ mod core;
 mod io;
 
 use configuration::Configuration;
-use io::search;
 
 /// エントリーポイント
 fn main() {
+	// ========== コンフィギュレーション ==========
+
 	// コンフィギュレーション
 	let result = Configuration::new();
 	if result.is_err() {
@@ -29,26 +30,18 @@ fn main() {
 		std::thread::sleep(std::time::Duration::from_millis(700));
 		return;
 	}
-	let path = std::path::Path::new(&conf.path_to_run);
 
-	// 計算機
+	// ========== アプリケーションを実行 ==========
+
+	// アプリケーションを初期化
 	let mut calculator = core::Application::new(&conf);
 
-	// ハンドラー
-	let mut handler = |arg: &std::path::Path| -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-		calculator.diagnose(arg)?;
-		return Ok(());
-	};
-
-	// ファイル走査
-	let result = search(&conf, &path, &mut handler);
+	// 実行
+	let result = calculator.run();
 	if result.is_err() {
 		let error = result.unwrap_err();
 		println!("[ERROR] 予期しない実行時のエラーです。理由: [{:?}]", error);
 		std::thread::sleep(std::time::Duration::from_secs(3));
 		return;
 	}
-
-	// サマリーを表示
-	calculator.summary();
 }
