@@ -73,7 +73,7 @@ impl Thread01 {
 			let mut success_count = 0;
 
 			loop {
-				// TODO Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
+				// TODO: Arc でくるんだオブジェクトを介して安全に情報の伝達ができるのか
 				// map.lock();
 				// map.as_ref().set
 
