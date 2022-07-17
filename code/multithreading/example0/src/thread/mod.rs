@@ -64,7 +64,9 @@ impl Thread01 {
 		tx: std::sync::mpsc::Sender<String>,
 		_map: &std::sync::Arc<std::sync::Mutex<std::collections::BTreeMap<String, String>>>,
 	) -> std::result::Result<(), Box<dyn std::error::Error>> {
-		let handle = std::thread::spawn(move || {
+		let thread_func = move || {
+			// TODO: このスコープで self のメソッドを呼び出すには？？
+
 			debug!("$$$ begin thread $$$");
 
 			// 成功カウンター(スレッドの終了条件)
@@ -82,7 +84,6 @@ impl Thread01 {
 				}
 
 				// ================ 一定期間で実施する何らかの処理 ================
-				// ※このスコープでメソッドを呼び出すことはできない。
 				let result = Self::try_and_respond(success_count, &tx);
 				if result.is_err() {
 					let error = result.err().unwrap();
@@ -104,7 +105,9 @@ impl Thread01 {
 			// レスポンス
 			debug!("--- exit thread ---");
 			return "スレッドの応答".to_string();
-		});
+		};
+
+		let handle = std::thread::spawn(thread_func);
 
 		debug!("スレッドは正常に実行されました。");
 
