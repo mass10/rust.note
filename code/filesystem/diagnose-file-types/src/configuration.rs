@@ -4,6 +4,7 @@ use toml;
 ///
 /// # Arguments
 /// * `path` ファイルのパス
+///
 /// # Returns
 /// ファイルの内容
 pub fn read_text_file_all(path: &str) -> std::result::Result<String, std::boxed::Box<dyn std::error::Error>> {
@@ -15,6 +16,7 @@ pub fn read_text_file_all(path: &str) -> std::result::Result<String, std::boxed:
 	return Ok(s);
 }
 
+/// パスの連結
 #[allow(unused)]
 fn join_as_string(path: &std::path::Path, child: &str) -> std::result::Result<String, std::boxed::Box<dyn std::error::Error>> {
 	let result = path.join(child);
@@ -38,29 +40,6 @@ fn find_settings_toml() -> std::result::Result<String, std::boxed::Box<dyn std::
 	return Ok("".to_string());
 }
 
-/// コンフィギュレーションクラス
-#[derive(std::fmt::Debug)]
-pub struct Configuration {
-	/// 走査するパス
-	pub path_to_run: String,
-
-	/// 除外するディレクトリ名
-	pub exclude_dirs: std::collections::HashSet<String>,
-
-	/// 除外するファイル名
-	pub exclude_files: std::collections::HashSet<String>,
-}
-
-// TOML の内容
-#[derive(serde_derive::Deserialize, std::fmt::Debug, std::clone::Clone)]
-struct SettingsToml {
-	/// 除外するディレクトリ名
-	pub exclude_dirs: std::collections::HashSet<String>,
-
-	/// 除外するファイル名
-	pub exclude_files: std::collections::HashSet<String>,
-}
-
 /// settings.toml をパースします。
 ///
 /// # Arguments
@@ -77,48 +56,49 @@ fn parse_settings_toml(path: &str) -> std::result::Result<SettingsToml, std::box
 	return Ok(settings);
 }
 
+// TOML の内容
+#[derive(serde_derive::Deserialize, std::fmt::Debug, std::clone::Clone)]
+struct SettingsToml {
+	/// 除外するディレクトリ名
+	pub exclude_dirs: std::collections::HashSet<String>,
+
+	/// 除外するファイル名
+	pub exclude_files: std::collections::HashSet<String>,
+}
+
+/// コンフィギュレーションクラス
+#[derive(std::fmt::Debug)]
+pub struct Configuration {
+	/// 走査するパス
+	pub path_to_run: String,
+
+	/// 除外するディレクトリ名
+	pub exclude_dirs: std::collections::HashSet<String>,
+
+	/// 除外するファイル名
+	pub exclude_files: std::collections::HashSet<String>,
+}
+
 impl Configuration {
 	/// コンフィギュレーションを行います。
 	pub fn new() -> std::result::Result<Configuration, std::boxed::Box<dyn std::error::Error>> {
 		// コマンドライン引数
 		let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
-
 		let arg = if 0 < args.len() { &args[0] } else { "" };
-
-		// 新しいインスタンス
-		let mut conf = Configuration {
-			path_to_run: String::from(arg),
-			exclude_dirs: std::collections::HashSet::new(),
-			exclude_files: std::collections::HashSet::new(),
-		};
 
 		// 設定ファイルのパス
 		let path = find_settings_toml()?;
 
-		// コンフィギュレーション
-		conf.configure(&path)?;
+		// settings.toml をパースして構造体に変換します。
+		let settings = parse_settings_toml(&path)?;
+
+		// 新しいインスタンスを返します。
+		let conf = Configuration {
+			path_to_run: String::from(arg),
+			exclude_dirs: settings.exclude_dirs,
+			exclude_files: settings.exclude_files,
+		};
 
 		return Ok(conf);
-	}
-
-	/// コンフィギュレーション
-	fn configure(&mut self, path: &str) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-		// パスが指定されていなければスキップします。
-		if path == "" {
-			return Ok(());
-		}
-
-		// ファイルが無ければスキップします。
-		if !std::path::Path::new(path).is_file() {
-			println!("[INFO] Configuration file not found. [{}]", path);
-			return Ok(());
-		}
-
-		// settings.toml をパースします。
-		let settings = parse_settings_toml(path)?;
-		self.exclude_dirs = settings.exclude_dirs;
-		self.exclude_files = settings.exclude_files;
-
-		return Ok(());
 	}
 }
