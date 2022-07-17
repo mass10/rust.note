@@ -84,7 +84,7 @@ impl Configuration {
 	pub fn new() -> std::result::Result<Configuration, std::boxed::Box<dyn std::error::Error>> {
 		// コマンドライン引数
 		let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
-		let arg = if 0 < args.len() { &args[0] } else { "" };
+		let arg1 = if 0 < args.len() { &args[0] } else { "" };
 
 		// 設定ファイルのパス
 		let path = find_settings_toml()?;
@@ -94,7 +94,7 @@ impl Configuration {
 
 		// 新しいインスタンスを返します。
 		let conf = Configuration {
-			path_to_run: String::from(arg),
+			path_to_run: String::from(arg1),
 			exclude_dirs: settings.exclude_dirs,
 			exclude_files: settings.exclude_files,
 		};
