@@ -33,7 +33,7 @@ impl<'a> Application<'a> {
 
 		// ハンドラー
 		let mut handler = |arg: &std::path::Path| -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
-			self.diagnose(arg)?;
+			self.push(arg)?;
 			return Ok(());
 		};
 
@@ -62,7 +62,7 @@ impl<'a> Application<'a> {
 	///
 	/// # Arguments
 	/// `path` ファイルのパス
-	fn diagnose(&mut self, path: &std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+	fn push(&mut self, path: &std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 		// ファイル名
 		let name = path.file_name().unwrap_or_default();
 		let name = name.to_str();
