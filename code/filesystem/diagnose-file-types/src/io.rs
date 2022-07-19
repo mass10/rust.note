@@ -6,6 +6,15 @@ use crate::configuration::Configuration;
 #[allow(unused)]
 type FileHandler = dyn FnMut(&std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>>;
 
+fn retrieve_name(path: &std::path::Path) -> Option<String> {
+	let pathname = path.canonicalize().unwrap();
+	let pathname = pathname.as_path();
+
+	let name = pathname.file_name()?;
+	let name = name.to_str()?;
+	return Some(name.to_string());
+}
+
 /// ファイル走査
 ///
 /// # Arguments
@@ -18,16 +27,12 @@ pub fn search(conf: &Configuration, path: &std::path::Path, handler: &mut dyn Fn
 	}
 
 	if path.is_dir() {
-		let pathname = path.canonicalize().unwrap();
-		let _pathname = pathname.as_os_str().to_str().unwrap();
-
-		let name = path.file_name().unwrap_or_default();
-		let name = name.to_str().unwrap();
+		let name = retrieve_name(path).unwrap();
 
 		// 名前のフィルタリング
 		for pat in &conf.exclude_dirs {
 			// TODO: ちゃんとする
-			if name == pat {
+			if &name == pat {
 				return Ok(());
 			}
 		}
@@ -40,8 +45,7 @@ pub fn search(conf: &Configuration, path: &std::path::Path, handler: &mut dyn Fn
 		}
 		return Ok(());
 	} else if path.is_file() {
-		let name = path.file_name().unwrap_or_default();
-		let name = name.to_str().unwrap();
+		let name = retrieve_name(path).unwrap();
 
 		// 名前のフィルタリング
 		for pat in &conf.exclude_files {
