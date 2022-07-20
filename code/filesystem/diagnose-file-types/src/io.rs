@@ -6,12 +6,18 @@ use crate::configuration::Configuration;
 #[allow(unused)]
 type FileHandler = dyn FnMut(&std::path::Path) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>>;
 
+/// ファイルエントリーの名前を取り出します。
+///
+/// # Returns
+/// 名前
 fn retrieve_name(path: &std::path::Path) -> Option<String> {
-	let pathname = path.canonicalize().unwrap();
-	let pathname = pathname.as_path();
+	// フルパスに変換
+	let pathname = path.canonicalize().unwrap_or_default();
 
+	// 名前
 	let name = pathname.file_name()?;
 	let name = name.to_str()?;
+
 	return Some(name.to_string());
 }
 
