@@ -7,7 +7,13 @@ fn format_filetime(time: &std::time::SystemTime) -> String {
 }
 
 fn dump_file_attributes(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	let left = std::fs::metadata(std::path::Path::new(path))?;
+	let path_object = std::path::Path::new(path);
+	let left = std::fs::symlink_metadata(path)?;
+	// let left = std::fs::metadata(path)?;
+	println!("* exists: [{}]", path_object.exists());
+	println!("* is_symlink: [{}]", left.is_symlink());
+	println!("* is_dir: [{}]", left.is_dir());
+	println!("* is_file: [{}]", left.is_file());
 	let system_time = left.modified()?;
 	println!("{} ({}, {} bytes)", &path, format_filetime(&system_time), left.len());
 	return Ok(());
