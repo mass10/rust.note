@@ -1,22 +1,36 @@
-#[derive(Debug)]
-struct Application {
-	id: String
-}
+//!
+//! オブジェクト指向プログラミング
+//!
+//! * 綺麗でスリムなオブジェクト指向プログラミングの試み
+//!     * インターフェイス(=trait)、およびコンストラクト関数のみを公開
+//!     * 実体(=struct)を隠蔽する
+//!
 
-impl Application {
-	fn run(&self) {
-		println!("### START ###");
-		println!("{}", self.get_id());
-		println!("--- END ---");
-	}
-	fn get_id(&self) -> String {
-		return self.id.to_string();
-	}
-}
+mod application;
+mod configuration;
 
+/// エントリーポイント
 fn main() {
-	let app = Application {
-		id: String::from("ABC")
-	};
-	app.run();
+	// ========== CONFIGURATION ==========
+
+	// コンフィギュレーション
+	let result = configuration::configure();
+	if result.is_err() {
+		let error = result.err().unwrap();
+		println!("ERROR: {:?}", error);
+		return;
+	}
+	let conf = result.unwrap();
+
+	// ========== LAUNCH APPLICATION ==========
+
+	// アプリケーションを初期化して
+	let app = application::create_new(conf);
+
+	// 実行
+	let result = app.run();
+	if result.is_err() {
+		println!("ERROR: {}", result.unwrap_err());
+		return;
+	}
 }
