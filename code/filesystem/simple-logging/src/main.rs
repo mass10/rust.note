@@ -1,22 +1,48 @@
 use std::io::Write;
 
-fn trunc_and_write() {
-	// always create
-	let mut f = std::fs::File::create("main.log").unwrap();
-	f.write_all(b"trunc.\n").unwrap();
+/// 現在のタイムスタンプを文字列で返します。
+///
+/// # Returns
+/// タイムスタンプ
+pub fn get_current_timestamp() -> String {
+	let date = chrono::Local::now();
+	return format!("{}", date.format("%Y-%m-%d %H:%M:%S%.3f"));
 }
 
-fn append(text: &str) {
+/// 一度破棄して出力します。
+/// 
+/// # Arguments
+/// * path パス
+/// * line 文字列
+fn trunc_and_append_line(path: &str, line: &str) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+	let mut f = std::fs::File::create(path)?;
+	f.write_all(line.as_bytes())?;
+	f.write_all(b"\n")?;
+	return Ok(());
+}
+
+/// テキストファイルに行を出力します。
+///
+/// # Arguments
+/// * path パス
+/// * line 文字列
+fn append_line(path: &str, line: &str) -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
 	// create or append
-	let mut f = std::fs::OpenOptions::new().create(true).append(true).open("main.log").unwrap();
-	f.write_all(text.as_bytes()).unwrap();
-	f.write_all(b"\n").unwrap();
+	let mut f = std::fs::OpenOptions::new().create(true).append(true).open(path)?;
+	f.write_all(line.as_bytes())?;
+	f.write_all(b"\n")?;
+	return Ok(());
 }
 
-fn main() {
-	append("000");
-	trunc_and_write();
-	append("aaa");
-	append("bbb");
-	append("ccc");
+/// アプリケーションのエントリーポイントです。
+fn main() -> std::result::Result<(), std::boxed::Box<dyn std::error::Error>> {
+	let path = "main.log";
+
+	append_line(path, "文字列")?;
+	trunc_and_append_line(path, "truncated.")?;
+	append_line(path, "aaa")?;
+	append_line(path, "bbb")?;
+	append_line(path, "ccc")?;
+
+	return Ok(());
 }
