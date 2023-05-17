@@ -44,8 +44,6 @@ fn function02(message: &str) -> std::result::Result<(), Box<dyn std::error::Erro
 
 /// とある操作(nop)
 fn nop(_: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
-	// let resson = ApplicationError::new("NOP");
-	// return Err(Box::new(resson));
 	return Ok(());
 }
 
@@ -57,6 +55,12 @@ fn get_function(function_id: &str) -> Result<AbstractTask, Box<dyn std::error::E
 		_ => nop,
 	};
 	return Ok(Box::new(operation));
+}
+
+/// 要求された識別子に該当するファンクションを実行する関数
+fn execute_task(id: &str) -> Result<(), Box<dyn std::error::Error>> {
+	let task = get_function(id)?;
+	return task("こにちは");
 }
 
 /// エントリーポイント
@@ -71,16 +75,7 @@ fn main() {
 	let function_id = &args[1];
 
 	// 要求された機能に該当するファンクションを取得します。
-	let result = get_function(&function_id);
-	if result.is_err() {
-		let error = result.err().unwrap();
-		println!("[ERROR] <main()> {}", error);
-		return;
-	}
-
-	// 要求された処理を実行します。
-	let task = result.unwrap();
-	let result = task("こにちは");
+	let result = execute_task(&function_id);
 	if result.is_err() {
 		let error = result.err().unwrap();
 		println!("[ERROR] <main()> {}", error);
