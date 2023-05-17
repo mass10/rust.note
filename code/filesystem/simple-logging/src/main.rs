@@ -10,7 +10,7 @@ pub fn get_current_timestamp() -> String {
 }
 
 /// 一度破棄して出力します。
-/// 
+///
 /// # Arguments
 /// * path パス
 /// * line 文字列
