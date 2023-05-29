@@ -25,4 +25,8 @@
 ```Rust
 // グローバル変数
 const FIXED_ARRAY: &[&str] = &["a", "b", "c"];
+
+fn main() {
+	println!("{:?}", FIXED_ARRAY);
+}
 ```
