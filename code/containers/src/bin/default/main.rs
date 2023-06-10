@@ -76,6 +76,7 @@ fn main() {
 
 	{
 		println!("[TRACE] ========== 配列 と 配列 を 結合 ==========");
+		// 🔥left と right の要素数が一致していないと結合できない！
 
 		let left = ["a", "b", "c"];
 		let right = ["d", "e", "f"];
@@ -84,6 +85,22 @@ fn main() {
 		let result = result.as_ref();
 
 		assert_eq!(result, ["a", "b", "c", "d", "e", "f"]);
+
+		println!();
+	}
+
+	{
+		println!("[TRACE] ========== Vec と Vec を 結合 ==========");
+
+		let left = vec!["a", "b", "c"];
+		let right = vec!["d", "e", "f", "g"];
+
+		let result = [left, right].concat();
+		let result = result.as_ref();
+
+		assert_eq!(result, ["a", "b", "c", "d", "e", "f"]);
+		// assert_eq!(left, ["a", "b", "c"]); // moved value
+		// assert_eq!(right, ["d", "e", "f"]); // moved value
 
 		println!();
 	}
