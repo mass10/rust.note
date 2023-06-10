@@ -19,3 +19,14 @@
 		assert_eq!(latter, &["b", "c"]);
 	}
 ```
+
+# グローバルな静的配列
+
+```Rust
+// グローバル変数
+const FIXED_ARRAY: &[&str] = &["a", "b", "c"];
+
+fn main() {
+	println!("{:?}", FIXED_ARRAY);
+}
+```

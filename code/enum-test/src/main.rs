@@ -23,15 +23,16 @@ impl fmt::Display for Category {
 	}
 }
 
-fn diagnose(s: String) -> Option<Category> {
-	return match s.as_str() {
+fn diagnose(s: &str) -> Option<Category> {
+	return match s {
 		"Louis Armstrong" => Some(Category::Musician),
+		"Genpaku Sugita" => Some(Category::Doctor),
 		_ => None,
 	}
 }
 
-fn debug(s: String) {
-	let category = diagnose(s.clone());
+fn debug(s: &str) {
+	let category = diagnose(s);
 	if category.is_none() {
 		println!("[TRACE] {} is None", s.clone());
 		return;
@@ -39,7 +40,8 @@ fn debug(s: String) {
 	println!("[TRACE] {} is {}", s, category.unwrap());
 }
 
+/// エントリーポイント
 fn main() {
-	debug("Louis Armstrong".to_owned());
-	debug("Genpaku Sugita".to_owned());
+	debug("Louis Armstrong");
+	debug("Genpaku Sugita");
 }
