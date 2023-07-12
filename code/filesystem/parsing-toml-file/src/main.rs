@@ -5,8 +5,8 @@ extern crate serde_derive;
 ///
 #[derive(serde_derive::Deserialize, std::fmt::Debug)]
 struct Attribute {
-	attribute01: Option<String>,
-	attribute02: Option<String>,
+	pub attribute01: Option<String>,
+	pub attribute02: Option<String>,
 }
 
 ///
@@ -30,9 +30,9 @@ struct Settings {
 #[derive(serde_derive::Deserialize, std::fmt::Debug)]
 struct Member {
 	/// 名前
-	name: String,
+	pub name: String,
 	/// メール
-	email: Option<String>,
+	pub email: Option<String>,
 }
 
 ///
@@ -41,9 +41,9 @@ struct Member {
 #[derive(serde_derive::Deserialize, std::fmt::Debug)]
 struct Groups {
 	/// グループ名
-	name: Option<String>,
+	pub name: Option<String>,
 	/// メンバー
-	members: Option<Vec<Member>>,
+	pub members: Option<Vec<Member>>,
 }
 
 ///
@@ -90,6 +90,8 @@ fn fix_conf_path(path: &str) -> String {
 }
 
 /// コンフィギュレーションを行います。
+///
+/// 決められた struct を用いて、コンフィギュレーションを行う方法です。
 fn configure1(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// TOML ファイル読み込み
 	let path = fix_conf_path(path);
@@ -127,6 +129,8 @@ fn configure1(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>>
 }
 
 /// コンフィギュレーションを行います。
+///
+/// 決められた struct を用いず、コレクションを引っ張りまわす方法です。
 fn configure2(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 	// TOML ファイル読み込み
 	let path = fix_conf_path(path);
@@ -136,12 +140,17 @@ fn configure2(path: &str) -> std::result::Result<(), Box<dyn std::error::Error>>
 	let conf = toml::from_str::<toml::Value>(&content)?;
 
 	let settings = conf.get("settings");
+	println!("--- settings ---");
 	println!("{:?}", &settings);
 
-	for node in conf.as_table() {
-		for key in node.keys() {
-			println!("{:?}", &key);
-		}
+	println!("--- table ---");
+	let table = conf.as_table();
+	if table.is_none() {
+		return Ok(());
+	}
+	let table = table.unwrap();
+	for (key, value) in table {
+		println!("{:?}: {:?}", key, value);
 	}
 
 	return Ok(());
@@ -153,6 +162,10 @@ fn main() {
 	let args: std::vec::Vec<String> = std::env::args().skip(1).collect();
 
 	let path_to_toml = if 0 < args.len() { &args[0] } else { "" };
+
+	if path_to_toml == "" {
+		return;
+	}
 
 	// コンフィギュレーション(1)
 	let result = configure1(path_to_toml);
