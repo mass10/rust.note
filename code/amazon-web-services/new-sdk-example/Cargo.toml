@@ -7,6 +7,12 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# ★INVALID
-s3 = { git = "https://github.com/awslabs/aws-sdk-rust", tag = "v0.0.3-alpha", package = "aws-sdk-s3" }
-tokio = { version = "1", features = ["full"] }
+regex = "*"
+chrono = "*"
+uuid = { version = "0.6", features = ["v4"] }
+serde = "*"
+toml = "*"
+serde_derive = "*"
+aws-sdk-s3 = "*"
+aws-config = "*"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
