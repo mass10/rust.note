@@ -15,11 +15,11 @@ async fn create_s3_client(_: &conf::ConfigurationSettings) -> Result<aws_sdk_s3:
 }
 
 /// オブジェクトをダウンロードします。
-async fn download_object(mut object: aws_sdk_s3::operation::get_object::GetObjectOutput) -> Result<(), Box<dyn std::error::Error>> {
+async fn download_object(mut object: aws_sdk_s3::operation::get_object::GetObjectOutput, path: &str) -> Result<(), Box<dyn std::error::Error>> {
 	let object_length = object.content_length.unwrap_or(0);
 
 	// ファイルに保存
-	let mut file = std::fs::File::create("")?;
+	let mut file = std::fs::File::create(path)?;
 	let mut byte_count = 0_usize;
 	while let Some(bytes) = object.body.try_next().await? {
 		use std::io::Write;
@@ -67,7 +67,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
 		.response_content_type("application/zip")
 		.send()
 		.await?;
-	download_object(object).await?;
+	download_object(object, ".tmp\\download.tmp").await?;
 
 	return Ok(());
 }
