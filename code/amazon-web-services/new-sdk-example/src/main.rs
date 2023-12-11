@@ -14,24 +14,48 @@ async fn create_s3_client(_: &conf::ConfigurationSettings) -> Result<aws_sdk_s3:
 	return Ok(client);
 }
 
+/// ミリ秒を [std::time::SystemTime] に変換します。
+fn millis_to_systemtime(millisec: i64) -> std::io::Result<std::time::SystemTime> {
+	let duration = std::time::Duration::from_millis(millisec as u64);
+	let systemtime = std::time::UNIX_EPOCH + duration;
+	return Ok(systemtime);
+}
+
+/// ファイルの更新日時を変更します。
+fn set_filetime(path: &str, time: &std::time::SystemTime) -> Result<(), Box<dyn std::error::Error>> {
+	let mtime: filetime::FileTime = filetime::FileTime::from_system_time(*time);
+	filetime::set_file_mtime(path, mtime)?;
+	return Ok(());
+}
+
 /// オブジェクトをダウンロードします。
 async fn download_object(mut object: aws_sdk_s3::operation::get_object::GetObjectOutput, path: &str) -> Result<(), Box<dyn std::error::Error>> {
+	// ファイルサイズを取得
 	let object_length = object.content_length.unwrap_or(0);
 
 	// ファイルに保存
-	let mut file = std::fs::File::create(path)?;
-	let mut byte_count = 0_usize;
-	while let Some(bytes) = object.body.try_next().await? {
-		use std::io::Write;
+	{
+		let mut file = std::fs::File::create(path)?;
+		let mut byte_count = 0_usize;
+		while let Some(bytes) = object.body.try_next().await? {
+			use std::io::Write;
 
-		let bytes_len = bytes.len();
-		file.write_all(&bytes)?;
-		byte_count += bytes_len;
+			let bytes_len = bytes.len();
+			file.write_all(&bytes)?;
+			byte_count += bytes_len;
+		}
+		// ファイルサイズを確認
+		if byte_count != object_length as usize {
+			return Err("サイズ不一致".into());
+		}
 	}
 
-	// ファイルサイズを確認
-	if byte_count != object_length as usize {
-		return Err("サイズ不一致".into());
+	// ファイルタイムをコピー
+	{
+		let filetime = object.last_modified.unwrap();
+		let millisec = filetime.to_millis().unwrap();
+		let systemtime = millis_to_systemtime(millisec)?;
+		set_filetime(path, &systemtime)?;
 	}
 
 	return Ok(());
