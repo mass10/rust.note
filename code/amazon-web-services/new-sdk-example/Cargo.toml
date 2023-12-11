@@ -16,3 +16,4 @@ serde_derive = "*"
 aws-sdk-s3 = "*"
 aws-config = "*"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+filetime = "*"
