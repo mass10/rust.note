@@ -12,7 +12,7 @@ impl Application {
 		Application {}
 	}
 
-    /// アプリケーションを実行します。
+	/// アプリケーションを実行します。
 	pub fn run(&self) {
 		info!("### Start ###");
 
@@ -36,7 +36,7 @@ impl Application {
 			std::thread::sleep(std::time::Duration::from_millis(1000 * 3));
 		}
 
-        thread1.terminate();
+		thread1.terminate();
 
 		info!("--- End ---");
 	}

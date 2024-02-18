@@ -1,8 +1,8 @@
-use crate::{debug, info};
+use crate::{debug, error, info};
 
 pub struct Thread1 {
 	/// メッセージ送信用のチャンネル
-	sender: std::sync::mpsc::Sender<String>,
+	sender: Option<std::sync::mpsc::Sender<String>>,
 	// marker: std::marker::PhantomData<()>,
 	/// ハンドル
 	handle: Option<std::thread::JoinHandle<()>>,
@@ -13,20 +13,18 @@ impl Thread1 {
 	///
 	/// * 同時に内部スレッドが開始されます。
 	pub fn new() -> Self {
-		let (sender, receiver) = std::sync::mpsc::channel();
 		let mut instance = Thread1 {
-			sender: sender,
-			// marker: std::marker::PhantomData,
+			sender: None,
 			handle: None,
 		};
-		instance.run(receiver);
+		instance.run();
 		return instance;
 	}
 
 	/// 内部スレッドを終了します。
 	pub fn terminate(&mut self) {
 		// 停止要求
-		let _ = self.sender.send("terminate".to_string());
+		self.request("terminate");
 
 		// 待機
 		let result = self.handle.take();
@@ -35,15 +33,29 @@ impl Thread1 {
 		}
 		let handle = result.unwrap();
 		handle.join().unwrap();
+
+		// チャネルをクローズ
+		self.sender = None;
 	}
 
 	/// 内部スレッドにメッセージを送信します。
 	pub fn request(&mut self, msg: &str) {
-		self.sender.send(msg.to_string()).unwrap();
+		if self.sender.is_none() {
+			return;
+		}
+		let sender = self.sender.as_ref().unwrap();
+		let result = sender.send(msg.to_string());
+		if result.is_err() {
+			let error = result.err().unwrap();
+			error!("{}", error);
+		}
 	}
 
 	/// 内部スレッドを実行します。
-	fn run(&mut self, receiver: std::sync::mpsc::Receiver<String>) {
+	fn run(&mut self) {
+		let (sender, receiver) = std::sync::mpsc::channel();
+		self.sender = Some(sender);
+
 		let thread = std::thread::spawn(move || {
 			info!("$$$ Start $$$");
 
@@ -76,7 +88,6 @@ impl Thread1 {
 			info!("--- End ---");
 		});
 
-		// End of run
 		info!("スレッドを開始しました。");
 
 		self.handle = Some(thread);

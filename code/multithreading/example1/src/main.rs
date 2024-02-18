@@ -6,11 +6,10 @@ mod application;
 mod thread1;
 mod thread2;
 
-/// current timestamp with millisecond
+/// 現在のタイムスタンプを返します。
 pub fn get_current_timestamp() -> String {
 	let now = chrono::Local::now();
-	let timestamp = now.format("%Y-%m-%d %H:%M:%S%.3f").to_string();
-	timestamp
+	return now.format("%Y-%m-%d %H:%M:%S%.3f").to_string();
 }
 
 /// info
