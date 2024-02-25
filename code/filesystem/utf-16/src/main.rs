@@ -41,26 +41,6 @@ fn read_text_file_vec_u8(path: &str) -> std::result::Result<Vec<u8>, Box<dyn std
 	return Ok(content);
 }
 
-/// UTF-8 の BOM を取り除きます。
-fn remove_bom(content: &str) -> String {
-	if !content.has_bom() {
-		return content.to_string();
-	}
-	let (_, content) = content.split_at(3);
-
-	return content.to_string();
-}
-
-/// UTF-16 LE テキストファイルの全体を読み込みます。
-fn read_text_file_utf16_bak(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
-	let buffer: Vec<u8> = read_text_file_vec_u8(path)?;
-	let (_prefix, shorts, _suffix) = unsafe { buffer.align_to::<u16>() };
-	let result = String::from_utf16(shorts)?;
-	let result = remove_bom(&result);
-
-	return Ok(result);
-}
-
 fn u8_to_u16(buffer: &[u8]) -> Vec<u16> {
 	let mut result: Vec<u16> = vec![];
 
@@ -78,15 +58,15 @@ fn u8_to_u16(buffer: &[u8]) -> Vec<u16> {
 fn read_text_file_utf16(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
 	let buffer: Vec<u8> = read_text_file_vec_u8(path)?;
 
-    if buffer.len() < 2 {
-        return Err("Invalid file size".into());
-    }
+	if buffer.len() < 2 {
+		return Err("Invalid file size".into());
+	}
 
-    if buffer[0] != 0xFF || buffer[1] != 0xFE {
-        return Err("Invalid BOM".into());
-    }
+	if buffer[0] != 0xFF || buffer[1] != 0xFE {
+		return Err("Invalid BOM".into());
+	}
 
-    let buffer = &buffer[2..];
+	let buffer = &buffer[2..];
 
 	let shorts = u8_to_u16(&buffer);
 
@@ -121,28 +101,23 @@ fn create_utf16_file(
 
 	let bytes = u16_to_u8_vec(&bytes);
 
-    // BOM
+	// BOM
 	file.write_all(&[0xFF, 0xFE])?;
 
-    file.write_all(&bytes)?;
+	file.write_all(&bytes)?;
 
 	return Ok(());
 }
 
 /// Rust アプリケーションのエントリーポイントです。
 fn main() {
-	let source = "東京都\r\n\r\n北海道\r\n\r\n沖縄県\r\n";
+	let source = "こんにちは お晩です รถตำรวจ\r\n\r\n";
 
-	create_utf16_file("u16.txt", source).unwrap();
+	create_utf16_file("u16.txt", &source).unwrap();
 
 	let content = read_text_file_utf16("u16.txt").unwrap();
 
 	eprintln!("[{}]", content);
-
-	for char in content.chars() {
-		// print in HEX ##
-		print!("{:X} ", char as u32);
-	}
 
 	assert!(source == content);
 }
