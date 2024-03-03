@@ -1,29 +1,38 @@
-fn find_dir(path: &str, handler: &mut dyn FnMut(&str)) -> Result<(), Box<dyn std::error::Error>> {
-	let xpath = std::path::Path::new(path);
-	if xpath.is_dir() {
-		let entries = std::fs::read_dir(path)?;
-		for entry in entries {
-			let entry = entry?;
-			let name = entry.file_name();
-			if name == "node_modules" {
-				continue;
+mod util {
+	/// 与えられたパスを探索し、なんらかの FnMut な操作をフックします。
+	///
+	/// # Arguments
+	/// * `path` - 探索するパス
+	/// * `handler` - ファイルパスを受け取るハンドラー(※FnMut なハンドラー)
+	pub fn find_dir(
+		path: &str,
+		handler: &mut dyn FnMut(&str),
+	) -> Result<(), Box<dyn std::error::Error>> {
+		let xpath = std::path::Path::new(path);
+		if xpath.is_dir() {
+			let entries = std::fs::read_dir(path)?;
+			for entry in entries {
+				let entry = entry?;
+				let name = entry.file_name();
+				if name == "node_modules" {
+					continue;
+				}
+				if name == ".git" {
+					continue;
+				}
+				if name == ".vscode" {
+					continue;
+				}
+				let path = entry.path();
+				let path = path.to_str().unwrap();
+				let _ = find_dir(path, handler);
 			}
-			if name == ".git" {
-				continue;
-			}
-			if name == ".vscode" {
-				continue;
-			}
-			let path = entry.path();
-			let path = path.to_str().unwrap();
-			let _ = find_dir(path, handler);
+		} else if xpath.is_file() {
+			handler(path);
 		}
-	} else if xpath.is_file() {
-		handler(path);
+		return Ok(());
 	}
-	return Ok(());
 }
-
 /// ファイルの情報を集計する構造体
 struct FileInfoAggregator {
 	timestamp: String,
@@ -102,15 +111,15 @@ impl Application {
 			// コマンドライン引数
 			let args: Vec<String> = std::env::args().skip(1).collect();
 
-			// ファイルの情報を集計する構造体
+			// ファイルの情報を集計する構造体(mut)
 			let mut aggregator = FileInfoAggregator::new();
 
-			// ファイルハンドラー
+			// mut なオブジェクトを書き換えるファイルハンドラー
 			let mut handler = |path: &str| aggregator.handle(path);
 
-			// ファイルの情報を集計する
+			// 与えられたパスを探索します。
 			for path in args {
-				let _ = find_dir(&path, &mut handler);
+				let _ = util::find_dir(&path, &mut handler);
 			}
 
 			// 最も新しいファイルの情報
