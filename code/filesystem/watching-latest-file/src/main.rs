@@ -25,11 +25,11 @@ fn find_dir(path: &str, handler: &mut dyn FnMut(&str)) -> Result<(), Box<dyn std
 }
 
 /// ファイルの情報を集計する構造体
-struct Aggregator {
+struct FileInfoAggregator {
 	count: u64,
 }
 
-impl Aggregator {
+impl FileInfoAggregator {
 	fn new() -> Self {
 		Self { count: 0 }
 	}
@@ -46,7 +46,7 @@ fn main() {
 	let args: Vec<String> = std::env::args().skip(1).collect();
 
 	// ファイルの情報を集計する構造体
-	let mut aggregator = Aggregator::new();
+	let mut aggregator = FileInfoAggregator::new();
 
 	// ファイルハンドラー
 	let mut handler = |path: &str| aggregator.handle(path);
