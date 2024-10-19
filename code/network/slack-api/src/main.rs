@@ -1,5 +1,3 @@
-extern crate reqwest;
-
 mod services;
 
 ///
@@ -19,7 +17,7 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	slack.post_text("member ID", "ダイレクトメッセージです。")?;
 
 	// コメントを付けてファイルを投稿します。
-	slack.upload_file("notifications", "さあうけとるがよい", "0.jpg", "")?;
+	slack.post_file("notifications", "さあうけとるがよい", "0.jpg", "")?;
 
 	return Ok(());
 }
