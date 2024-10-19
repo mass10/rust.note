@@ -1,5 +1,3 @@
-extern crate reqwest;
-
 /// テキストファイル全体を読み込んで返します。
 ///
 /// ### Arguments
@@ -7,7 +5,7 @@ extern crate reqwest;
 ///
 /// ### Returns
 /// ファイル全体の内容を返します。
-pub fn read_text_file(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
+fn read_text_file(path: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
 	use std::io::Read;
 
 	let mut file = std::fs::File::open(path).unwrap();
@@ -23,7 +21,7 @@ pub fn read_text_file(path: &str) -> std::result::Result<String, Box<dyn std::er
 ///
 /// ### Returns
 /// `serde_json::Value`
-pub fn parse_json_to_value(json_text: &str) -> std::option::Option<serde_json::Value> {
+fn parse_json_to_value(json_text: &str) -> std::option::Option<serde_json::Value> {
 	let result = serde_json::from_str::<serde_json::Value>(json_text);
 	if result.is_err() {
 		return None;
@@ -38,7 +36,7 @@ pub fn parse_json_to_value(json_text: &str) -> std::option::Option<serde_json::V
 ///
 /// ### Returns
 /// ファイル名
-pub fn get_file_name(path: &str) -> String {
+fn get_file_name(path: &str) -> String {
 	let file = std::path::Path::new(path);
 	return file.file_name().unwrap().to_str().unwrap().to_string();
 }
@@ -164,7 +162,7 @@ impl SlackClient {
 	/// * `text` コメント
 	/// * `path` ファイルへのパス
 	/// * `file_name` ファイルの表示名(省略時はファイル名が採用されます)
-	pub fn upload_file(&mut self, channel: &str, text: &str, path: &str, file_name: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+	pub fn post_file(&mut self, channel: &str, text: &str, path: &str, file_name: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		// コンフィギュレーション
 		let conf = self.configure()?;
 
