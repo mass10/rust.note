@@ -1,5 +1,13 @@
 # Getting Started
 
+* OAuth Scopes を設定します。
+  * channels:read
+  * chat:write
+  * files:write
+  * groups:read
+  * im:read
+  * im:write
+
 * .settings.json を作成します。
 
 ```json
