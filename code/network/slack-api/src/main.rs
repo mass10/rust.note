@@ -15,6 +15,9 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 		"テキストメッセージ\r\n`warning`\r\n:four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover::four_leaf_clover:",
 	)?;
 
+	// DM を送信します。
+	slack.post_text("member ID", "ダイレクトメッセージです。")?;
+
 	// コメントを付けてファイルを投稿します。
 	slack.upload_file("notifications", "さあうけとるがよい", "0.jpg", "")?;
 
