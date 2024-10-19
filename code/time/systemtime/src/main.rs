@@ -20,11 +20,12 @@ fn get_current_timestamp_with_timezone() -> String {
 	return format!("{}", date.format("%+"));
 }
 
-// fn generate_timestamnp_in(hours: i64) -> chrono::DateTime<chrono::Utc> {
+/// 指定されたタイムゾーンで現在のタイムスタンプを返します。
 fn generate_timestamnp_in(hours: i64) -> String {
     let now = chrono::Utc::now();
     let local_time = now + chrono::Duration::hours(hours);
-	let text = format!("{} {:02?}", local_time.format("%Y-%m-%d %H:%M:%S%.3f"), hours);
+	// +#03 -> 符号付き、最低3桁を確保する、0埋め、整数
+	let text = format!("{}{:+#03}:00", local_time.format("%Y-%m-%dT%H:%M:%S%.3f"), hours);
     return text;
 }
 
