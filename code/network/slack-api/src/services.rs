@@ -1,3 +1,18 @@
+#[derive(serde::Deserialize)]
+struct User {
+	pub id: String,
+	#[allow(unused)]
+	pub name: String,
+}
+
+#[derive(serde::Deserialize)]
+struct LookupMemberByEmailResponse {
+	#[allow(unused)]
+	pub ok: bool,
+	#[allow(unused)]
+	pub user: User,
+}
+
 /// テキストファイル全体を読み込んで返します。
 ///
 /// ### Arguments
@@ -122,6 +137,13 @@ impl SlackClient {
 	/// * `channel` チャネル
 	/// * `text` コメント
 	pub fn post_text(&mut self, channel: &str, text: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
+		// メールアドレスに対する考慮
+		let channel = if channel.contains("@") {
+			self.lookup_member_by_email(channel)?.user.id
+		} else {
+			channel.to_string()
+		};
+
 		// コンフィギュレーション
 		let conf = self.configure()?;
 
@@ -153,6 +175,32 @@ impl SlackClient {
 		}
 
 		return Ok(());
+	}
+
+	/// email から Member ID を取得します。
+	///
+	/// ### Arguments
+	/// * `email` メールアドレス
+	///
+	/// ### Returns
+	/// `Member ID` を返します。
+	///
+	/// ### Remarks
+	/// * users:read および users:read.email が必要です。
+	fn lookup_member_by_email(&mut self, email: &str) -> std::result::Result<LookupMemberByEmailResponse, Box<dyn std::error::Error>> {
+		// コンフィギュレーション
+		let conf = self.configure()?;
+
+		// リクエスト送信
+		let access_token_header = format!("Bearer {}", conf.access_token);
+		let client = reqwest::Client::new();
+		let url = "https://slack.com/api/users.lookupByEmail";
+		let mut response = client.get(url).header("Authorization", access_token_header).query(&[("email", email)]).send()?;
+		let content = response.text()?;
+		println!("{}", content);
+		let value = serde_json::from_str::<LookupMemberByEmailResponse>(&content)?;
+
+		return Ok(value);
 	}
 
 	/// コメントを付けてファイルを投稿します。
