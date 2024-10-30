@@ -14,7 +14,7 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 	)?;
 
 	// DM を送信します。
-	slack.post_text("member ID", "ダイレクトメッセージです。")?;
+	slack.post_text("member ID or e-mail", "ダイレクトメッセージです。")?;
 
 	// コメントを付けてファイルを投稿します。
 	slack.post_file("notifications", "さあうけとるがよい", "0.jpg", "")?;
