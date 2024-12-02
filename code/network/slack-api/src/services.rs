@@ -1,5 +1,6 @@
 #[derive(serde::Deserialize)]
 struct User {
+	#[allow(unused)]
 	pub id: String,
 	#[allow(unused)]
 	pub name: String,
@@ -138,11 +139,7 @@ impl SlackClient {
 	/// * `text` コメント
 	pub fn post_text(&mut self, channel: &str, text: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		// メールアドレスに対する考慮
-		let channel = if channel.contains("@") {
-			self.lookup_member_by_email(channel)?.user.id
-		} else {
-			channel.to_string()
-		};
+		let channel = self.convert_email_to_id(channel)?;
 
 		// コンフィギュレーション
 		let conf = self.configure()?;
@@ -175,6 +172,15 @@ impl SlackClient {
 		}
 
 		return Ok(());
+	}
+
+	/// メールアドレスを member ID に変換します。
+	fn convert_email_to_id(&mut self, channel: &str) -> std::result::Result<String, Box<dyn std::error::Error>> {
+		if !channel.contains("@") {
+			return Ok(channel.to_string());
+		}
+		let result = self.lookup_member_by_email(channel)?;
+		return Ok(result.user.id);
 	}
 
 	/// email から Member ID を取得します。
