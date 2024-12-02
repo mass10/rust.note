@@ -135,7 +135,7 @@ impl SlackClient {
 	/// テキストメッセージを投稿します。
 	///
 	/// ### Arguments
-	/// * `channel` チャネル
+	/// * `channel` チャネルの名前、もしくは ID
 	/// * `text` コメント
 	pub fn post_text(&mut self, channel: &str, text: &str) -> std::result::Result<(), Box<dyn std::error::Error>> {
 		// メールアドレスに対する考慮
@@ -212,7 +212,7 @@ impl SlackClient {
 	/// コメントを付けてファイルを投稿します。
 	///
 	/// ### Arguments
-	/// * `channel` チャネル
+	/// * `channel` チャネルの名前、もしくは ID
 	/// * `text` コメント
 	/// * `path` ファイルへのパス
 	/// * `file_name` ファイルの表示名(省略時はファイル名が採用されます)
